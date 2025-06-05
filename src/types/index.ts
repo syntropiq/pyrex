@@ -45,6 +45,11 @@ export interface Match {
    */
   groups(default_?: string): (string | null)[];
 
+ /**
+  * Return a list of all captures for the given group.
+  */
+ captures(group: number | string): string[];
+
   /**
    * Return a dictionary containing all the named subgroups of the match
    */

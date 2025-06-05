@@ -149,6 +149,10 @@ export class PythonBackend {
               'span': match_obj.span(),
               'groupdict': dict(match_obj.groupdict()),
               'capturesdict': dict(match_obj.capturesdict())
+          },
+          'captures': {
+              group_name: [match_obj.captures(group_name) for group_name in match_obj.groupdict().keys()],
+              group_index: [match_obj.captures(i) for i in range(match_obj.lastindex + 1)]
           }
       
       def create_pattern_data(pattern_obj):
@@ -350,6 +354,14 @@ export class PythonMatch implements Match {
       const index = parseInt(groupNum);
       return this._groups[index] ?? '';
     });
+  }
+
+  captures(group: number | string): string[] {
+    if (typeof group === 'number') {
+      return this._data.captures.group_index[group] || [];
+    } else {
+      return this._data.captures.group_name[group] || [];
+    }
   }
 }
 
