@@ -340,15 +340,15 @@ describe('Python Backend Registry System', () => {
     });
 
     it('should handle sub operations correctly', async () => {
-      const result = await testPattern.sub('X', 'hello world');
+      const result = await testPattern.sub('X', 'hello world', 0);
       expect(result).toBe('X X');
       
-      const funcResult = await testPattern.sub((match) => `[${match.group()}]`, 'hello world');
+      const funcResult = await testPattern.sub((match) => `[${match.group()}]`, 'hello world', 0);
       expect(funcResult).toBe('[hello] [world]');
     });
 
     it('should handle subn operations correctly', async () => {
-      const [result, count] = await testPattern.subn('X', 'hello world');
+      const [result, count] = await testPattern.subn('X', 'hello world', 0);
       expect(result).toBe('X X');
       expect(count).toBe(2);
     });

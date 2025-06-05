@@ -112,12 +112,12 @@ describe('Python Pattern Operations (Unit Tests)', () => {
 
   describe('Substitution Operations', () => {
     it('should handle sub operations with string replacement', async () => {
-      const result = await testPattern.sub('X', TestStrings.HELLO_WORLD);
+      const result = await testPattern.sub('X', TestStrings.HELLO_WORLD, 0);
       expect(result).toBe('X X');
     });
 
     it('should handle sub operations with function replacement', async () => {
-      const funcResult = await testPattern.sub((match) => `[${match.group()}]`, TestStrings.HELLO_WORLD);
+      const funcResult = await testPattern.sub((match) => `[${match.group()}]`, TestStrings.HELLO_WORLD, 0);
       expect(funcResult).toBe('[hello] [world]');
     });
 
@@ -127,13 +127,13 @@ describe('Python Pattern Operations (Unit Tests)', () => {
     });
 
     it('should handle subn operations correctly', async () => {
-      const [result, count] = await testPattern.subn('X', TestStrings.HELLO_WORLD);
+      const [result, count] = await testPattern.subn('X', TestStrings.HELLO_WORLD, 0);
       expect(result).toBe('X X');
       expect(count).toBe(2);
     });
 
     it('should handle subn with function replacement', async () => {
-      const [result, count] = await testPattern.subn((match) => `[${match.group()}]`, TestStrings.HELLO_WORLD);
+      const [result, count] = await testPattern.subn((match) => `[${match.group()}]`, TestStrings.HELLO_WORLD, 0);
       expect(result).toBe('[hello] [world]');
       expect(count).toBe(2);
     });

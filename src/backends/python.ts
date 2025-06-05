@@ -331,74 +331,92 @@ export class PythonPattern implements AsyncPattern {
   }
 
   async search(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_search_string = ${JSON.stringify(string)}`);
+    
     const matchData = await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      match_obj = pattern_obj.search("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
-      create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+match_obj = pattern_obj.search(_search_string, ${pos}, ${endpos || string.length})
+create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
   }
 
   async match(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_match_string = ${JSON.stringify(string)}`);
+    
     const matchData = await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      match_obj = pattern_obj.match("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
-      create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+match_obj = pattern_obj.match(_match_string, ${pos}, ${endpos || string.length})
+create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || string.length})
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
   }
 
   async fullmatch(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_fullmatch_string = ${JSON.stringify(string)}`);
+    
     const matchData = await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      match_obj = pattern_obj.fullmatch("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
-      create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+match_obj = pattern_obj.fullmatch(_fullmatch_string, ${pos}, ${endpos || string.length})
+create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos || string.length})
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
   }
 
   async split(string: string, maxsplit: number = 0): Promise<string[]> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_split_string = ${JSON.stringify(string)}`);
+    
     return await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      pattern_obj.split("${string.replace(/"/g, '\\"')}", ${maxsplit})
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+pattern_obj.split(_split_string, ${maxsplit})
     `);
   }
 
   async findall(string: string, pos: number = 0, endpos?: number): Promise<string[]> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_findall_string = ${JSON.stringify(string)}`);
+    
     return await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      pattern_obj.findall("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+pattern_obj.findall(_findall_string, ${pos}, ${endpos || string.length})
     `);
   }
 
   async *finditer(string: string, pos: number = 0, endpos?: number): AsyncIterableIterator<Match> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_finditer_string = ${JSON.stringify(string)}`);
+    
     const matches = await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      matches = []
-      for match_obj in pattern_obj.finditer("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length}):
-          matches.append(create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length}))
-      matches
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+matches = []
+for match_obj in pattern_obj.finditer(_finditer_string, ${pos}, ${endpos || string.length}):
+    matches.append(create_match_data(match_obj, pattern_obj, _finditer_string, ${pos}, ${endpos || string.length}))
+matches
     `);
 
     for (const matchData of matches) {
@@ -406,12 +424,12 @@ export class PythonPattern implements AsyncPattern {
     }
   }
 
-  async sub(repl: string | ((match: Match) => string), string: string, count: number = 0): Promise<string> {
+  async sub(repl: string | ((match: Match) => string), string: string, count: number = 1): Promise<string> {
     const [result] = await this.subn(repl, string, count);
     return result;
   }
 
-  async subn(repl: string | ((match: Match) => string), string: string, count: number = 0): Promise<[string, number]> {
+  async subn(repl: string | ((match: Match) => string), string: string, count: number = 1): Promise<[string, number]> {
     if (typeof repl === 'function') {
       // For function replacements, we need to handle this in TypeScript
       let result = string;
@@ -439,13 +457,17 @@ export class PythonPattern implements AsyncPattern {
       return [result, substitutions];
     }
 
+    // Set strings in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_subn_repl = ${JSON.stringify(repl as string)}`);
+    await PythonBackend.runPython(`_subn_string = ${JSON.stringify(string)}`);
+    
     return await PythonBackend.runPython(`
-      pattern_obj = get_pattern("${this._handle}")
-      if pattern_obj is None:
-          raise ValueError("Pattern handle not found in registry")
-      
-      result = pattern_obj.subn("${(repl as string).replace(/"/g, '\\"')}", "${string.replace(/"/g, '\\"')}", ${count})
-      [result[0], result[1]]
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+
+result = pattern_obj.subn(_subn_repl, _subn_string, ${count})
+[result[0], result[1]]
     `);
   }
 
