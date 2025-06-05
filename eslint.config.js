@@ -13,6 +13,26 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
+      globals: {
+        // Node.js globals
+        console: 'readonly',
+        process: 'readonly',
+        Buffer: 'readonly',
+        global: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        // Browser globals
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        fetch: 'readonly',
+        // CommonJS
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,

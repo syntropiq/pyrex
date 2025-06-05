@@ -22,26 +22,32 @@ export class PythonBackend {
     if (this.pyodide) return;
 
     console.log('[MIRAI DEBUG] Starting Pyodide initialization...');
-    
+
     try {
       // Load Pyodide with proper indexURL configuration
       const { loadPyodide } = await import('pyodide');
       console.log('[MIRAI DEBUG] Pyodide module imported successfully');
-      
+
       // Detect environment and configure appropriate paths
       const isNode = typeof process !== 'undefined' && process.versions?.node;
-      console.log('[MIRAI DEBUG] Environment detected:', isNode ? 'Node.js' : 'Browser');
-      
+      console.log(
+        '[MIRAI DEBUG] Environment detected:',
+        isNode ? 'Node.js' : 'Browser'
+      );
+
       let pyodideConfig;
-      
+
       if (isNode) {
         // Node.js environment - use absolute paths without file:// protocol
         const path = await import('path');
         const { fileURLToPath } = await import('url');
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
-        
-        const pyodidePath = path.resolve(__dirname, '../../node_modules/pyodide/');
+
+        const pyodidePath = path.resolve(
+          __dirname,
+          '../../node_modules/pyodide/'
+        );
         pyodideConfig = {
           indexURL: pyodidePath,
           packageCacheDir: path.join(__dirname, '../../.pyodide-cache'),
@@ -56,14 +62,13 @@ export class PythonBackend {
         };
         console.log('[MIRAI DEBUG] Browser config:', pyodideConfig);
       }
-      
+
       // Configure Pyodide to find assets in the correct location
       this.pyodide = await loadPyodide(pyodideConfig);
       console.log('[MIRAI DEBUG] Pyodide loaded successfully');
-      
     } catch (error) {
       console.error('[MIRAI ERROR] Failed to load Pyodide:', error);
-      
+
       // Fallback: Try loading with CDN
       console.log('[MIRAI DEBUG] Attempting fallback CDN initialization...');
       try {
@@ -71,12 +76,20 @@ export class PythonBackend {
         this.pyodide = await loadPyodide({
           indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/',
         });
-        console.log('[MIRAI DEBUG] Pyodide loaded successfully from CDN fallback');
+        console.log(
+          '[MIRAI DEBUG] Pyodide loaded successfully from CDN fallback'
+        );
       } catch (fallbackError) {
         console.error('[MIRAI ERROR] CDN fallback also failed:', fallbackError);
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-        throw new Error(`Failed to initialize Pyodide: ${errorMessage}. CDN fallback also failed: ${fallbackErrorMessage}`);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        const fallbackErrorMessage =
+          fallbackError instanceof Error
+            ? fallbackError.message
+            : String(fallbackError);
+        throw new Error(
+          `Failed to initialize Pyodide: ${errorMessage}. CDN fallback also failed: ${fallbackErrorMessage}`
+        );
       }
     }
 
@@ -152,12 +165,12 @@ export class PythonBackend {
     await this.initialize();
     try {
       const result = this.pyodide.runPython(code);
-      
+
       // Convert PyProxy objects to JavaScript objects
       if (result && typeof result === 'object' && 'toJs' in result) {
         return result.toJs({ dict_converter: Object.fromEntries });
       }
-      
+
       return result;
     } catch (error) {
       console.error('[MIRAI ERROR] Python execution failed:', error);
@@ -165,16 +178,18 @@ export class PythonBackend {
     }
   }
 
-  static async compile(pattern: string, flags: string = ''): Promise<PythonPattern> {
+  static async compile(
+    pattern: string,
+    flags: string = ''
+  ): Promise<PythonPattern> {
     await this.initialize();
-    
-    
+
     // Set pattern and flags in Python globals to avoid escaping issues
     await this.runPython(`
 _compile_pattern = ${JSON.stringify(pattern)}
 _compile_flags = ${JSON.stringify(flags)}
     `);
-    
+
     // Use globals to pass the result back
     await this.runPython(`
 import regex as re
@@ -207,23 +222,31 @@ try:
 except Exception as e:
     _compile_result = {'error': str(e), 'pattern': _compile_pattern, 'flags': _compile_flags}
     `);
-    
+
     const result = await this.runPython('_compile_result');
 
-
     if (!result) {
-      throw new Error(`Python execution returned undefined result for pattern: ${pattern}`);
+      throw new Error(
+        `Python execution returned undefined result for pattern: ${pattern}`
+      );
     }
 
     if (result.error) {
       throw new Error(`Failed to compile Python pattern: ${result.error}`);
     }
-    
+
     if (!result.pattern_data) {
-      throw new Error(`Invalid pattern compilation result: ${JSON.stringify(result)}`);
+      throw new Error(
+        `Invalid pattern compilation result: ${JSON.stringify(result)}`
+      );
     }
-    
-    return new PythonPattern(pattern, flags, result.pattern_data, result.handle);
+
+    return new PythonPattern(
+      pattern,
+      flags,
+      result.pattern_data,
+      result.handle
+    );
   }
 
   static async cleanup(handle: string): Promise<boolean> {
@@ -262,21 +285,26 @@ export class PythonMatch implements Match {
   group(): string | null;
   group(index: number): string | null;
   group(index: number, ...indices: number[]): (string | null)[];
-  group(index?: number, ...indices: number[]): string | null | (string | null)[] {
+  group(
+    index?: number,
+    ...indices: number[]
+  ): string | null | (string | null)[] {
     if (index === undefined) {
       return this._groups[0] ?? null;
     }
-    
+
     if (indices.length === 0) {
-      return index < this._groups.length ? this._groups[index] ?? null : null;
+      return index < this._groups.length ? (this._groups[index] ?? null) : null;
     }
-    
+
     const allIndices = [index, ...indices];
-    return allIndices.map(i => i < this._groups.length ? this._groups[i] ?? null : null);
+    return allIndices.map((i) =>
+      i < this._groups.length ? (this._groups[i] ?? null) : null
+    );
   }
 
   groups(default_?: string): (string | null)[] {
-    return this._groups.slice(1).map(group => group ?? default_ ?? null);
+    return this._groups.slice(1).map((group) => group ?? default_ ?? null);
   }
 
   groupdict(default_?: string): Record<string, string | null> {
@@ -330,10 +358,14 @@ export class PythonPattern implements AsyncPattern {
     this._handle = handle;
   }
 
-  async search(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
+  async search(
+    string: string,
+    pos: number = 0,
+    endpos?: number
+  ): Promise<Match | null> {
     // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_search_string = ${JSON.stringify(string)}`);
-    
+
     const matchData = await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -346,10 +378,14 @@ create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || st
     return matchData ? new PythonMatch(matchData, this) : null;
   }
 
-  async match(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
+  async match(
+    string: string,
+    pos: number = 0,
+    endpos?: number
+  ): Promise<Match | null> {
     // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_match_string = ${JSON.stringify(string)}`);
-    
+
     const matchData = await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -362,10 +398,16 @@ create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || str
     return matchData ? new PythonMatch(matchData, this) : null;
   }
 
-  async fullmatch(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
+  async fullmatch(
+    string: string,
+    pos: number = 0,
+    endpos?: number
+  ): Promise<Match | null> {
     // Set string in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(`_fullmatch_string = ${JSON.stringify(string)}`);
-    
+    await PythonBackend.runPython(
+      `_fullmatch_string = ${JSON.stringify(string)}`
+    );
+
     const matchData = await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -381,7 +423,7 @@ create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos ||
   async split(string: string, maxsplit: number = 0): Promise<string[]> {
     // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_split_string = ${JSON.stringify(string)}`);
-    
+
     return await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -391,10 +433,16 @@ pattern_obj.split(_split_string, ${maxsplit})
     `);
   }
 
-  async findall(string: string, pos: number = 0, endpos?: number): Promise<string[]> {
+  async findall(
+    string: string,
+    pos: number = 0,
+    endpos?: number
+  ): Promise<string[]> {
     // Set string in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(`_findall_string = ${JSON.stringify(string)}`);
-    
+    await PythonBackend.runPython(
+      `_findall_string = ${JSON.stringify(string)}`
+    );
+
     return await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -404,10 +452,16 @@ pattern_obj.findall(_findall_string, ${pos}, ${endpos || string.length})
     `);
   }
 
-  async *finditer(string: string, pos: number = 0, endpos?: number): AsyncIterableIterator<Match> {
+  async *finditer(
+    string: string,
+    pos: number = 0,
+    endpos?: number
+  ): AsyncIterableIterator<Match> {
     // Set string in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(`_finditer_string = ${JSON.stringify(string)}`);
-    
+    await PythonBackend.runPython(
+      `_finditer_string = ${JSON.stringify(string)}`
+    );
+
     const matches = await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -424,23 +478,31 @@ matches
     }
   }
 
-  async sub(repl: string | ((match: Match) => string), string: string, count: number = 1): Promise<string> {
+  async sub(
+    repl: string | ((match: Match) => string),
+    string: string,
+    count: number = 1
+  ): Promise<string> {
     const [result] = await this.subn(repl, string, count);
     return result;
   }
 
-  async subn(repl: string | ((match: Match) => string), string: string, count: number = 1): Promise<[string, number]> {
+  async subn(
+    repl: string | ((match: Match) => string),
+    string: string,
+    count: number = 1
+  ): Promise<[string, number]> {
     if (typeof repl === 'function') {
       // For function replacements, we need to handle this in TypeScript
       let result = string;
       let substitutions = 0;
-      
+
       const matches = [];
       for await (const match of this.finditer(string)) {
         matches.push(match);
         if (count > 0 && matches.length >= count) break;
       }
-      
+
       // Process matches in reverse order to maintain correct indices
       for (let i = matches.length - 1; i >= 0; i--) {
         const match = matches[i];
@@ -448,19 +510,21 @@ matches
           const replacement = repl(match);
           const start = match.start();
           const end = match.end();
-          
+
           result = result.slice(0, start) + replacement + result.slice(end);
           substitutions++;
         }
       }
-      
+
       return [result, substitutions];
     }
 
     // Set strings in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(`_subn_repl = ${JSON.stringify(repl as string)}`);
+    await PythonBackend.runPython(
+      `_subn_repl = ${JSON.stringify(repl as string)}`
+    );
     await PythonBackend.runPython(`_subn_string = ${JSON.stringify(string)}`);
-    
+
     return await PythonBackend.runPython(`
 pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
@@ -482,6 +546,9 @@ result = pattern_obj.subn(_subn_repl, _subn_string, ${count})
 /**
  * Compile a pattern using Python regex
  */
-export async function compile(pattern: string, flags: string = ''): Promise<PythonPattern> {
+export async function compile(
+  pattern: string,
+  flags: string = ''
+): Promise<PythonPattern> {
   return await PythonBackend.compile(pattern, flags);
 }

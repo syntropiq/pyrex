@@ -10,16 +10,17 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
+    "build": "bun run lint:fix && bun run format && vite build",
+    "build:clean": "vite build",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "format": "prettier --write src/**/*.{ts,tsx}",
-    "format:check": "prettier --check src/**/*.{ts,tsx}",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
     "dev": "vite",
     "preview": "vite preview",
-    "prepublishOnly": "bun run lint && bun run test:run && bun run build"
+    "prepublishOnly": "bun run lint && bun run test && bun run build:clean"
   },
   "keywords": [
     "regex",

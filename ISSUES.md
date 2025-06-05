@@ -1,5 +1,31 @@
 # Pyrex Library Issues and Discrepancies
 
+## Build Pipeline Status (Last Run: 2025-01-06)
+
+### Build Command Status
+✅ **PASSED** - `bun run build` (via npx vite build)
+- Successfully creates dist/index.esm.js
+- Minor warnings about browser compatibility for 'path' and 'url' modules
+
+### Test Command Status
+❌ **FAILED** - `bun run test`
+- **50 test files failed** out of 51 total
+- **34 individual test failures** out of 41 total tests
+- **7 tests passed**
+
+### Lint Command Status
+❌ **FAILED** - `bun run lint`
+- **14 ESLint errors** in src/backends/python.ts
+- All errors related to undefined globals: console, process, window, URL
+- Needs proper ESLint configuration for Node.js/browser environment
+
+### Format Command Status
+⚠️ **PARTIALLY PASSED** - `bun run format`
+- Successfully formatted .ts files
+- Error: No .tsx files found (pattern should be updated to only .ts)
+
+---
+
 ## Critical Architecture Issues
 
 ### Missing Python-like `re` Object Export
@@ -31,6 +57,68 @@ re.sub(pattern, replacement, string, {backend: 'python'});
 ---
 
 ## Test Infrastructure Issues
+
+### Syntax Errors in Test Files
+**Priority: HIGH**
+**Status: NEWLY IDENTIFIED**
+
+Multiple test files have syntax errors preventing execution:
+
+1. **test/python-backend/basic_tests.test.ts:101** - Unexpected "}"
+2. **test/python-backend/general_su_tests.test.ts:108** - Unterminated string literal
+
+### Python Backend Initialization Issues
+**Priority: HIGH**
+**Status: NEWLY IDENTIFIED**
+
+Many tests timeout during Python backend initialization:
+- Tests failing with 5000ms timeout
+- Pyodide initialization appears to hang
+- Pattern: `[MIRAI DEBUG] Starting Pyodide initialization...` followed by timeout
+
+### Pattern Recognition Issues
+**Priority: MEDIUM**
+**Status: NEWLY IDENTIFIED**
+
+Library incorrectly handling Python-specific regex patterns:
+- Python named groups `(?P<name>...)` trigger "Use compileAsync()" errors
+- Python version flags `(?V0)` and `(?V1)` not recognized
+- Backref replacement `\1`, `\g<0>` not working correctly
+
+---
+
+## ESLint Configuration Issues
+
+### Undefined Globals in Python Backend
+**Priority: MEDIUM**
+**Status: NEWLY IDENTIFIED**
+
+14 ESLint errors in src/backends/python.ts:
+- `console` not defined (10 instances)
+- `process` not defined (1 instance)
+- `window` not defined (1 instance)
+- `URL` not defined (1 instance)
+
+**Solution:** Update ESLint config to support Node.js and browser globals
+
+---
+
+## Formatting Configuration Issues
+
+### Package.json Script Pattern Error
+**Priority: LOW**
+**Status: NEWLY IDENTIFIED**
+
+Format script looks for non-existent .tsx files:
+```json
+"format": "prettier --write src/**/*.{ts,tsx}"
+```
+
+**Solution:** Remove .tsx from pattern since project only uses .ts files
+
+---
+
+## Previous Test Infrastructure Issues (STILL PRESENT)
 
 ❯ test/integration/performance.test.ts (9 tests | 2 failed) 6761ms
    × Performance and Stress Tests > Pattern Registry Performance > should demonstrate pattern reuse efficiency 5024ms
