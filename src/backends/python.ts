@@ -32,10 +32,31 @@ export class PythonBackend {
       await micropip.install('regex')
     `);
 
-    // Set up the Python environment
+    // Set up the Python environment with pattern registry
     await this.pyodide.runPython(`
       import regex as re
       import json
+      import uuid
+      
+      # Pattern registry to store compiled patterns
+      _pattern_registry = {}
+      
+      def register_pattern(pattern_obj):
+          """Register a compiled pattern and return its handle"""
+          handle = str(uuid.uuid4())
+          _pattern_registry[handle] = pattern_obj
+          return handle
+      
+      def get_pattern(handle):
+          """Retrieve a pattern by its handle"""
+          return _pattern_registry.get(handle)
+      
+      def unregister_pattern(handle):
+          """Remove a pattern from the registry"""
+          if handle in _pattern_registry:
+              del _pattern_registry[handle]
+              return True
+          return False
       
       def create_match_data(match_obj, pattern_obj, string, pos=0, endpos=None):
           if match_obj is None:
@@ -80,7 +101,7 @@ export class PythonBackend {
   static async compile(pattern: string, flags: string = ''): Promise<PythonPattern> {
     await this.initialize();
     
-    const patternData = await this.runPython(`
+    const result = await this.runPython(`
       import regex as re
       
       flag_map = {
@@ -100,10 +121,21 @@ export class PythonBackend {
               flag_value |= flag_map[flag]
       
       pattern_obj = re.compile("${pattern.replace(/"/g, '\\"')}", flag_value)
-      create_pattern_data(pattern_obj)
+      handle = register_pattern(pattern_obj)
+      pattern_data = create_pattern_data(pattern_obj)
+      
+      {
+          'handle': handle,
+          'pattern_data': pattern_data
+      }
     `);
 
-    return new PythonPattern(pattern, flags, patternData);
+    return new PythonPattern(pattern, flags, result.pattern_data, result.handle);
+  }
+
+  static async cleanup(handle: string): Promise<boolean> {
+    await this.initialize();
+    return await this.runPython(`unregister_pattern("${handle}")`);
   }
 }
 
@@ -193,21 +225,24 @@ export class PythonPattern implements AsyncPattern {
   public readonly groupindex: Record<string, number>;
 
   private _pythonFlags: string;
+  private _handle: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(pattern: string, flags: string, data: any) {
+  constructor(pattern: string, flags: string, data: any, handle: string) {
     this.pattern = pattern;
     this._pythonFlags = flags;
     this.flags = data.flags;
     this.groups = data.groups;
     this.groupindex = data.groupindex;
+    this._handle = handle;
   }
 
   async search(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
     const matchData = await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       match_obj = pattern_obj.search("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
       create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
     `);
@@ -217,9 +252,10 @@ export class PythonPattern implements AsyncPattern {
 
   async match(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
     const matchData = await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       match_obj = pattern_obj.match("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
       create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
     `);
@@ -229,9 +265,10 @@ export class PythonPattern implements AsyncPattern {
 
   async fullmatch(string: string, pos: number = 0, endpos?: number): Promise<Match | null> {
     const matchData = await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       match_obj = pattern_obj.fullmatch("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
       create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
     `);
@@ -241,27 +278,30 @@ export class PythonPattern implements AsyncPattern {
 
   async split(string: string, maxsplit: number = 0): Promise<string[]> {
     return await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       pattern_obj.split("${string.replace(/"/g, '\\"')}", ${maxsplit})
     `);
   }
 
   async findall(string: string, pos: number = 0, endpos?: number): Promise<string[]> {
     return await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       pattern_obj.findall("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length})
     `);
   }
 
   async *finditer(string: string, pos: number = 0, endpos?: number): AsyncIterableIterator<Match> {
     const matches = await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       matches = []
       for match_obj in pattern_obj.finditer("${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length}):
           matches.append(create_match_data(match_obj, pattern_obj, "${string.replace(/"/g, '\\"')}", ${pos}, ${endpos || string.length}))
@@ -307,12 +347,20 @@ export class PythonPattern implements AsyncPattern {
     }
 
     return await PythonBackend.runPython(`
-      import regex as re
+      pattern_obj = get_pattern("${this._handle}")
+      if pattern_obj is None:
+          raise ValueError("Pattern handle not found in registry")
       
-      pattern_obj = re.compile("${this.pattern.replace(/"/g, '\\"')}", ${this.flags})
       result = pattern_obj.subn("${(repl as string).replace(/"/g, '\\"')}", "${string.replace(/"/g, '\\"')}", ${count})
       [result[0], result[1]]
     `);
+  }
+
+  /**
+   * Clean up the pattern from the registry
+   */
+  async cleanup(): Promise<boolean> {
+    return await PythonBackend.cleanup(this._handle);
   }
 }
 

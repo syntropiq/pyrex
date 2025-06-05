@@ -1,31 +1,22 @@
 # TODO
 
-## Project Setup
-- [x] Initialize project with Bun
-- [x] Set up Vite for build, testing, and bundling
-- [x] Configure TypeScript for strict mode and evergreen browsers
-- [x] Add ESLint and Prettier
-
-## Phase 1: Pythonic Regex Interface
-- [x] Design TypeScript API mirroring Python's `re` module
-- [x] Implement type definitions and documentation
-- [x] Export as `re`
-
-## Phase 2: Implementation
-- [x] Implement pattern analysis logic
-- [x] Integrate Pyodide for Python-only regex features
-- [x] Integrate JS RegExp and core-js polyfill for JS-compatible patterns
-- [x] Expose unified API
+## Python Backend Pattern Registry (Immediate Objective)
+- [ ] Implement Python-side pattern registry and handle logic.
+- [ ] Refactor TypeScript backend to use pattern handles.
+- [ ] Update FFI/glue code for handle-based operations.
 
 ## Testing
-- [x] Write unit tests for all API methods
-- [x] Test Python-only and JS-compatible patterns
+- [ ] Update and expand tests for handle-based backend in [`test/basic.test.ts`](test/basic.test.ts:1).
+- [ ] Ensure no repeated compilation and proper pattern reuse.
+- [ ] Add regression and error handling tests.
 
 ## Documentation
-- [x] Write `PLAN.md`
-- [x] Write `README.md`
-- [ ] Write usage examples
-- [x] Write `TODO.md`
+- [x] Rewrite [`PLAN.md`](PLAN.md:1) for new architecture.
+- [ ] Update [`README.md`](README.md:1) to describe backend registry.
+- [ ] Track progress and update TODOs as tasks are completed.
 
-## Project Management
-- [ ] Track progress and update TODOs as tasks are completed
+## Future Improvements (Outline)
+- [ ] Refactor backend selection logic for extensibility.
+- [ ] Enhance async/sync API consistency.
+- [ ] Explore caching/pooling for JS backend.
+- [ ] Improve error messages and developer tooling.

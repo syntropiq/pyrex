@@ -1,70 +1,53 @@
 # Project Plan: Pythonic Regex API in TypeScript
 
-## Overview
+## 1. Immediate Objective: Python Backend Pattern Registry
 
-This project provides a Python-like regex interface in TypeScript, exposing an API similar to Python's `re` module. It targets evergreen browsers and is built with Bun, Vite, ESLint, and Prettier for modern, zero-debt development.
+### Problem
+Python regex patterns are recompiled on every operation, causing inefficiency and potential bugs.
 
----
-
-## 1. Project Initialization
-
-- Use Bun for package management and scripts.
-- Set up Vite for build, testing, and bundling.
-- Configure TypeScript for strict mode and latest ECMAScript targeting evergreen browsers.
-- Add ESLint and Prettier for code quality and formatting.
-
----
-
-## 2. Phase 1: Pythonic Regex Interface
-
-- Design a TypeScript API that mirrors Python’s `re` module:
-  - `re.match`
-  - `re.search`
-  - `re.compile`
-  - `re.sub`
-  - `re.split`
-  - `re.findall`
-  - `re.fullmatch`
-  - `re.escape`
-- Provide type definitions and documentation.
-- Export as `re` for ergonomic imports.
+### Solution
+- Implement a Python-side registry (dict) to store compiled patterns, keyed by handle (UUID/int).
+- On `compile`, store the pattern and return a handle to TypeScript.
+- All subsequent operations (`search`, `match`, etc.) use the handle to retrieve the compiled pattern.
+- Update TypeScript classes to store and use the handle.
+- Update FFI/glue code for handle-based operations.
 
 ---
 
-## 3. Phase 2: Implementation
+## 2. Testing
 
-- **Regex Dispatch Logic:**
-  - Analyze the regex pattern and flags.
-  - If Python-only features are detected:
-    - Use Pyodide to run Python’s `regex` package.
-  - Otherwise:
-    - Translate to the latest JS regex spec.
-    - Use core-js polyfill for advanced features.
-- Expose a seamless API regardless of backend.
+- Update and expand tests in [`test/basic.test.ts`](test/basic.test.ts:1) to cover:
+  - Pattern reuse via handle.
+  - No repeated compilation.
+  - Regression and error handling.
 
 ---
 
-## 4. Testing
+## 3. Documentation
 
-- Write comprehensive unit tests for all API methods using Vite’s test runner.
-- Include tests for both Python-only and JS-compatible regex patterns.
-
----
-
-## 5. Documentation & Project Management
-
-- `PLAN.md`: This architecture and implementation plan.
-- `README.md`: Usage, installation, and contribution guidelines.
-- `TODO.md`: Task breakdown and progress tracking.
+- Update [`README.md`](README.md:1) to describe the new backend design.
+- Update [`SUMMARY.md`](SUMMARY.md:1) and [`TODO.md`](TODO.md:1) to reflect new tasks and progress.
 
 ---
 
-## Mermaid Diagram: High-Level Architecture
+## 4. Future Improvements (Outline)
+
+- **Backend Abstraction:**  
+  Refactor backend selection logic for extensibility (e.g., support for additional regex engines).
+- **API Ergonomics:**  
+  Enhance async/sync API consistency.
+- **Performance:**  
+  Explore caching and pooling for JS backend.
+- **DX:**  
+  Improve error messages and developer tooling.
+
+---
+
+## Mermaid Diagram
 
 ```mermaid
 flowchart TD
-    A[User Code (TypeScript)] -->|import re| B[re API (TS Interface)]
-    B --> C{Pattern Analysis}
-    C -- Python-only features --> D[Pyodide + regex]
-    C -- JS-compatible --> E[JS RegExp + core-js polyfill]
-    D & E --> F[Unified Result]
+    A[TypeScript: PythonPattern] -- compile(pattern) --> B[Python: Registry]
+    B -- handle --> A
+    A -- search/match/etc(handle) --> B
+    B -- result --> A

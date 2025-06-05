@@ -5,8 +5,8 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       name: 'PythonRegex',
-      formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`,
+      formats: ['es'],
+      fileName: () => 'index.esm.js',
     },
     rollupOptions: {
       external: ['pyodide', 'core-js'],
