@@ -1,187 +1,137 @@
-# TODO
+# TODO: Test Suite Restructuring - Actionable Tasks
 
-## 🚨 CRITICAL BUG FIXES (PRIORITY 1 - BLOCKING ISSUES)
+This document outlines the specific, actionable tasks for implementing the new comprehensive test suite restructuring, as detailed in `PLAN.md`.
 
-**URGENT:** The following critical issues are blocking proper functionality and must be resolved immediately:
+## Phase 1: Analysis and Extraction of `test-regex.py`
 
-### 1. Timeout Issues - Test Suite Stability
-- [ ] **Fix infinite loops in async pattern compilation** - [`src/backends/python.ts`](src/backends/python.ts:1)
-  - [ ] Investigate timeout failures in multiple test files (5000ms limit exceeded)
-  - [ ] Add timeout guards and circuit breakers in [`PyodideBackend.compile()`](src/backends/python.ts:1)
-  - [ ] Implement proper async cancellation for long-running operations
-  - [ ] Add progress monitoring for pattern compilation operations
+*   [ ] **Task 1.1: Identify and Categorize Python Test Methods**
+    *   [ ] Go through `test-regex.py` and list all `test_` methods within the `RegexTests` class.
+    *   [ ] Group these methods into logical categories (e.g., basic operations, flags, groups, lookarounds, fuzzy matching, recursive patterns, error handling, performance).
+    *   **Deliverable**: Internal list/spreadsheet of categorized Python test methods.
 
-### 2. Substitution Logic Bug - Pattern Replacement
-- [ ] **Fix "REPLACED REPLACED" substitution bug** - [`src/backends/python.ts`](src/backends/python.ts:1)
-  - [ ] Debug pattern replacement returning duplicate "REPLACED" text instead of "REPLACED test"
-  - [ ] Review substitution logic in [`PyodideBackend.replace()`](src/backends/python.ts:1)
-  - [ ] Verify replacement string handling and escaping
-  - [ ] Add unit tests for various substitution scenarios
+*   [ ] **Task 1.2: Map Python Assertions to TypeScript Equivalents**
+    *   [ ] Document the conversion rules for common `unittest.TestCase` assertions (e.g., `self.assertEqual`, `self.assertRaisesRegex`, `self.assertTrue`, `self.assertFalse`, `self.assertIsNone`, `self.assertIsNotNone`) to Vitest/Jest assertions (`expect().toBe()`, `expect().toThrow()`, `expect().toBeNull()`, `expect().not.toBeNull()`).
+    *   [ ] Note any differences in behavior or additional considerations for TypeScript.
+    *   **Deliverable**: Markdown document or internal guide for assertion mapping.
 
-### 3. Pattern Analysis Backend Detection
-- [ ] **Fix incorrect backend routing** - [`src/utils/pattern-analyzer.ts`](src/utils/pattern-analyzer.ts:1)
-  - [ ] Correct Python-only patterns being incorrectly identified as JavaScript backend
-  - [ ] Review [`analyzePattern()`](src/utils/pattern-analyzer.ts:1) detection logic
-  - [ ] Update pattern feature detection for Python named groups
-  - [ ] Add comprehensive backend detection test cases
+*   [ ] **Task 1.3: Develop and Implement Test Case Extraction Strategy**
+    *   [ ] Design a strategy for extracting patterns, input strings, expected outputs, and flags from `test-regex.py` test methods.
+    *   [ ] Prioritize direct 1:1 conversion of test cases where feasible.
+    *   [ ] For complex or Python-specific constructs, define how to create functionally equivalent TypeScript tests.
+    *   [ ] **Action**: Create or enhance `tools/extract-regex-tests.py` to automate the extraction of test data into a structured format (e.g., JSON files, one per category).
+    *   **Deliverable**: `tools/extract-regex-tests.py` script and initial set of extracted JSON test data files.
 
-### 4. Test Logic Errors - Incorrect Expectations
-- [ ] **Fix test assertions and expectations** - [`test/unit/`](test/unit/)
-  - [ ] Review tests expecting no matches when matches should be found
-  - [ ] Audit test expectations in [`test/unit/python-operations.test.ts`](test/unit/python-operations.test.ts:1)
-  - [ ] Verify test data and expected results alignment
-  - [ ] Add debug logging for test failure analysis
+## Phase 2: Defining the New TypeScript Test Structure
 
-### 5. Python Code Generation Issues
-- [ ] **Fix IndentationError in generated Python code** - [`src/backends/python.ts`](src/backends/python.ts:1)
-  - [ ] Debug unexpected indentation in generated Python regex code
-  - [ ] Review Python code template generation
-  - [ ] Add proper indentation handling and validation
-  - [ ] Test Python code generation with various pattern types
+*   [ ] **Task 2.1: Propose and Implement New Test Directory Structure**
+    *   [ ] Create the following new directories under `test/`:
+        *   `test/python-backend/` (for tests specifically targeting the Python backend)
+        *   `test/javascript-backend/` (for tests specifically targeting the JavaScript backend)
+        *   `test/shared-features/` (for tests of features common to both backends, like `pattern-analyzer` or `error-handling`)
+        *   `test/performance/` (for performance benchmarks)
+        *   `test/utils/` (for shared test infrastructure, already exists but ensure it's aligned)
+    *   **Deliverable**: New empty test directories created.
 
-### 6. Module Import Issues - Test Infrastructure
-- [ ] **Fix incorrect import paths** - [`test/utils/test-helpers.ts`](test/utils/test-helpers.ts:1)
-  - [ ] Correct import of '../../src/backends/python.js' (should be .ts or compiled output)
-  - [ ] Update all test helper import paths to use correct extensions
-  - [ ] Verify module resolution in test environment
-  - [ ] Add import path validation in build process
+*   [ ] **Task 2.2: Define and Apply Naming Conventions**
+    *   [ ] Establish clear naming conventions for test files (e.g., `basic.test.ts`, `flags.test.ts`, `lookarounds.test.ts`).
+    *   [ ] Ensure consistency across all new test files.
+    *   **Deliverable**: Documented naming conventions.
 
-### 7. Registry Performance Issues
-- [ ] **Optimize pattern registry overhead** - [`src/backends/python.ts`](src/backends/python.ts:1)
-  - [ ] Profile and optimize registry performance bottlenecks
-  - [ ] Implement pattern handle caching strategies
-  - [ ] Add registry operation monitoring and metrics
-  - [ ] Consider lazy loading for registry operations
+*   [ ] **Task 2.3: Create Initial Skeleton Test Files**
+    *   [ ] Based on the categorized test methods from Phase 1, create empty TypeScript test files (e.g., `test/python-backend/basic.test.ts`, `test/javascript-backend/flags.test.ts`) as placeholders.
+    *   **Deliverable**: Skeleton TypeScript test files.
 
----
+## Phase 3: Implementing Test Utilities and Helpers
 
-## 🔧 IMMEDIATE ACTION ITEMS (PRIORITY 2)
+*   [ ] **Task 3.1: Develop Python Test Runner Utility (`test/utils/python-test-runner.ts`)**
+    *   [ ] Create a TypeScript utility to interact with the Pyodide environment.
+    *   [ ] Implement functions within this utility to:
+        *   Compile Python regex patterns.
+        *   Execute `match`, `search`, `findall`, `sub`, `split` operations.
+        *   Return results in a format easily consumable by TypeScript assertions.
+        *   Handle pattern registration and deregistration within Pyodide.
+    *   **Deliverable**: `test/utils/python-test-runner.ts` with core functionality.
 
-### Testing & Validation
-- [ ] **Run comprehensive test suite after each fix**
-  - [ ] Execute [`npm test`](package.json:1) after each critical fix
-  - [ ] Monitor test execution times for timeout improvements
-  - [ ] Validate backend detection accuracy
-  - [ ] Verify substitution logic correctness
+*   [ ] **Task 3.2: Implement JavaScript Test Helpers (`test/utils/js-test-helpers.ts`)**
+    *   [ ] Create or adapt existing helpers to provide consistent assertion patterns for JavaScript backend tests.
+    *   **Deliverable**: `test/utils/js-test-helpers.ts` with common assertion utilities.
 
-### Code Quality & Monitoring
-- [ ] **Add debugging and monitoring capabilities**
-  - [ ] Implement detailed logging for pattern compilation
-  - [ ] Add performance metrics collection
-  - [ ] Create error tracking for async operations
-  - [ ] Add pattern registry health checks
+*   [ ] **Task 3.3: Create Test Data Loader (`test/utils/test-data-loader.ts`)**
+    *   [ ] Develop a utility to read and parse the JSON test data files generated in Phase 1.
+    *   [ ] Provide functions to load specific test categories or all test data.
+    *   **Deliverable**: `test/utils/test-data-loader.ts`.
 
----
+*   [ ] **Task 3.4: Integrate Utilities with Vitest**
+    *   [ ] Ensure all new test utilities are correctly imported and usable within the Vitest test environment.
+    *   [ ] Verify that tests can be run using `npm test` (or equivalent Vitest command).
+    *   **Deliverable**: Functional integration of new utilities with the test runner.
 
-## ✅ PHASE 1 COMPLETED - Fix Pyodide Initialization
+## Phase 4: Populating the New Test Suite
 
-**Phase 1 has been successfully completed with excellent results:**
-- ✅ Pyodide initializes successfully without asset loading errors
-- ✅ Python-style named groups correctly routed to Python backend
-- ✅ No more "Invalid regular expression" or module resolution errors
-- ✅ Environment-aware initialization (Node.js vs Browser)
-- ✅ CDN fallback mechanism for robust initialization
-- ✅ All core Python regex functionality working perfectly
+*   [ ] **Task 4.1: Convert Basic Regex Tests**
+    *   [ ] Write TypeScript tests for basic regex operations (e.g., `*`, `+`, `?`, `.`, `^`, `$`) for both Python and JavaScript backends, using extracted data and new utilities.
+    *   **Deliverable**: Populated `test/python-backend/basic.test.ts` and `test/javascript-backend/basic.test.ts`.
 
-### Pyodide Backend Fixes
-- [x] Implement proper indexURL configuration in [`src/backends/python.ts`](src/backends/python.ts:1)
-- [x] Fix pattern routing logic for Python-style named groups
-- [x] Ensure test environment compatibility
-- [x] Verify pyodide initialization works correctly
-- [x] Add environment detection and fallback mechanisms
+*   [ ] **Task 4.2: Implement Tests for Flags and Special Characters**
+    *   [ ] Convert tests related to regex flags (`I`, `M`, `X`, `S`, `L`, `U`, `A`) and character escapes (`\n`, `\t`, `\x`, `\u`, `\N{}`).
+    *   **Deliverable**: Populated `test/python-backend/flags.test.ts`, `test/javascript-backend/flags.test.ts`, etc.
 
----
+*   [ ] **Task 4.3: Handle Grouping and Backreferences**
+    *   [ ] Convert tests for capturing groups, named groups (`(?P<name>...)`), and backreferences (`\1`, `\g<name>`).
+    *   **Deliverable**: Populated `test/python-backend/groups.test.ts`, `test/javascript-backend/groups.test.ts`, etc.
 
-## ✅ PHASE 2 COMPLETED - Python Backend Pattern Registry
+*   [ ] **Task 4.4: Address Lookarounds and Conditionals**
+    *   [ ] Implement tests for positive/negative lookahead (`(?=...)`, `(?!...)`) and lookbehind (`(?<=...)`, `(?<!...)`), and conditional patterns (`(?(id)yes|no)`).
+    *   **Deliverable**: Populated `test/python-backend/lookarounds.test.ts`, `test/shared-features/conditionals.test.ts`, etc.
 
-**Phase 2 has been successfully completed with excellent results:**
-- ✅ UUID-based handle system implemented
-- ✅ Python-side pattern registry with full CRUD operations
-- ✅ Handle-based operations for all regex methods
-- ✅ Automatic pattern cleanup and memory management
-- ✅ Performance optimizations through pattern reuse
+*   [ ] **Task 4.5: Tackle Fuzzy Matching and Recursive Patterns**
+    *   [ ] Convert complex fuzzy matching tests (`{e<=N}`, `{i<=N}`, `{d<=N}`, `{s<=N}`) and recursive pattern tests (`(?R)`, `(?&name)`).
+    *   **Deliverable**: Populated `test/python-backend/fuzzy.test.ts`, `test/python-backend/recursive.test.ts`.
 
-### Backend Architecture
-- [x] Implement Python-side pattern registry and handle logic
-- [x] Refactor TypeScript backend to use pattern handles
-- [x] Update FFI/glue code for handle-based operations
-- [x] Add pattern cleanup and deregistration functionality
-- [x] Implement error handling for invalid handles
+*   [ ] **Task 4.6: Ensure Exact Parity/Functional Equivalence**
+    *   [ ] During conversion, meticulously compare results between Python and TypeScript tests.
+    *   [ ] Document any identified behavioral differences in a dedicated section (e.g., `docs/backend-differences.md`).
+    *   **Deliverable**: Comprehensive, passing TypeScript test suite with documented behavioral differences.
 
----
+## Phase 5: Performance and Regression Testing Setup
 
-## ✅ PHASE 3 COMPLETED - Comprehensive Test Suite Refactoring
+*   [ ] **Task 5.1: Migrate Performance Tests**
+    *   [ ] Adapt relevant performance-focused tests from `test-regex.py` (e.g., tests involving large strings, many repetitions, or complex backtracking) to TypeScript.
+    *   [ ] Place these in `test/performance/performance.test.ts`.
+    *   **Deliverable**: `test/performance/performance.test.ts` with initial performance tests.
 
-**Phase 3 has been successfully completed with significant improvements:**
-- ✅ Refactored monolithic test file into organized test suite
-- ✅ 125+ comprehensive tests across multiple categories
-- ✅ Shared test utilities and helpers
-- ✅ Performance benchmarks and stress testing
-- ✅ Comprehensive error handling scenarios
+*   [ ] **Task 5.2: Establish Performance Baselines**
+    *   [ ] Run the new performance tests and record baseline execution times for both backends.
+    *   [ ] Store these baselines (e.g., in a JSON file or a simple text file).
+    *   **Deliverable**: Initial performance benchmark results.
 
-### Test Suite Architecture
-- [x] Create unit tests for individual components ([`test/unit/`](test/unit/))
-- [x] Create integration tests for cross-component behavior ([`test/integration/`](test/integration/))
-- [x] Implement shared test utilities ([`test/utils/test-helpers.ts`](test/utils/test-helpers.ts))
-- [x] Add performance and stress tests
-- [x] Implement comprehensive error handling tests
-- [x] Create TestPatternManager for automatic cleanup
+*   [ ] **Task 5.3: Implement Regression Test Automation**
+    *   [ ] Update `package.json` scripts to easily run the entire new test suite.
+    *   [ ] Ensure the test suite can be integrated into a CI/CD pipeline.
+    *   **Deliverable**: Updated `package.json` scripts.
 
-### Testing Categories Created
-- [x] JavaScript regex operations testing
-- [x] Python registry core functionality testing
-- [x] Python pattern operations testing
-- [x] Pattern analyzer testing
-- [x] Async operations and backward compatibility testing
-- [x] Performance and stress testing
-- [x] Error handling and edge case testing
+*   [ ] **Task 5.4: Define Performance Monitoring Strategy**
+    *   [ ] Outline how future performance changes will be tracked (e.g., comparing against baselines, setting thresholds).
+    *   **Deliverable**: Brief documentation on performance monitoring.
 
----
+## Phase 6: Documentation and Cleanup
 
-## PHASE 4 - API Enhancements (Next Major Focus)
+*   [ ] **Task 6.1: Update `PLAN.md`**
+    *   [ ] Ensure `PLAN.md` reflects the final approved plan. (Already completed)
+    *   **Deliverable**: Up-to-date `PLAN.md`.
 
-### Advanced Python Regex Features
-- [ ] Explore possessive quantifiers and atomic groups
-- [ ] Implement advanced replacement functions with context
-- [ ] Add pattern composition and combination utilities
-- [ ] Support additional Python regex flags and options
+*   [ ] **Task 6.2: Update `TODO.md`**
+    *   [ ] Replace the current `TODO.md` with this detailed list of actionable tasks. (This current task)
+    *   **Deliverable**: Up-to-date `TODO.md`.
 
-### Performance & Optimization
-- [ ] Implement pattern compilation caching for JavaScript backend
-- [ ] Add pattern compilation result caching across sessions
-- [ ] Optimize memory management for pattern registry
-- [ ] Create benchmark suite for performance regression detection
+*   [ ] **Task 6.3: Document New Test Architecture**
+    *   [ ] Create a new `TESTING.md` file or update `README.md` with:
+        *   An overview of the new test structure.
+        *   Instructions on how to add new test cases.
+        *   Guidance on running tests for specific backends or features.
+        *   Details on performance testing.
+    *   **Deliverable**: Comprehensive testing documentation.
 
----
-
-## PHASE 6 - Future Improvements (Long-term Vision)
-
-### Backend Extensibility
-- [ ] Abstract backend interface for pluggable regex engines
-- [ ] Support for alternative Python regex libraries (e.g., `pcre`)
-- [ ] WebAssembly backend option for better performance
-- [ ] Rust-based backend integration possibility
-
-### Developer Tooling
-- [ ] Create VS Code extension for regex pattern validation
-- [ ] Implement regex visualization and debugging tools
-- [ ] Add pattern statistics and analysis tools
-- [ ] Create interactive regex playground
-
-### Advanced Features
-- [ ] Lazy loading of Python backend for better startup times
-- [ ] Pattern migration tools between backends
-- [ ] Advanced pattern optimization suggestions
-- [ ] Real-time pattern performance monitoring
-
----
-
-## Current Status Summary
-
-**Completed Phases:** 3/3 major phases ✅
-**Test Coverage:** 125+ tests across 7 test files
-**Pattern Registry:** Fully functional with UUID handles
-**Backend Support:** Both JavaScript and Python backends working
-**Documentation:** PLAN.md updated, README.md needs update
-
-**Next Priority:** Documentation updates and API enhancements
+*   [ ] **Task 6.4: Remove Legacy Test Files**
+    *   [ ] Once the new test suite is fully implemented, validated, and passing, delete the `test/legacy/` directory and its contents.
+    *   **Deliverable**: Cleaned `test/` directory.
