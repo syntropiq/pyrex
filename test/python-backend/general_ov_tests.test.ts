@@ -6,27 +6,27 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.findall test 1', async () => {
-    // Python: import regeximport unittestclass TestGeneralOv(unittest.TestCase):def test_overlapped(self):self.assertEqual(regex.findall(r"..", "abcde"), ["a", "cd"])
+    // Python: import regeximport unittestclass TestGeneralOv(unittest.TestCase):def test_overlapped(self):self.assertEqual(regex.findall("..", "abcde"), ["a", "cd"])
     expect(await re.findall("..", "abcde")).toStrictEqual(["a", "cd"]);
   });
 
   it('regex.findall test 2', async () => {
-    // Python: self.assertEqual(regex.findall(r"..", "abcde", overlapped=True), ["a", "bc", "cd", "de"])
+    // Python: self.assertEqual(regex.findall("..", "abcde", overlapped=True), ["a", "bc", "cd", "de"])
     expect(await re.findall("..", "abcde")).toStrictEqual(["a", "bc", "cd", "de"]);
   });
 
   it('regex.findall test 3', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)..", "abcde"), ["de", "bc"])
+    // Python: self.assertEqual(regex.findall("(?r)..", "abcde"), ["de", "bc"])
     expect(await re.findall("(?r)..", "abcde")).toStrictEqual(["de", "bc"]);
   });
 
   it('regex.findall test 4', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)..", "abcde", overlapped=True), ["de", "cd", "bc", "a"])
+    // Python: self.assertEqual(regex.findall("(?r)..", "abcde", overlapped=True), ["de", "cd", "bc", "a"])
     expect(await re.findall("(?r)..", "abcde")).toStrictEqual(["de", "cd", "bc", "a"]);
   });
 
   it('regex.findall test 5', async () => {
-    // Python: self.assertEqual(regex.findall(r"(.)(-)(.)", "a-b-c", overlapped=True),[("a", "-", ""), ("", "-", "c")],)
+    // Python: self.assertEqual(regex.findall("(.)(-)(.)", "a-b-c", overlapped=True),[("a", "-", ""), ("", "-", "c")],)
     expect(await re.findall("(.)(-)(.)", "a-b-c")).toStrictEqual([("a", "-", "");
   });
 });

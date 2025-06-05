@@ -7,7 +7,7 @@ import * as re from '../../src/index';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.match test 1', async () => {
-    // Python: self.assertEqual(regex.match(r"(\w+) (\w+)", "foo bar").expandf("{0} => {2} {1}"),"foo bar => bar foo",)
-    expect(await re.match("(\\w+) (\\w+)", "foo bar")?.expandf("{0} => {2} {1}")).toStrictEqual("foo bar => bar foo",);
+    // Python: self.assertEqual(regex.match("(\w+) (\w+)", "foo ba").expandf("{0} => {2} {1}"),"foo bar => bar foo",)
+    expect(await re.match("(\\w+) (\\w+)", "foo ba")?.expandf("{0} => {2} {1}")).toStrictEqual("foo bar => bar foo",);
   });
 });

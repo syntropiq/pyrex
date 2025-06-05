@@ -6,12 +6,12 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.match test 1', async () => {
-    // Python: # Issue 3511.self.assertEqual(regex.match(r"[Z-a]", "_").span(), (0, 1))
+    // Python: # Issue 3511.self.assertEqual(regex.match("[Z-a]", "_").span(), (0, 1))
     expect(await re.match("[Z-a]", "_")?.span()).toStrictEqual((0, 1);
   });
 
   it('regex.match test 2', async () => {
-    // Python: self.assertEqual(regex.match(r"(?i)[Z-a]", "_").span(), (0, 1))
+    // Python: self.assertEqual(regex.match("(?i)[Z-a]", "_").span(), (0, 1))
     expect(await re.match("(?i)[Z-a]", "_")?.span()).toStrictEqual((0, 1);
   });
 });

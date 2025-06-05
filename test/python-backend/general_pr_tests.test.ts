@@ -51,57 +51,57 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 10', async () => {
-    // Python: self.assertEqual(regex.match(r"\d", "?"), null)
+    // Python: self.assertEqual(regex.match("\d", "?"), null)
     expect(await re.match("\\d", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 11', async () => {
-    // Python: self.assertEqual(regex.match(r"\s", "?"), null)
+    // Python: self.assertEqual(regex.match("\s", "?"), null)
     expect(await re.match("\\s", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 12', async () => {
-    // Python: self.assertEqual(regex.match(r"\w", "?"), null)
+    // Python: self.assertEqual(regex.match("\w", "?"), null)
     expect(await re.match("\\w", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 13', async () => {
-    // Python: self.assertEqual(regex.match(r"\D", "0"), null)
+    // Python: self.assertEqual(regex.match("\D", "0"), null)
     expect(await re.match("\\D", "0")).toStrictEqual(null);
   });
 
   it('regex.match test 14', async () => {
-    // Python: self.assertEqual(regex.match(r"\S", " "), null)
+    // Python: self.assertEqual(regex.match("\S", " "), null)
     expect(await re.match("\\S", " ")).toStrictEqual(null);
   });
 
   it('regex.match test 15', async () => {
-    // Python: self.assertEqual(regex.match(r"\W", "A"), null)
+    // Python: self.assertEqual(regex.match("\W", "A"), null)
     expect(await re.match("\\W", "A")).toStrictEqual(null);
   });
 
   it('regex.match test 16', async () => {
-    // Python: self.assertEqual(regex.match(r"\X", "\xE0").span(), (0, 1))
+    // Python: self.assertEqual(regex.match("\X", "\xE0").span(), (0, 1))
     expect(await re.match("\\X", "\\xE0")?.span()).toStrictEqual((0, 1);
   });
 
   it('regex.match test 17', async () => {
-    // Python: self.assertEqual(regex.match(r"\X", "a\u0300").span(), (0, 2))
+    // Python: self.assertEqual(regex.match("\X", "a\u0300").span(), (0, 2))
     expect(await re.match("\\X", "a\\u0300")?.span()).toStrictEqual((0, 2);
   });
 
   it('regex.findall test 18', async () => {
-    // Python: self.assertEqual(regex.findall(r"\X","a\xE0a\u0300e\xE9e\u0301"), ['a', '\xe0', 'a\u0300', 'e','\xe9', 'e\u0301'])
+    // Python: self.assertEqual(regex.findall("\X","a\xE0a\u0300e\xE9e\u0301"), ['a', '\xe0', 'a\u0300', 'e','\xe9', 'e\u0301'])
     expect(await re.findall("\\X", "a\\xE0a\\u0300e\\xE9e\\u0301")).toStrictEqual(['a', '\xe0', 'a\u0300', 'e','\xe9', 'e\u0301']);
   });
 
   it('regex.findall test 19', async () => {
-    // Python: self.assertEqual(regex.findall(r"\X{3}","a\xE0a\u0300e\xE9e\u0301"), ['a\xe0a\u0300', 'e\xe9e\u0301'])
+    // Python: self.assertEqual(regex.findall("\X{3}","a\xE0a\u0300e\xE9e\u0301"), ['a\xe0a\u0300', 'e\xe9e\u0301'])
     expect(await re.findall("\\X{3}", "a\\xE0a\\u0300e\\xE9e\\u0301")).toStrictEqual(['a\xe0a\u0300', 'e\xe9e\u0301']);
   });
 
   it('regex.findall test 20', async () => {
-    // Python: self.assertEqual(regex.findall(r"\X", "\r\r\n\u0301A\u0301"),['\r', '\r\n', '\u0301', 'A\u0301'])
-    expect(await re.findall("\\X", "\\r\\r\\n\\u0301A\\u0301")).toStrictEqual(['\r', '\r\n', '\u0301', 'A\u0301']);
+    // Python: self.assertEqual(regex.findall("\X", "\1\1\1\u0301A\u0301"),['\1', '\1\1', '\u0301', 'A\u0301'])
+    expect(await re.findall("\\X", "\\1\\1\\1\\u0301A\\u0301")).toStrictEqual(['\1', '\1\1', '\u0301', 'A\u0301']);
   });
 });

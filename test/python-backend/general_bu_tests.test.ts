@@ -7,32 +7,32 @@ import * as re from '../../src/index';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 1', async () => {
-    // Python: import regeximport unittestimport sysclass TestGeneralBu(unittest.TestCase):FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"PATTERN_CLASS = "<class '_regex.Pattern'>"BAD_SET = "unterminated character set"# test_bug_449964def test_bug_449964(self):# Fails for group followed by other escape.self.assertEqual(regex.sub(r"(?P<unk>x)", r"\g<1>\g<1>\", "xx"), "xx\x08xx\")
+    // Python: import regeximport unittestimport sysclass TestGeneralBu(unittest.TestCase):FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"PATTERN_CLASS = "<class '_regex.Pattern'>"BAD_SET = "unterminated character set"# test_bug_449964def test_bug_449964(self):# Fails for group followed by other escape.self.assertEqual(regex.sub("(?P<unk>x)", "\g<1>\g<1>\", "xx"), "xx\x08xx\")
     expect(await re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\", "xx")).toBe("xx\x08xx\");
   });
 
   it('regex.sub test 2', async () => {
-    // Python: # test_bug_449000def test_bug_449000(self):# Test for sub() on escaped characters.self.assertEqual(regex.sub(r"\r\n", r"\n", "abc\r\ndef\r\n"), "abc\ndef\n")
-    expect(await re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
+    // Python: # test_bug_449000def test_bug_449000(self):# Test for sub() on escaped characters.self.assertEqual(regex.sub("\1\1", "\1", "abc\1\1def\1\1"), "abc\1def\1")
+    expect(await re.sub("\\1\\1", "\\1", "abc\\1\\1def\\1\\1")).toBe("abc\1def\1");
   });
 
   it('regex.sub test 3', async () => {
-    // Python: self.assertEqual(regex.sub("\r\n", r"\n", "abc\r\ndef\r\n"), "abc\ndef\n")
-    expect(await re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
+    // Python: self.assertEqual(regex.sub("\1\1", "\1", "abc\1\1def\1\1"), "abc\1def\1")
+    expect(await re.sub("\\1\\1", "\\1", "abc\\1\\1def\\1\\1")).toBe("abc\1def\1");
   });
 
   it('regex.sub test 4', async () => {
-    // Python: self.assertEqual(regex.sub(r"\r\n", "\n", "abc\r\ndef\r\n"), "abc\ndef\n")
-    expect(await re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
+    // Python: self.assertEqual(regex.sub("\1\1", "\1", "abc\1\1def\1\1"), "abc\1def\1")
+    expect(await re.sub("\\1\\1", "\\1", "abc\\1\\1def\\1\\1")).toBe("abc\1def\1");
   });
 
   it('regex.sub test 5', async () => {
-    // Python: self.assertEqual(regex.sub("\r\n", "\n", "abc\r\ndef\r\n"), "abc\ndef\n")
-    expect(await re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
+    // Python: self.assertEqual(regex.sub("\1\1", "\1", "abc\1\1def\1\1"), "abc\1def\1")
+    expect(await re.sub("\\1\\1", "\\1", "abc\\1\\1def\\1\\1")).toBe("abc\1def\1");
   });
 
   it('regex.sub test 6', async () => {
-    // Python: # test_bug_114660def test_bug_114660(self):self.assertEqual(regex.sub(r"(\S)\s+(\S)", r"\1 \2", "hello  there"), "hello there")
+    // Python: # test_bug_114660def test_bug_114660(self):self.assertEqual(regex.sub("(\S)\s+(\S)", "\1 \2", "hello  there"), "hello there")
     expect(await re.sub("(\\S)\\s+(\\S)", "\\1 \\2", "hello  there")).toBe("hello there");
   });
 
@@ -57,28 +57,28 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 11', async () => {
-    // Python: # test_bug_14462def test_bug_14462(self):# chr(255) is a valid identifier in Python 3.group_name = "\xff"self.assertEqual(regex.search(r"(?P<" + group_name + ">a)", "abc").group(group_name), "a")
+    // Python: # test_bug_14462def test_bug_14462(self):# chr(255) is a valid identifier in Python 3.group_name = "\xff"self.assertEqual(regex.search("(?P<" + group_name + ">a)", "abc").group(group_name), "a")
     const group_name = "\\xff"; // Define group_name as a string
     expect((await re.search("(?P<" + group_name + ">a)", "abc"))?.group(group_name)).toStrictEqual("a");
   });
 
   it('regex.findall test 12', async () => {
-    // Python: # test_bug_117612def test_bug_117612(self):self.assertEqual(regex.findall(r"(a|(b))", "aba"), [("a", ""), ("", ""), ("a", "")])
+    // Python: # test_bug_117612def test_bug_117612(self):self.assertEqual(regex.findall("(a|(b))", "aba"), [("a", ""), ("", ""), ("a", "")])
     expect(await re.findall("(a|(b))", "aba")).toStrictEqual([["a", null], ["", ""], ["a", null]]);
   });
 
   it('regex.match test 13', async () => {
-    // Python: # test_bug_113254def test_bug_113254(self):self.assertEqual(regex.match(r"(a)|(b)", "").start(1), -1)
+    // Python: # test_bug_113254def test_bug_113254(self):self.assertEqual(regex.match("(a)|(b)", "").start(1), -1)
     expect((await re.match("(a)|(b)", ""))?.start(1)).toStrictEqual(-1);
   });
 
   it('regex.match test 14', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)|(b)", "").end(1), -1)
+    // Python: self.assertEqual(regex.match("(a)|(b)", "").end(1), -1)
     expect((await re.match("(a)|(b)", ""))?.end(1)).toStrictEqual(-1);
   });
 
   it('regex.match test 15', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)|(b)", "").span(1), (-1, -1))
+    // Python: self.assertEqual(regex.match("(a)|(b)", "").span(1), (-1, -1))
     expect((await re.match("(a)|(b)", ""))?.span(1)).toStrictEqual([-1, -1]);
   });
 

@@ -7,7 +7,7 @@ import * as re from '../../src/index';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.search test 1', async () => {
-    // Python: import regeximport unittestclass TestGeneralAt(unittest.TestCase):# test_atomicdef test_atomic(self):# Issue 433030.self.assertEqual(regex.search(r"(?>a*)a", "aa"), null)
+    // Python: import regeximport unittestclass TestGeneralAt(unittest.TestCase):# test_atomicdef test_atomic(self):# Issue 433030.self.assertEqual(regex.search("(?>a*)a", "aa"), null)
     expect(await re.search("(?>a*)a", "aa")).toStrictEqual(null);
   });
 });

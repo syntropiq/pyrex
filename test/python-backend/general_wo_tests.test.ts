@@ -6,12 +6,12 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.findall test 1', async () => {
-    // Python: import regeximport unittestclass TestGeneralWo(unittest.TestCase):# test_word_classdef test_word_class(self):self.assertEqual(regex.findall(r"\w+", " \u0939\u093f\u0928\u094d\u0926\u0940,"),["\u0939\u093f\u0928\u094d\u0926\u0940"],)
+    // Python: import regeximport unittestclass TestGeneralWo(unittest.TestCase):# test_word_classdef test_word_class(self):self.assertEqual(regex.findall("\w+", " \u0939\u093f\u0928\u094d\u0926\u0940,"),["\u0939\u093f\u0928\u094d\u0926\u0940"],)
     expect(await re.findall("\\w+", " \\u0939\\u093f\\u0928\\u094d\\u0926\\u0940)).toStrictEqual(["\u0939\u093f\u0928\u094d\u0926\u0940"],);
   });
 
   it('regex.findall test 2', async () => {
-    // Python: self.assertEqual(regex.findall(r"\W+", " \u0939\u093f\u0928\u094d\u0926\u0940,"), [" ", ","])
+    // Python: self.assertEqual(regex.findall("\W+", " \u0939\u093f\u0928\u094d\u0926\u0940,"), [" ", ","])
     expect(await re.findall("\\W+", " \\u0939\\u093f\\u0928\\u094d\\u0926\\u0940)).toStrictEqual([" ", ","]);
   });
 });

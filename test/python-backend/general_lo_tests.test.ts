@@ -6,22 +6,22 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.search test 1', async () => {
-    // Python: import regeximport unittestclass TestGeneralLo(unittest.TestCase):PATTERN_CLASS = "<class '_regex.Pattern'>"# test_lookbehinddef test_lookbehind(self):self.assertEqual(regex.search(r"123(?<=a\d+)", "a123").span(), (1, 4))
+    // Python: import regeximport unittestclass TestGeneralLo(unittest.TestCase):PATTERN_CLASS = "<class '_regex.Pattern'>"# test_lookbehinddef test_lookbehind(self):self.assertEqual(regex.search("123(?<=a\d+)", "a123").span(), (1, 4))
     expect(await re.search("123(?<=a\\d+)", "a123")?.span()).toStrictEqual((1, 4);
   });
 
   it('regex.search test 2', async () => {
-    // Python: self.assertEqual(regex.search(r"123(?<=a\d+)", "b123"), null)
+    // Python: self.assertEqual(regex.search("123(?<=a\d+)", "b123"), null)
     expect(await re.search("123(?<=a\\d+)", "b123")).toStrictEqual(null);
   });
 
   it('regex.search test 3', async () => {
-    // Python: self.assertEqual(regex.search(r"123(?<!a\d+)", "a123"), null)
+    // Python: self.assertEqual(regex.search("123(?<!a\d+)", "a123"), null)
     expect(await re.search("123(?<!a\\d+)", "a123")).toStrictEqual(null);
   });
 
   it('regex.search test 4', async () => {
-    // Python: self.assertEqual(regex.search(r"123(?<!a\d+)", "b123").span(), (1, 4))
+    // Python: self.assertEqual(regex.search("123(?<!a\d+)", "b123").span(), (1, 4))
     expect(await re.search("123(?<!a\\d+)", "b123")?.span()).toStrictEqual((1, 4);
   });
 

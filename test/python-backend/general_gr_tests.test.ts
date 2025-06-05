@@ -11,27 +11,27 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 2', async () => {
-    // Python: # test_graphemedef test_grapheme(self):self.assertEqual(regex.match(r"\X", "\xe0").span(), (0, 1))
+    // Python: # test_graphemedef test_grapheme(self):self.assertEqual(regex.match("\X", "\xe0").span(), (0, 1))
     expect(await re.match("\\X", "\\xe0")?.span()).toStrictEqual((0, 1);
   });
 
   it('regex.match test 3', async () => {
-    // Python: self.assertEqual(regex.match(r"\X", "a\u0300").span(), (0, 2))
+    // Python: self.assertEqual(regex.match("\X", "a\u0300").span(), (0, 2))
     expect(await re.match("\\X", "a\\u0300")?.span()).toStrictEqual((0, 2);
   });
 
   it('regex.findall test 4', async () => {
-    // Python: self.assertEqual(regex.findall(r"\X", "a\xe0a\u0300e\xe9e\u0301"),["a", "\xe0", "a\u0300", "e", "\xe9", "e\u0301"],)
+    // Python: self.assertEqual(regex.findall("\X", "a\xe0a\u0300e\xe9e\u0301"),["a", "\xe0", "a\u0300", "e", "\xe9", "e\u0301"],)
     expect(await re.findall("\\X", "a\\xe0a\\u0300e\\xe9e\\u0301")).toStrictEqual(["a", "\xe0", "a\u0300", "e", "\xe9", "e\u0301"],);
   });
 
   it('regex.findall test 5', async () => {
-    // Python: self.assertEqual(regex.findall(r"\X{3}", "a\xe0a\u0300e\xe9e\u0301"),["a\xe0a\u0300", "e\xe9e\u0301"],)
+    // Python: self.assertEqual(regex.findall("\X{3}", "a\xe0a\u0300e\xe9e\u0301"),["a\xe0a\u0300", "e\xe9e\u0301"],)
     expect(await re.findall("\\X{3}", "a\\xe0a\\u0300e\\xe9e\\u0301")).toStrictEqual(["a\xe0a\u0300", "e\xe9e\u0301"],);
   });
 
   it('regex.findall test 6', async () => {
-    // Python: self.assertEqual(regex.findall(r"\X", "\r\r\n\u0301A\u0301"),["\r", "\r\n", "\u0301", "A\u0301"],)
-    expect(await re.findall("\\X", "\\r\\r\\n\\u0301A\\u0301")).toStrictEqual(["\r", "\r\n", "\u0301", "A\u0301"],);
+    // Python: self.assertEqual(regex.findall("\X", "\1\1\1\u0301A\u0301"),["\1", "\1\1", "\u0301", "A\u0301"],)
+    expect(await re.findall("\\X", "\\1\\1\\1\\u0301A\\u0301")).toStrictEqual(["\1", "\1\1", "\u0301", "A\u0301"],);
   });
 });
