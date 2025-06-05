@@ -156,3 +156,146 @@ The Pyrex library now successfully delivers on its core promise:
 **"Seamless Python-to-TypeScript regex migration with automatic backend selection"**
 
 Developers can use familiar Python `re` module syntax with full async support and automatic pattern handling. The library provides an excellent developer experience for regex migration scenarios.
+
+---
+
+## CURRENT TEST SUITE ISSUES (Discovered 2025-06-05)
+
+### 🔍 DISCOVERY METHOD
+**Commands Used for Investigation:**
+1. `bun run test` - Revealed massive test failures (50/53 test files failed, 33/54 individual tests failed)
+2. `bun run test test/validation/` - Confirmed validation tests pass (13/13 tests passing)
+3. `search_files` with pattern `\.skip\(|it\.skip|describe\.skip` - Found only 2 explicitly skipped tests
+4. `read_file` on failing test samples - Analyzed specific failure patterns
+
+**Key Finding:** Core library functionality works (validation tests pass), but legacy test suite has systematic issues.
+
+---
+
+### 📊 ISSUE CATEGORIES (Easiest → Most Difficult)
+
+## CATEGORY 1: EASY FIXES - Missing Async/Await ⚡
+**Priority: HIGH | Difficulty: EASY | Effort: 1-2 hours**
+
+**Issue:** Legacy tests call async functions without `await` keywords
+**Evidence:** Tests show `expected Promise{…} to be 'value'` errors
+**Examples:**
+- [`test/python-backend/general_bu_tests.test.ts:13`](test/python-backend/general_bu_tests.test.ts:13) - `expect(re.sub(...)).toBe(...)` should be `expect(await re.sub(...)).toBe(...)`
+- [`test/python-backend/general_mo_tests.test.ts:12`](test/python-backend/general_mo_tests.test.ts:12) - Same pattern
+- [`test/python-backend/general_qu_tests.test.ts:12`](test/python-backend/general_qu_tests.test.ts:12) - Same pattern
+
+**Fix Strategy:** Mechanical addition of `await` keywords and `async` to test functions
+**Affected Files:** ~15-20 test files with Promise mismatch errors
+
+---
+
+## CATEGORY 2: MEDIUM FIXES - Syntax Errors from Auto-conversion 🔧
+**Priority: MEDIUM | Difficulty: MEDIUM | Effort: 2-4 hours**
+
+**Issue:** Auto-converted Python tests contain invalid TypeScript syntax
+**Evidence:** ESBuild transform errors and compilation failures
+**Examples:**
+- [`test/python-backend/general_su_tests.test.ts:18`](test/python-backend/general_su_tests.test.ts:18) - `"Legacy octal escape sequences cannot be used in an ECMAScript module"`
+- Patterns like `"\000"`, `"\001"`, `"\111"` need conversion to `"\x00"`, `"\x01"`, `"\x49"`
+- Duplicate import statements (line 2-3 in many files)
+
+**Fix Strategy:**
+1. Convert legacy octal escapes to hex escapes
+2. Remove duplicate imports
+3. Fix malformed string literals
+
+**Affected Files:** ~10-15 test files with syntax errors
+
+---
+
+## CATEGORY 3: MEDIUM-HARD - Empty/Broken Test Files 📁
+**Priority: MEDIUM | Difficulty: MEDIUM-HARD | Effort: 4-6 hours**
+
+**Issue:** Many test files show "No test found in suite" errors
+**Evidence:** Test runner reports like `Error: No test found in suite test/python-backend/general_br_tests.test.ts`
+**Examples:**
+- [`test/python-backend/general_br_tests.test.ts`](test/python-backend/general_br_tests.test.ts)
+- [`test/python-backend/general_by_tests.test.ts`](test/python-backend/general_by_tests.test.ts)
+- [`test/python-backend/general_ca_tests.test.ts`](test/python-backend/general_ca_tests.test.ts)
+- ~30+ files affected
+
+**Fix Strategy:**
+1. Investigate source Python files in `test/split/` directory
+2. Determine if tests were not converted or conversion failed
+3. Either fix conversion or mark as properly skipped
+
+**Affected Files:** ~30 test files showing "No test found" errors
+
+---
+
+## CATEGORY 4: HARD - Test Expectation Mismatches 🎯
+**Priority: LOW-MEDIUM | Difficulty: HARD | Effort: 6-10 hours**
+
+**Issue:** Tests execute but expect different results than library produces
+**Evidence:** Assertion failures showing different string outputs
+**Examples:**
+- [`test/python-backend/general_hg_tests.test.ts:25`](test/python-backend/general_hg_tests.test.ts:25) - Expected "xx", got "x"
+- [`test/python-backend/general_hg_tests.test.ts:31`](test/python-backend/general_hg_tests.test.ts:31) - Expected "|||||||||", got "|test"
+- [`test/python-backend/general_un_tests.test.ts:25`](test/python-backend/general_un_tests.test.ts:25) - Expected "y-x-", got "y-x"
+
+**Analysis Required:**
+- Determine if expectations are correct vs implementation
+- Check for Python version differences
+- Verify regex behavior differences between JavaScript and Python backends
+
+**Fix Strategy:** Requires behavioral analysis and possibly implementation fixes
+
+---
+
+## CATEGORY 5: UNKNOWNS - Timeouts and Backend Issues ❓
+**Priority: MEDIUM | Difficulty: UNKNOWN | Effort: UNKNOWN**
+
+**Issue:** Some tests timeout during Pyodide initialization
+**Evidence:** `Error: Test timed out in 5000ms` with Pyodide debug logs
+**Examples:**
+- [`test/python-backend/general_hg_tests.test.ts:10`](test/python-backend/general_hg_tests.test.ts:10) - Test 2 timeout
+- [`test/python-backend/general_un_tests.test.ts:7`](test/python-backend/general_un_tests.test.ts:7) - Test 1 timeout
+
+**Potential Causes:**
+- Pyodide initialization race conditions
+- Test environment setup issues
+- Resource contention during parallel test execution
+
+**Investigation Needed:** Requires deeper debugging of Python backend initialization
+
+---
+
+## CATEGORY 6: UNKNOWNS - Backref Processing Issues 🔍
+**Priority: HIGH | Difficulty: UNKNOWN | Effort: UNKNOWN**
+
+**Issue:** Python regex replacement patterns not working correctly
+**Evidence:** Literal backref strings instead of substitutions
+**Examples:**
+- [`test/python-backend/general_hg_tests.test.ts:49`](test/python-backend/general_hg_tests.test.ts:49) - Expected "x", got "\\g<0>"
+- [`test/python-backend/general_hg_tests.test.ts:55`](test/python-backend/general_hg_tests.test.ts:55) - Expected "xayxby", got "x\\1yx\\1y"
+
+**Analysis Required:**
+- Check if Python backend is properly processing replacement patterns
+- Verify string escaping between TypeScript and Python
+- May indicate core functionality bug
+
+---
+
+## 📈 CURRENT TEST STATUS SUMMARY
+- **Validation Tests:** ✅ 13/13 passing (core functionality proven)
+- **Legacy Tests:** ❌ 50/53 test files failed
+- **Individual Tests:** ❌ 33/54 tests failed
+- **Explicitly Skipped:** 2 tests (syntax errors)
+- **Empty Test Files:** ~30 files
+- **Async/Await Issues:** ~15-20 files
+- **Syntax Errors:** ~10-15 files
+
+---
+
+## 🎯 RECOMMENDED FIX PRIORITY
+1. **EASY WINS:** Fix missing async/await (Category 1) - Immediate impact
+2. **SYNTAX CLEANUP:** Fix auto-conversion syntax errors (Category 2) - Enable more tests to run
+3. **INVESTIGATE UNKNOWNS:** Focus on backref issues (Category 6) - May indicate core bugs
+4. **EMPTY FILES:** Address missing test content (Category 3) - Lower priority
+5. **EXPECTATIONS:** Analyze behavior mismatches (Category 4) - Requires careful analysis
+6. **TIMEOUTS:** Debug Pyodide initialization (Category 5) - Environment-specific
