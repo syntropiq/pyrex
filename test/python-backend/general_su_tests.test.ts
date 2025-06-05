@@ -105,7 +105,7 @@ describe('Python Backend - Regex (converted)', () => {
   it('test 17', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("x", br'\\x100", "x")).toBe("\x00");
+    expect(re.sub("x", "br'\\x100", "x")).toBe("\x00");
   });
 
   it('test 18', () => {
