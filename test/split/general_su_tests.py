@@ -1,4 +1,10 @@
-# test_sub_template_numeric_escape
+import regex
+import unittest
+
+class TestGeneralSu(unittest.TestCase):
+    INVALID_GROUP_REF = "invalid group reference"
+    
+    # test_sub_template_numeric_escape
     def test_sub_template_numeric_escape(self):
         # Bug 776311 and friends.
         self.assertEqual(regex.sub('x', r'\0', 'x'), "\0")
@@ -56,7 +62,7 @@
         self.assertEqual(regex.sub('((((((((((y))))))))))(.)', r'\11a', 'xyz'),
           'xza')
 
-# test_subscripting_match
+    # test_subscripting_match
     def test_subscripting_match(self):
         m = regex.match(r'(?<a>\w)', 'xy')
         if not m:
@@ -68,7 +74,7 @@
         elif m[:] != ('x', 'x'):
             self.fail("Failed: expected \"('x', 'x')\" but got {} instead".format(ascii(m[:])))
 
-# test_subscripted_captures
+    # test_subscripted_captures
     def test_subscripted_captures(self):
         self.assertEqual(regex.match(r'(?P<x>.)+',
           'abc').expandf('{0} {0[0]} {0[-1]}'), 'abc abc abc')

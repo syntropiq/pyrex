@@ -3,6 +3,8 @@ import unittest
 
 
 class TestGeneralLo(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
     # test_lookbehind
     def test_lookbehind(self):
         self.assertEqual(regex.search(r"123(?<=a\d+)", "a123").span(), (1, 4))

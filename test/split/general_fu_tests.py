@@ -3,6 +3,8 @@ import unittest
 
 
 class TestGeneralFu(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
     # test_fuzzy
     def test_fuzzy(self):
         # Some tests borrowed from TRE library tests.

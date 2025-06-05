@@ -1,4 +1,14 @@
-# test_symbolic_refs
+import regex
+import unittest
+
+class TestGeneralSy(unittest.TestCase):
+    MISSING_GT = "missing >"
+    MISSING_GROUP_NAME = "missing group name"
+    MISSING_LT = "missing <"
+    BAD_GROUP_NAME = "bad character in group name"
+    UNKNOWN_GROUP_I = "unknown group"
+
+    # test_symbolic_refs
     def test_symbolic_refs(self):
         self.assertRaisesRegex(regex.error, self.MISSING_GT, lambda:
           regex.sub('(?P<a>x)', r'\g<a', 'xx'))

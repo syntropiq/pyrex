@@ -1,4 +1,9 @@
-# test_properties
+import regex
+import unittest
+
+
+class TestGeneralPr(unittest.TestCase):
+    # test_properties
     def test_properties(self):
         self.assertEqual(regex.match(b'(?ai)\xC0', b'\xE0'), None)
         self.assertEqual(regex.match(br'(?ai)\xC0', b'\xE0'), None)

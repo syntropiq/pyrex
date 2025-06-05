@@ -1,3 +1,7 @@
+import regex
+import unittest
+
+class TestGeneralNo(unittest.TestCase):
 # test_non_consuming
     def test_non_consuming(self):
         self.assertEqual(regex.match(r"(a(?=\s[^a]))", "a b")[1], 'a')

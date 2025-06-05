@@ -12,6 +12,10 @@ class BytesSubclass(bytes):
 
 
 class TestGeneralIs(unittest.TestCase):
+    def assertTypedEqual(self, actual, expected):
+        self.assertEqual(actual, expected)
+        self.assertEqual(type(actual), type(expected))
+    
     # test_issue_18468
     def test_issue_18468(self):
         self.assertTypedEqual(regex.sub("y", "a", "xyz"), "xaz")

@@ -1,4 +1,8 @@
-# test_turkic
+import regex
+import unittest
+
+
+class TestGeneralTu(unittest.TestCase):
     def test_turkic(self):
         # Turkish has dotted and dotless I/i.
         pairs = "I=i;I=\u0131;i=\u0130"

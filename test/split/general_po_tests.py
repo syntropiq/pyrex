@@ -1,4 +1,8 @@
-# test_possessive
+import regex
+import unittest
+
+class TestGeneralPo(unittest.TestCase):
+    # test_possessive
     def test_possessive(self):
         # Single-character non-possessive.
         self.assertEqual(regex.search(r"a?a", "a").span(), (0, 1))
@@ -10,8 +14,7 @@
         self.assertEqual(regex.search(r"(?:ab)?ab", "ab").span(), (0, 2))
         self.assertEqual(regex.search(r"(?:ab)*ab", "ababab").span(), (0, 6))
         self.assertEqual(regex.search(r"(?:ab)+ab", "ababab").span(), (0, 6))
-        self.assertEqual(regex.search(r"(?:ab){1,3}ab", "ababab").span(), (0,
-          6))
+        self.assertEqual(regex.search(r"(?:ab){1,3}ab", "ababab").span(), (0, 6))
 
         # Single-character possessive.
         self.assertEqual(regex.search(r"a?+a", "a"), None)

@@ -3,6 +3,8 @@ import unittest
 
 
 class TestGeneralGe(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
     # test_getattr
     def test_getattr(self):
         self.assertEqual(regex.compile("(?i)(a)(b)").pattern, "(?i)(a)(b)")

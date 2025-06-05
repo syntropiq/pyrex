@@ -3,6 +3,8 @@ import unittest
 
 
 class TestGeneralNa(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
     # test_named_lists
     def test_named_lists(self):
         options = ["one", "two", "three"]

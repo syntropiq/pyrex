@@ -3,6 +3,13 @@ import unittest
 
 
 class TestGeneralBy(unittest.TestCase):
+    STR_PAT_ON_BYTES = "cannot use a string pattern on a bytes-like object"
+    BYTES_PAT_ON_STR = "cannot use a bytes pattern on a string-like object"
+    STR_PAT_BYTES_TEMPL = "expected str instance, bytes found"
+    BYTES_PAT_STR_TEMPL = "expected a bytes-like object, str found"
+    BYTES_PAT_UNI_FLAG = "cannot use UNICODE flag with a bytes pattern"
+    MIXED_FLAGS = "ASCII, LOCALE and UNICODE flags are mutually incompatible"
+    
     # test_bytes_str_mixing
     def test_bytes_str_mixing(self):
         # Mixing str and bytes is disallowed.

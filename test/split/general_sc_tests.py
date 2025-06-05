@@ -1,4 +1,10 @@
-# test_scanner
+import regex
+import unittest
+
+class TestGeneralSc(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
+    # test_scanner
     def test_scanner(self):
         def s_ident(scanner, token): return token
         def s_operator(scanner, token): return "op%s" % token
@@ -15,7 +21,7 @@
         self.assertEqual(scanner.scan("sum = 3*foo + 312.50 + bar"), (['sum',
           'op=', 3, 'op*', 'foo', 'op+', 312.5, 'op+', 'bar'], ''))
 
-# test_scoped_and_inline_flags
+    # test_scoped_and_inline_flags
     def test_scoped_and_inline_flags(self):
         # Issues 433028, 433024, 433027.
         self.assertEqual(regex.search(r"(?i)Ab", "ab").span(), (0, 2))

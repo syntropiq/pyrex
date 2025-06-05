@@ -1,3 +1,8 @@
-# test_main
-def test_main():
-    unittest.main(verbosity=2)
+import unittest
+
+# This file contains the test_main function from the original test file
+# Since tests are now run via pytest, we'll just pass
+
+class TestGeneralMa(unittest.TestCase):
+    def test_main(self):
+        pass

@@ -4,6 +4,10 @@ import sys
 
 
 class TestGeneralBu(unittest.TestCase):
+    FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    BAD_SET = "unterminated character set"
+    
     # test_bug_449964
     def test_bug_449964(self):
         # Fails for group followed by other escape.

@@ -3,7 +3,7 @@ import unittest
 
 
 class TestGeneralFl(unittest.TestCase):
-    PATTERN_CLASS = "<class 'regex.Pattern'>"
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
 
     # test_flags
     def test_flags(self):

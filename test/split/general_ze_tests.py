@@ -1,4 +1,9 @@
-# test_zerowidth
+import regex
+import unittest
+import sys
+
+
+class TestGeneralZe(unittest.TestCase):
     def test_zerowidth(self):
         # Issue 3262.
         if sys.version_info >= (3, 7, 0):

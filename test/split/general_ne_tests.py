@@ -1,4 +1,8 @@
-# test_new_named_groups
+import regex
+import unittest
+
+class TestGeneralNe(unittest.TestCase):
+    # test_new_named_groups
     def test_new_named_groups(self):
         m0 = regex.match(r'(?P<a>\w)', 'x')
         m1 = regex.match(r'(?<a>\w)', 'x')

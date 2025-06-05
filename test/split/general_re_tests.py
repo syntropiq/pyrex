@@ -1,3 +1,9 @@
+import regex
+import unittest
+import sys
+
+
+class TestGeneralRe(unittest.TestCase):
 # test_re_subn
     def test_re_subn(self):
         self.assertEqual(regex.subn("(?i)b+", "x", "bbbb BBBB"), ('x x', 2))

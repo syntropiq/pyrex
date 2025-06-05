@@ -5,6 +5,8 @@ import unittest
 
 
 class TestGeneralCo(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
     # test_constants
     def test_constants(self):
         if regex.I != regex.IGNORECASE:

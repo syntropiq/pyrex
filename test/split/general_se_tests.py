@@ -3,6 +3,8 @@ import unittest
 
 
 class TestGeneralSe(unittest.TestCase):
+    PATTERN_CLASS = "<class '_regex.Pattern'>"
+    
     # test_search_star_plus
     def test_search_star_plus(self):
         self.assertEqual(regex.search("a*", "xxx").span(0), (0, 0))

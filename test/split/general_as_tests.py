@@ -3,6 +3,8 @@ import unittest
 
 
 class TestGeneralAs(unittest.TestCase):
+    MIXED_FLAGS = "ASCII, LOCALE and UNICODE flags are mutually incompatible"
+    
     # test_ascii_and_unicode_flag
     def test_ascii_and_unicode_flag(self):
         # String patterns.
