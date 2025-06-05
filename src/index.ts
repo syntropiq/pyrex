@@ -177,6 +177,42 @@ export function analyze(pattern: string, flags?: string) {
 // Export escape function
 export { escape };
 
+/**
+ * Python-like re module interface
+ * Provides the familiar Python re.method() syntax
+ */
+export const re = {
+  // Core compilation functions
+  compile,
+  compileAsync,
+  
+  // Pattern matching functions
+  search,
+  match,
+  fullmatch,
+  
+  // Pattern operations
+  split,
+  findall,
+  finditer,
+  sub,
+  subn,
+  
+  // Async versions
+  searchAsync,
+  matchAsync,
+  fullmatchAsync,
+  splitAsync,
+  findallAsync,
+  subAsync,
+  subnAsync,
+  
+  // Utility functions
+  requiresPython,
+  analyze,
+  escape
+};
+
 // Export types
 export type { Match, Pattern, AsyncPattern };
 export { RegexFlags } from './types/index.js';

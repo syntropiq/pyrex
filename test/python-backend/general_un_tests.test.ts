@@ -1,61 +1,69 @@
 import { describe, it, expect } from 'vitest';
+import { re } from '../../src/index.js';
 // Auto-converted from /Users/steve/Projects/amjur.org/pyrex/test/split/general_un_tests.py
-
-// You must implement or import a 'sub' function that mimics Python's regex.sub behavior.
 
 describe('Python Backend - Regex (converted)', () => {
 
-  it('test 1', () => {
+  it('test 1', async () => {
     
-    // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)(x)?(y)?", "\\2-\\1", "xy", { backend: 'python' })).toBe("y-x-");
+    // Use PyRex's Python backend for sub (patterns with (?V0) automatically use Python backend)
+    const result = await re.subAsync("(?V0)(x)?(y)?", "\\2-\\1", "xy");
+    expect(result).toBe("y-x-");
   });
 
-  it('test 2', () => {
+  it('test 2', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)(x)?(y)?", "\\2-\\1", "xy", { backend: 'python' })).toBe("y-x");
+    const result = await re.subAsync("(?V0)(x)?(y)?", "\\2-\\1", "xy");
+    expect(result).toBe("y-x");
   });
 
-  it('test 3', () => {
+  it('test 3', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V1)(x)?(y)?", "\\2-\\1", "xy", { backend: 'python' })).toBe("y-x-");
+    const result = await re.subAsync("(?V1)(x)?(y)?", "\\2-\\1", "xy");
+    expect(result).toBe("y-x-");
   });
 
-  it('test 4', () => {
+  it('test 4', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)(x)?(y)?", "\\2-\\1", "x", { backend: 'python' })).toBe("-x-");
+    const result = await re.subAsync("(?V0)(x)?(y)?", "\\2-\\1", "x");
+    expect(result).toBe("-x-");
   });
 
-  it('test 5', () => {
+  it('test 5', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)(x)?(y)?", "\\2-\\1", "x", { backend: 'python' })).toBe("-x");
+    const result = await re.subAsync("(?V0)(x)?(y)?", "\\2-\\1", "x");
+    expect(result).toBe("-x");
   });
 
-  it('test 6', () => {
+  it('test 6', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V1)(x)?(y)?", "\\2-\\1", "x", { backend: 'python' })).toBe("-x-");
+    const result = await re.subAsync("(?V1)(x)?(y)?", "\\2-\\1", "x");
+    expect(result).toBe("-x-");
   });
 
-  it('test 7', () => {
+  it('test 7', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)(x)?(y)?", "\\2-\\1", "y", { backend: 'python' })).toBe("y--");
+    const result = await re.subAsync("(?V0)(x)?(y)?", "\\2-\\1", "y");
+    expect(result).toBe("y--");
   });
 
-  it('test 8', () => {
+  it('test 8', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)(x)?(y)?", "\\2-\\1", "y", { backend: 'python' })).toBe("y-");
+    const result = await re.subAsync("(?V0)(x)?(y)?", "\\2-\\1", "y");
+    expect(result).toBe("y-");
   });
 
-  it('test 9', () => {
+  it('test 9', async () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V1)(x)?(y)?", "\\2-\\1", "y", { backend: 'python' })).toBe("y--");
+    const result = await re.subAsync("(?V1)(x)?(y)?", "\\2-\\1", "y");
+    expect(result).toBe("y--");
   });
 });

@@ -4,6 +4,9 @@ import type { PatternAnalysis, RegexBackend } from '../types/index.js';
  * Python-specific regex features that are not available in JavaScript
  */
 const PYTHON_ONLY_FEATURES = [
+  // Python version specifiers ((?V0), (?V1))
+  /\(\?V[01]\)/g, // Python version specifiers (?V0) and (?V1)
+  
   // Python-style named groups
   /\(\?P<[^>]+>/g, // Python named groups (?P<name>...)
   

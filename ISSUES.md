@@ -1,3 +1,37 @@
+# Pyrex Library Issues and Discrepancies
+
+## Critical Architecture Issues
+
+### Missing Python-like `re` Object Export
+**Priority: HIGH**
+**Status: IDENTIFIED - NEEDS FIX**
+
+The project's primary goal is to provide a Python-like `re` module interface, but the current exports only provide individual functions. Tests expect to import and use `re.sub()`, `re.search()`, etc., but the library doesn't export a `re` object.
+
+**Current Exports (src/index.ts):**
+- Individual functions: `sub()`, `search()`, `match()`, etc.
+- Missing: `re` object with all methods
+
+**Expected Usage (from failing tests):**
+```typescript
+import { re } from '@syntropiq/pyrex';
+re.sub(pattern, replacement, string, {backend: 'python'});
+```
+
+**Impact:**
+- 97% test failure rate due to `ReferenceError: re is not defined`
+- Tests cannot access library functionality
+- Core project promise not delivered
+
+**Required Fix:**
+1. Create `re` object export with all Python regex methods
+2. Update API to support Python-like syntax options
+3. Ensure backward compatibility with existing function exports
+
+---
+
+## Test Infrastructure Issues
+
 ❯ test/integration/performance.test.ts (9 tests | 2 failed) 6761ms
    × Performance and Stress Tests > Pattern Registry Performance > should demonstrate pattern reuse efficiency 5024ms
      → Test timed out in 5000ms.
