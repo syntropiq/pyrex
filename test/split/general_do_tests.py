@@ -1,4 +1,8 @@
-# test_dollar_matches_twice
+import regex
+import unittest
+
+class TestGeneralDo(unittest.TestCase):
+    # test_dollar_matches_twice
     def test_dollar_matches_twice(self):
         # $ matches the end of string, and just before the terminating \n.
         pattern = regex.compile('$')

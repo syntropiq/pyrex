@@ -1,15 +1,28 @@
-# test_issue_18468
+import regex
+import unittest
+import sys
+
+
+class StrSubclass(str): pass
+class BytesSubclass(bytes): pass
+
+
+class TestGeneralIs(unittest.TestCase):
+    # test_issue_18468
     def test_issue_18468(self):
         self.assertTypedEqual(regex.sub('y', 'a', 'xyz'), 'xaz')
         self.assertTypedEqual(regex.sub('y', StrSubclass('a'),
           StrSubclass('xyz')), 'xaz')
         self.assertTypedEqual(regex.sub(b'y', b'a', b'xyz'), b'xaz')
         self.assertTypedEqual(regex.sub(b'y', BytesSubclass(b'a'),
-          BytesSubclass(b'xyz')), b'xaz')
+          BytesSubclass(b'xyz')), b'xaz'
+        )
         self.assertTypedEqual(regex.sub(b'y', bytearray(b'a'),
-          bytearray(b'xyz')), b'xaz')
+          bytearray(b'xyz')), b'xaz'
+        )
         self.assertTypedEqual(regex.sub(b'y', memoryview(b'a'),
-          memoryview(b'xyz')), b'xaz')
+          memoryview(b'xyz')), b'xaz'
+        )
 
         for string in ":a:b::c", StrSubclass(":a:b::c"):
             self.assertTypedEqual(regex.split(":", string), ['', 'a', 'b', '',

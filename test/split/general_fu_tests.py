@@ -1,3 +1,7 @@
+import regex
+import unittest
+
+class TestGeneralFu(unittest.TestCase):
 # test_fuzzy
     def test_fuzzy(self):
         # Some tests borrowed from TRE library tests.

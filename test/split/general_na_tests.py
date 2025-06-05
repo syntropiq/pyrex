@@ -1,4 +1,8 @@
-# test_named_lists
+import regex
+import unittest
+
+class TestGeneralNa(unittest.TestCase):
+    # test_named_lists
     def test_named_lists(self):
         options = ["one", "two", "three"]
         self.assertEqual(regex.match(r"333\L<bar>444", "333one444",

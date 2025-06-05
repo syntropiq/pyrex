@@ -1,4 +1,8 @@
-# test_search_star_plus
+import regex
+import unittest
+
+class TestGeneralSe(unittest.TestCase):
+    # test_search_star_plus
     def test_search_star_plus(self):
         self.assertEqual(regex.search('a*', 'xxx').span(0), (0, 0))
         self.assertEqual(regex.search('x*', 'axx').span(), (0, 0))
@@ -11,16 +15,16 @@
         self.assertEqual(regex.match('x*', 'xxxa').span(), (0, 3))
         self.assertEqual(regex.match('a+', 'xxx'), None)
 
-# test_search_coverage
+    # test_search_coverage
     def test_search_coverage(self):
         self.assertEqual(regex.search(r"\s(b)", " b")[1], 'b')
         self.assertEqual(regex.search(r"a\s", "a ")[0], 'a ')
 
-# test_search_anchor
+    # test_search_anchor
     def test_search_anchor(self):
         self.assertEqual(regex.findall(r"\G\w{2}", "abcd ef"), ['ab', 'cd'])
 
-# test_search_reverse
+    # test_search_reverse
     def test_search_reverse(self):
         self.assertEqual(regex.findall(r"(?r).", "abc"), ['c', 'b', 'a'])
         self.assertEqual(regex.findall(r"(?r).", "abc", overlapped=True), ['c',
@@ -119,7 +123,7 @@
         self.assertEqual(regex.sub(r"(.)", r"\1", "abc"), 'abc')
         self.assertEqual(regex.sub(r"(?r)(.)", r"\1", "abc"), 'abc')
 
-# test_set
+    # test_set
     def test_set(self):
         self.assertEqual(regex.match(r"[a]", "a").span(), (0, 1))
         self.assertEqual(regex.match(r"(?i)[a]", "A").span(), (0, 1))

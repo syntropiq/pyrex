@@ -1,4 +1,10 @@
-# test_basic_regex_sub
+import regex
+import unittest
+
+class TestBasicRegexSub(unittest.TestCase):
+    def bump_num(self, m):
+        return str(int(m.group(0)) + 1)
+
     def test_basic_regex_sub(self):
         self.assertEqual(regex.sub("(?i)b+", "x", "bbbb BBBB"), 'x x')
         self.assertEqual(regex.sub(r'\d+', self.bump_num, '08.2 -2 23x99y'),

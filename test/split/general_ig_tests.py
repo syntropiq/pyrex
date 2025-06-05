@@ -1,4 +1,7 @@
-# test_ignore_case
+import regex
+import unittest
+
+class TestGeneralIg(unittest.TestCase):
     def test_ignore_case(self):
         self.assertEqual(regex.match("abc", "ABC", regex.I)[0], 'ABC')
         self.assertEqual(regex.match(b"abc", b"ABC", regex.I)[0], b'ABC')

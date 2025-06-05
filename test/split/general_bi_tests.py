@@ -1,4 +1,9 @@
-# test_bigcharset
+import regex
+import unittest
+
+
+class TestGeneralBi(unittest.TestCase):
+    # test_bigcharset
     def test_bigcharset(self):
         self.assertEqual(regex.match(r"([\u2222\u2223])", "\u2222")[1],
           '\u2222')

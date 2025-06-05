@@ -1,4 +1,8 @@
-# test_special_escapes
+import regex
+import unittest
+
+class TestGeneralSp(unittest.TestCase):
+    # test_special_escapes
     def test_special_escapes(self):
         self.assertEqual(regex.search(r"\b(b.)\b", "abcd abc bcd bx")[1], 'bx')
         self.assertEqual(regex.search(r"\B(b.)\B", "abc bcd bc abxd")[1], 'bx')
@@ -32,7 +36,7 @@
         self.assertEqual(regex.search(r"\d\D\w\W\s\S", "1aa! a",
           regex.UNICODE)[0], '1aa! a')
 
-# test_splititer
+    # test_splititer
     def test_splititer(self):
         self.assertEqual(regex.split(r",", "a,b,,c,"), ['a', 'b', '', 'c', ''])
         self.assertEqual([m for m in regex.splititer(r",", "a,b,,c,")], ['a',

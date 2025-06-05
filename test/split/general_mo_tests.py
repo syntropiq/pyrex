@@ -1,4 +1,9 @@
-# test_more_zerowidth
+import regex
+import sys
+import unittest
+
+class TestGeneralMo(unittest.TestCase):
+    # test_more_zerowidth
     def test_more_zerowidth(self):
         if sys.version_info >= (3, 7, 0):
             self.assertEqual(regex.split(r'\b|:+', 'a::bc'), ['', 'a', '', '',

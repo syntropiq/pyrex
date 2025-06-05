@@ -1,4 +1,7 @@
-# test_overlapped
+import regex
+import unittest
+
+class TestGeneralOv(unittest.TestCase):
     def test_overlapped(self):
         self.assertEqual(regex.findall(r"..", "abcde"), ['ab', 'cd'])
         self.assertEqual(regex.findall(r"..", "abcde", overlapped=True), ['ab',

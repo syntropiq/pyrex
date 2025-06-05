@@ -1,4 +1,9 @@
-# test_line_boundary
+import regex
+import unittest
+
+
+class TestGeneralLi(unittest.TestCase):
+    # test_line_boundary
     def test_line_boundary(self):
         self.assertEqual(regex.findall(r".+", "Line 1\nLine 2\n"), ["Line 1",
           "Line 2"])
@@ -41,7 +46,7 @@
         self.assertEqual(regex.search(r"(?mw)abc$", "abc\n").start(), 0)
         self.assertEqual(regex.search(r"(?mw)abc$", "abc\r").start(), 0)
 
-# test_line_ending
+    # test_line_ending
     def test_line_ending(self):
       self.assertEqual(regex.findall(r'\R', '\r\n\n\x0B\f\r\x85\u2028\u2029'),
         ['\r\n', '\n', '\x0B', '\f', '\r', '\x85', '\u2028', '\u2029'])

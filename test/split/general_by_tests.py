@@ -1,4 +1,8 @@
-# test_bytes_str_mixing
+import regex
+import unittest
+
+class TestGeneralBy(unittest.TestCase):
+    # test_bytes_str_mixing
     def test_bytes_str_mixing(self):
         # Mixing str and bytes is disallowed.
         pat = regex.compile('.')

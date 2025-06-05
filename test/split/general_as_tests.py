@@ -1,4 +1,8 @@
-# test_ascii_and_unicode_flag
+import regex
+import unittest
+
+class TestGeneralAs(unittest.TestCase):
+    # test_ascii_and_unicode_flag
     def test_ascii_and_unicode_flag(self):
         # String patterns.
         for flags in (0, regex.UNICODE):

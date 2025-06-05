@@ -1,4 +1,9 @@
-# test_empty_array
+import regex
+import unittest
+
+
+class TestGeneralEm(unittest.TestCase):
+    # test_empty_array
     def test_empty_array(self):
         # SF buf 1647541.
         import array

@@ -1,3 +1,7 @@
+import regex
+import unittest
+
+class TestGeneralCa(unittest.TestCase):
 # test_case_folding
     def test_case_folding(self):
         self.assertEqual(regex.search(r"(?fi)ss", "SS").span(), (0, 2))

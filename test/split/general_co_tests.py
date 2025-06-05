@@ -1,4 +1,10 @@
-# test_constants
+import regex
+import string
+import copy
+import unittest
+
+class TestGeneralCo(unittest.TestCase):
+    # test_constants
     def test_constants(self):
         if regex.I != regex.IGNORECASE:
             self.fail()
@@ -11,7 +17,7 @@
         if regex.X != regex.VERBOSE:
             self.fail()
 
-# test_common_prefix
+    # test_common_prefix
     def test_common_prefix(self):
         # Very long common prefix
         all = string.ascii_lowercase + string.digits + string.ascii_uppercase
@@ -19,7 +25,7 @@
         regexp = '(' + side + '|' + side + ')'
         self.assertEqual(repr(type(regex.compile(regexp))), self.PATTERN_CLASS)
 
-# test_copy
+    # test_copy
     def test_copy(self):
         # PatternObjects are immutable, therefore there's no need to clone them.
         r = regex.compile("a")

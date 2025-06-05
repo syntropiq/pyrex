@@ -1,4 +1,10 @@
-# test_unmatched_in_sub
+import regex
+import sys
+import unittest
+
+
+class TestGeneralUn(unittest.TestCase):
+    # test_unmatched_in_sub
     def test_unmatched_in_sub(self):
         # Issue 1519638.
 

@@ -1,4 +1,9 @@
-# test_format
+import regex
+import unittest
+
+
+class TestGeneralFo(unittest.TestCase):
+    # test_format
     def test_format(self):
         self.assertEqual(regex.subf(r"(\w+) (\w+)", "{0} => {2} {1}",
           "foo bar"), "foo bar => bar foo")

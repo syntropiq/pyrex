@@ -1,4 +1,9 @@
-# test_partial
+import regex
+import unittest
+
+
+class TestGeneralPa(unittest.TestCase):
+    # test_partial
     def test_partial(self):
         self.assertEqual(regex.match('ab', 'a', partial=True).partial, True)
         self.assertEqual(regex.match('ab', 'a', partial=True).span(), (0, 1))
