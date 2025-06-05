@@ -3,6 +3,7 @@ import string
 import copy
 import unittest
 
+
 class TestGeneralCo(unittest.TestCase):
     # test_constants
     def test_constants(self):
@@ -22,7 +23,7 @@ class TestGeneralCo(unittest.TestCase):
         # Very long common prefix
         all = string.ascii_lowercase + string.digits + string.ascii_uppercase
         side = all * 4
-        regexp = '(' + side + '|' + side + ')'
+        regexp = "(" + side + "|" + side + ")"
         self.assertEqual(repr(type(regex.compile(regexp))), self.PATTERN_CLASS)
 
     # test_copy
