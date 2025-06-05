@@ -21,13 +21,68 @@ export class PythonBackend {
   private static async _doInitialize(): Promise<void> {
     if (this.pyodide) return;
 
-    // Load Pyodide
-    const { loadPyodide } = await import('pyodide');
-    this.pyodide = await loadPyodide();
+    console.log('[MIRAI DEBUG] Starting Pyodide initialization...');
+    
+    try {
+      // Load Pyodide with proper indexURL configuration
+      const { loadPyodide } = await import('pyodide');
+      console.log('[MIRAI DEBUG] Pyodide module imported successfully');
+      
+      // Detect environment and configure appropriate paths
+      const isNode = typeof process !== 'undefined' && process.versions?.node;
+      console.log('[MIRAI DEBUG] Environment detected:', isNode ? 'Node.js' : 'Browser');
+      
+      let pyodideConfig;
+      
+      if (isNode) {
+        // Node.js environment - use absolute paths without file:// protocol
+        const path = await import('path');
+        const { fileURLToPath } = await import('url');
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        
+        const pyodidePath = path.resolve(__dirname, '../../node_modules/pyodide/');
+        pyodideConfig = {
+          indexURL: pyodidePath,
+          packageCacheDir: path.join(__dirname, '../../.pyodide-cache'),
+        };
+        console.log('[MIRAI DEBUG] Node.js config:', pyodideConfig);
+      } else {
+        // Browser environment - use relative paths from the current origin
+        const baseURL = new URL(window.location.href).origin;
+        pyodideConfig = {
+          indexURL: `${baseURL}/node_modules/pyodide/`,
+          // packageCacheDir not needed in browser (uses IndexedDB automatically)
+        };
+        console.log('[MIRAI DEBUG] Browser config:', pyodideConfig);
+      }
+      
+      // Configure Pyodide to find assets in the correct location
+      this.pyodide = await loadPyodide(pyodideConfig);
+      console.log('[MIRAI DEBUG] Pyodide loaded successfully');
+      
+    } catch (error) {
+      console.error('[MIRAI ERROR] Failed to load Pyodide:', error);
+      
+      // Fallback: Try loading with CDN
+      console.log('[MIRAI DEBUG] Attempting fallback CDN initialization...');
+      try {
+        const { loadPyodide } = await import('pyodide');
+        this.pyodide = await loadPyodide({
+          indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/',
+        });
+        console.log('[MIRAI DEBUG] Pyodide loaded successfully from CDN fallback');
+      } catch (fallbackError) {
+        console.error('[MIRAI ERROR] CDN fallback also failed:', fallbackError);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+        throw new Error(`Failed to initialize Pyodide: ${errorMessage}. CDN fallback also failed: ${fallbackErrorMessage}`);
+      }
+    }
 
     // Install the regex package
     await this.pyodide.loadPackage(['micropip']);
-    await this.pyodide.runPython(`
+    await this.pyodide.runPythonAsync(`
       import micropip
       await micropip.install('regex')
     `);
@@ -95,41 +150,79 @@ export class PythonBackend {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async runPython(code: string): Promise<any> {
     await this.initialize();
-    return this.pyodide.runPython(code);
+    try {
+      const result = this.pyodide.runPython(code);
+      
+      // Convert PyProxy objects to JavaScript objects
+      if (result && typeof result === 'object' && 'toJs' in result) {
+        return result.toJs({ dict_converter: Object.fromEntries });
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('[MIRAI ERROR] Python execution failed:', error);
+      throw error;
+    }
   }
 
   static async compile(pattern: string, flags: string = ''): Promise<PythonPattern> {
     await this.initialize();
     
-    const result = await this.runPython(`
-      import regex as re
-      
-      flag_map = {
-          'i': re.IGNORECASE,
-          'm': re.MULTILINE,
-          's': re.DOTALL,
-          'x': re.VERBOSE,
-          'a': re.ASCII,
-          'l': re.LOCALE,
-          'u': re.UNICODE,
-          'd': re.DEBUG
-      }
-      
-      flag_value = 0
-      for flag in "${flags}":
-          if flag in flag_map:
-              flag_value |= flag_map[flag]
-      
-      pattern_obj = re.compile("${pattern.replace(/"/g, '\\"')}", flag_value)
-      handle = register_pattern(pattern_obj)
-      pattern_data = create_pattern_data(pattern_obj)
-      
-      {
-          'handle': handle,
-          'pattern_data': pattern_data
-      }
+    
+    // Set pattern and flags in Python globals to avoid escaping issues
+    await this.runPython(`
+_compile_pattern = ${JSON.stringify(pattern)}
+_compile_flags = ${JSON.stringify(flags)}
     `);
+    
+    // Use globals to pass the result back
+    await this.runPython(`
+import regex as re
 
+flag_map = {
+    'i': re.IGNORECASE,
+    'm': re.MULTILINE,
+    's': re.DOTALL,
+    'x': re.VERBOSE,
+    'a': re.ASCII,
+    'l': re.LOCALE,
+    'u': re.UNICODE,
+    'd': re.DEBUG
+}
+
+flag_value = 0
+for flag in _compile_flags:
+    if flag in flag_map:
+        flag_value |= flag_map[flag]
+
+try:
+    pattern_obj = re.compile(_compile_pattern, flag_value)
+    handle = register_pattern(pattern_obj)
+    pattern_data = create_pattern_data(pattern_obj)
+    
+    _compile_result = {
+        'handle': handle,
+        'pattern_data': pattern_data
+    }
+except Exception as e:
+    _compile_result = {'error': str(e), 'pattern': _compile_pattern, 'flags': _compile_flags}
+    `);
+    
+    const result = await this.runPython('_compile_result');
+
+
+    if (!result) {
+      throw new Error(`Python execution returned undefined result for pattern: ${pattern}`);
+    }
+
+    if (result.error) {
+      throw new Error(`Failed to compile Python pattern: ${result.error}`);
+    }
+    
+    if (!result.pattern_data) {
+      throw new Error(`Invalid pattern compilation result: ${JSON.stringify(result)}`);
+    }
+    
     return new PythonPattern(pattern, flags, result.pattern_data, result.handle);
   }
 

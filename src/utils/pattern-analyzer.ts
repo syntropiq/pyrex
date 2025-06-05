@@ -4,6 +4,9 @@ import type { PatternAnalysis, RegexBackend } from '../types/index.js';
  * Python-specific regex features that are not available in JavaScript
  */
 const PYTHON_ONLY_FEATURES = [
+  // Python-style named groups
+  /\(\?P<[^>]+>/g, // Python named groups (?P<name>...)
+  
   // Lookbehind assertions (variable length)
   /\(\?<=.*?\)/g, // Variable length positive lookbehind
   /\(\?<!.*?\)/g, // Variable length negative lookbehind
@@ -56,16 +59,23 @@ export function analyzePattern(pattern: string, flags?: string): PatternAnalysis
   const features: string[] = [];
   let hasPythonFeatures = false;
   
+  console.log(`[MIRAI DEBUG] Analyzing pattern: "${pattern}" with flags: "${flags || 'none'}"`);
+  
   // Check for Python-only features
   for (const feature of PYTHON_ONLY_FEATURES) {
+    // Reset regex state before testing
+    feature.lastIndex = 0;
     if (feature.test(pattern)) {
       hasPythonFeatures = true;
       features.push(feature.source);
+      console.log(`[MIRAI DEBUG] Found Python feature: ${feature.source}`);
     }
   }
   
   // Check for modern JS features
   for (const feature of MODERN_JS_FEATURES) {
+    // Reset regex state before testing
+    feature.lastIndex = 0;
     if (feature.test(pattern)) {
       features.push(`modern-js: ${feature.source}`);
     }
@@ -84,6 +94,8 @@ export function analyzePattern(pattern: string, flags?: string): PatternAnalysis
   
   // Determine backend
   const backend: RegexBackend = hasPythonFeatures ? 'python' : 'javascript';
+  
+  console.log(`[MIRAI DEBUG] Selected backend: ${backend}, hasPythonFeatures: ${hasPythonFeatures}, features: [${features.join(', ')}]`);
   
   return {
     backend,
