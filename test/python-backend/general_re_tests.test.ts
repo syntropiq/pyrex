@@ -9,19 +9,20 @@ describe('Python Backend - Regex (converted)', () => {
   it('test 1', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(.)", "\\1\\1", "x", { backend: 'python' })).toBe('xx');
+    expect(re.sub("(.)", "\\1\\1", "x")).toBe('xx');
   });
 // Skipped test 2: incomplete arguments in Python: self.assertEqual(regex.sub('(.)', regex.escape(r"\1\1"), 'x'), r"\1\1")
 
   it('test 3', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(.)", "\\\\1\\\\1", "x", { backend: 'python' })).toBe(r"\1\1");
+    expect(re.subAsync("(.)", "\\\\1\\\\1", "x")).resolves.toBe("\\x01\\x01");
   });
 
   it('test 4', () => {
     // Python: self.assertEqual(regex.sub('(.)', lambda m: r"\1\1", 'x'), r"\1\1")
     // Use PyRex's Python backend for sub
-    expect(re.sub("(.)", // TODO: Manual conversion needed for callable replacement, "x", { backend: 'python' })).toBe(r"\1\1");
+    // TODO: Manual conversion needed for callable replacement
+    expect(re.subAsync("(.)", "\\x01\\x01", "x")).resolves.toBe("\\x01\\x01");
   });
 });

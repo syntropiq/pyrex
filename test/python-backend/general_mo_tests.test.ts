@@ -9,6 +9,6 @@ describe('Python Backend - Regex (converted)', () => {
   it('test 1', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("\\b|:+", "-", "a::bc", { backend: 'python' })).toBe("-a---bc-");
+    expect(re.sub("\\b|:+", "-", "a::bc")).toBe("-a---bc-");
   });
 });

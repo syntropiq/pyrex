@@ -10,54 +10,54 @@ describe('Python Backend - Regex (converted)', () => {
   it('test 1', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\b", "xx", { backend: 'python' })).toBe("xx\bxx\b");
+    expect(re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\b", "xx")).toBe("xx\bxx\b");
   });
 
   it('test 2', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n", { backend: 'python' })).toBe("abc\ndef\n");
+    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
   });
 
   it('test 3', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n", { backend: 'python' })).toBe("abc\ndef\n");
+    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
   });
 
   it('test 4', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n", { backend: 'python' })).toBe("abc\ndef\n");
+    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
   });
 
   it('test 5', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n", { backend: 'python' })).toBe("abc\ndef\n");
+    expect(re.sub("\\r\\n", "\\n", "abc\\r\\ndef\\r\\n")).toBe("abc\ndef\n");
   });
 
   it('test 6', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)x*", "-", "abxd", { backend: 'python' })).toBe("-a-b--d-");
+    expect(re.sub("(?V0)x*", "-", "abxd")).toBe("-a-b--d-");
   });
 
   it('test 7', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V0)x*", "-", "abxd", { backend: 'python' })).toBe("-a-b-d-");
+    expect(re.sub("(?V0)x*", "-", "abxd")).toBe("-a-b-d-");
   });
 
   it('test 8', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?V1)x*", "-", "abxd", { backend: 'python' })).toBe("-a-b--d-");
+    expect(re.sub("(?V1)x*", "-", "abxd")).toBe("-a-b--d-");
   });
 
   it('test 9', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("x+", "-", "abxd", { backend: 'python' })).toBe("ab-d");
+    expect(re.sub("x+", "-", "abxd")).toBe("ab-d");
   });
 });

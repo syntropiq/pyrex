@@ -9,12 +9,12 @@ describe('Python Backend - Regex (converted)', () => {
   it('test 1', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?P<a>x)|(?P<b>y)", "\\g<b>", "xx", { backend: 'python' })).toBe('');
+    expect(re.sub("(?P<a>x)|(?P<b>y)", "\\g<b>", "xx")).toBe('');
   });
 
   it('test 2', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("(?P<a>x)|(?P<b>y)", "\\2", "xx", { backend: 'python' })).toBe('');
+    expect(re.sub("(?P<a>x)|(?P<b>y)", "\\2", "xx")).toBe('');
   });
 });

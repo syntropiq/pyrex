@@ -9,12 +9,12 @@ describe('Python Backend - Regex (converted)', () => {
   it('test 1', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("a", "b", "aaaaa", { backend: 'python' })).toBe('bbbbb');
+    expect(re.sub("a", "b", "aaaaa")).toBe('bbbbb');
   });
 
   it('test 2', () => {
     
     // Use PyRex's Python backend for sub
-    expect(re.sub("a", "b", "aaaaa", { backend: 'python' })).toBe('baaaa');
+    expect(re.sub("a", "b", "aaaaa")).toBe('baaaa');
   });
 });

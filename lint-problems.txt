@@ -1,0 +1,235 @@
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/basic.test.ts
+  2:10  error  're' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/basic_tests.test.ts
+  19:2  error  Parsing error: Argument expression expected
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/batch_convert_py_tests_to_ts.ts
+   11:77  error    Unnecessary escape character: \)          no-useless-escape
+   80:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:3   error    'console' is not defined                  no-undef
+  127:24  error    'URL' is not defined                      no-undef
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/convert_basic_tests.py-to-ts.ts
+   13:77  error    Unnecessary escape character: \)          no-useless-escape
+   77:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:1   error    'console' is not defined                  no-undef
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_an_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+  3:10  error  're' is already defined             no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_as_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+  3:10  error  're' is already defined             no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_at_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+  3:10  error  're' is already defined             no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_bi_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+  3:10  error  're' is already defined             no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_br_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+  3:10  error  're' is already defined             no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_bu_tests.test.ts
+  3:10  error  're' is already defined  no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_by_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+  3:10  error  're' is already defined             no-redeclare
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ca_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_co_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_do_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_em_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ex_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_fi_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_fl_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_fo_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_fu_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ge_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_gr_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_gu_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ig_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_in_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_is_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_li_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_lo_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ma_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_na_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ne_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_no_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ov_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_pa_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_po_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_pr_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_re_tests.test.ts
+  19:75  error  Parsing error: Octal escape sequences are not allowed. Use the syntax '\x01'
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_sc_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_sp_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_sr_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_st_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_su_tests.test.ts
+  18:67  error  Parsing error: Octal escape sequences are not allowed. Use the syntax '\x00'
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_tu_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_va_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_we_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_wo_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/steve/Projects/amjur.org/pyrex/test/python-backend/general_ze_tests.test.ts
+  1:20  error  'it' is defined but never used      @typescript-eslint/no-unused-vars
+  1:24  error  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  're' is defined but never used      @typescript-eslint/no-unused-vars
+
+✖ 138 problems (136 errors, 2 warnings)
+
