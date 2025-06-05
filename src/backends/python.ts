@@ -345,8 +345,23 @@ export class PythonMatch implements Match {
     return this._data.end;
   }
 
-  span(): [number, number] {
-    return this._data.span;
+  span(group?: number | string): [number, number] {
+    if (group === undefined) {
+      return this._data.span;
+    }
+    if (typeof group === 'number') {
+      // Python's span for a specific numeric group
+      const span = this._data.span[group];
+      return span ? [span[0], span[1]] : [-1, -1];
+    } else {
+      // Python's span for a specific named group
+      const groupIndex = this.re.groupindex[group];
+      if (groupIndex !== undefined) {
+        const span = this._data.span[groupIndex];
+        return span ? [span[0], span[1]] : [-1, -1];
+      }
+      return [-1, -1];
+    }
   }
 
   expand(template: string): string {

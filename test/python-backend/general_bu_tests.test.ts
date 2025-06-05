@@ -7,8 +7,8 @@ import * as re from '../../src/index';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 1', async () => {
-    // Python: import regeximport unittestimport sysclass TestGeneralBu(unittest.TestCase):FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"PATTERN_CLASS = "<class '_regex.Pattern'>"BAD_SET = "unterminated character set"# test_bug_449964def test_bug_449964(self):# Fails for group followed by other escape.self.assertEqual(regex.sub(r"(?P<unk>x)", r"\g<1>\g<1>\", "xx"), "xx\bxx\")
-    expect(await re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\", "xx")).toBe("xx\bxx\");
+    // Python: import regeximport unittestimport sysclass TestGeneralBu(unittest.TestCase):FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"PATTERN_CLASS = "<class '_regex.Pattern'>"BAD_SET = "unterminated character set"# test_bug_449964def test_bug_449964(self):# Fails for group followed by other escape.self.assertEqual(regex.sub(r"(?P<unk>x)", r"\g<1>\g<1>\", "xx"), "xx\x08xx\")
+    expect(await re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\", "xx")).toBe("xx\x08xx\");
   });
 
   it('regex.sub test 2', async () => {

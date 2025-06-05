@@ -11,13 +11,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.sub test 2', async () => {
-    // Python: self.assertEqual(regex.sub('x', r'\000', 'x'), "\000")
-    expect(await re.sub("x", "\\x00", "x")).toBe("\000");
+    // Python: self.assertEqual(regex.sub('x', r'\x00', 'x'), "\x00")
+    expect(await re.sub("x", "\\x00", "x")).toBe("\x00");
   });
 
   it('regex.sub test 3', async () => {
-    // Python: self.assertEqual(regex.sub('x', r'\001', 'x'), "\001")
-    expect(await re.sub("x", "\\x01", "x")).toBe("\001");
+    // Python: self.assertEqual(regex.sub('x', r'\x01', 'x'), "\x01")
+    expect(await re.sub("x", "\\x01", "x")).toBe("\x01");
   });
 
   it('regex.sub test 4', async () => {
@@ -31,23 +31,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.sub test 6', async () => {
-    // Python: self.assertEqual(regex.sub('x', r'\111', 'x'), "\111")
-    expect(await re.sub("x", "\\x49", "x")).toBe("\111");
+    // Python: self.assertEqual(regex.sub('x', r'\x49', 'x'), "\x49")
+    expect(await re.sub("x", "\\x49", "x")).toBe("\x49");
   });
 
   it('regex.sub test 7', async () => {
-    // Python: self.assertEqual(regex.sub('x', r'\117', 'x'), "\117")
-    expect(await re.sub("x", "\\x4f", "x")).toBe("\117");
+    // Python: self.assertEqual(regex.sub('x', r'\x4f', 'x'), "\x4f")
+    expect(await re.sub("x", "\\x4f", "x")).toBe("\x4f");
   });
 
   it('regex.sub test 8', async () => {
-    // Python: self.assertEqual(regex.sub('x', r'\1111', 'x'), "\1111")
-    expect(await re.sub("x", "\\x491", "x")).toBe("\1111");
+    // Python: self.assertEqual(regex.sub('x', r'\x491', 'x'), "\x491")
+    expect(await re.sub("x", "\\x491", "x")).toBe("\x491");
   });
 
   it('regex.sub test 9', async () => {
-    // Python: self.assertEqual(regex.sub('x', r'\1111', 'x'), "\111" + "1")
-    expect(await re.sub("x", "\\x491", "x")).toBe("\111" + "1");
+    // Python: self.assertEqual(regex.sub('x', r'\x491', 'x'), "\x49" + "1")
+    expect(await re.sub("x", "\\x491", "x")).toBe("\x49" + "1");
   });
 
   it('regex.sub test 10', async () => {
@@ -77,22 +77,22 @@ describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 15', async () => {
     // Python: self.assertEqual(regex.sub('x', r'\400', 'x'), "\u0100")
-    expect(await re.sub("x", "\\x100", "x")).toBe("\u0100");
+    expect(await re.sub("x", "\\x00", "x")).toBe("\u0100");
   });
 
   it('regex.sub test 16', async () => {
     // Python: self.assertEqual(regex.sub('x', r'\777', 'x'), "\u01FF")
-    expect(await re.sub("x", "\\x1ff", "x")).toBe("\u01FF");
+    expect(await re.sub("x", "\\xff", "x")).toBe("\u01FF");
   });
 
   it('regex.sub test 17', async () => {
     // Python: self.assertEqual(regex.sub(b'x', br'\400', b'x'), "\x00")
-    expect(await re.sub("x", br'\\x100", "x")).toBe("\x00");
+    expect(await re.sub("x", br'\\x00", "x")).toBe("\x00");
   });
 
   it('regex.sub test 18', async () => {
     // Python: self.assertEqual(regex.sub(b'x', br'\777', b'x'), "\xFF")
-    expect(await re.sub("x", br'\\x1ff", "x")).toBe("\xFF");
+    expect(await re.sub("x", br'\\xff", "x")).toBe("\xFF");
   });
 
   it('regex.sub test 19', async () => {

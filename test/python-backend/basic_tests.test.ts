@@ -61,18 +61,18 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.sub test 10', async () => {
-    // Python: self.assertEqual(regex.sub("a", r"\t\n\v\r\f\a\", "a"), "\t\n\v\r\f\a\")
-    expect(await re.sub("a", "\\t\\n\\v\\r\\f\\a\\", "a")).toBe("\t\n\v\r\f\a\");
+    // Python: self.assertEqual(regex.sub("a", r"\t\n\v\r\f\x07\", "a"), "\t\n\v\r\f\x07\")
+    expect(await re.sub("a", "\\t\\n\\v\\r\\f\\x07\\", "a")).toBe("\t\n\v\r\f\x07\");
   });
 
   it('regex.sub test 11', async () => {
-    // Python: self.assertEqual(regex.sub("a", "\t\n\v\r\f\a", "a"), "\t\n\v\r\f\a")
-    expect(await re.sub("a", "\\t\\n\\v\\r\\f\\a", "a")).toBe("\t\n\v\r\f\a");
+    // Python: self.assertEqual(regex.sub("a", "\t\n\v\r\f\x07", "a"), "\t\n\v\r\f\x07")
+    expect(await re.sub("a", "\\t\\n\\v\\r\\f\\x07", "a")).toBe("\t\n\v\r\f\x07");
   });
 
   it('regex.sub test 12', async () => {
-    // Python: self.assertEqual(regex.sub("a", "\t\n\v\r\f\a", "a"),chr(9) + chr(10) + chr(11) + chr(13) + chr(12) + chr(7),)
-    expect(await re.sub("a", "\\t\\n\\v\\r\\f\\a", "a")).toBe("\t\n\v\r\f\a");
+    // Python: self.assertEqual(regex.sub("a", "\t\n\v\r\f\x07", "a"),chr(9) + chr(10) + chr(11) + chr(13) + chr(12) + chr(7),)
+    expect(await re.sub("a", "\\t\\n\\v\\r\\f\\x07", "a")).toBe("\t\n\v\r\f\x07");
   });
 
   it('regex.sub test 13', async () => {

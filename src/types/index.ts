@@ -67,6 +67,7 @@ export interface Match {
   start(group?: number): number;
   end(group?: number): number;
   span(group?: number): [number, number];
+  span(group?: string): [number, number];
 
   /**
    * Return the string obtained by doing backslash substitution

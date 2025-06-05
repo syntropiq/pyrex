@@ -6,12 +6,12 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 1', async () => {
-    // Python: self.assertEqual(regex.sub(r"\b|:+", "-", "a::bc"), "-a---bc-")
-    expect(await re.sub("\\b|:+", "-", "a::bc")).toBe("-a---bc-");
+    // Python: self.assertEqual(regex.sub(r"\x08|:+", "-", "a::bc"), "-a---bc-")
+    expect(await re.sub("\\x08|:+", "-", "a::bc")).toBe("-a---bc-");
   });
 
   it('regex.findall test 2', async () => {
-    // Python: self.assertEqual(regex.findall(r"\b|:+", "a::bc"), ["", "", "::", "", ""])
-    expect(await re.findall("\\b|:+", "a::bc")).toStrictEqual(["", "", "::", "", ""]);
+    // Python: self.assertEqual(regex.findall(r"\x08|:+", "a::bc"), ["", "", "::", "", ""])
+    expect(await re.findall("\\x08|:+", "a::bc")).toStrictEqual(["", "", "::", "", ""]);
   });
 });

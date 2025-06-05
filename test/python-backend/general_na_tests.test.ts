@@ -71,13 +71,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 14', async () => {
-    // Python: self.assertEqual(regex.search(r"(?fi)\b(\w+) +\1\", " stra\N{LATIN SMALL LETTER SHARP S}e STRASSE ").span(),(1, 15),)
-    expect(await re.search("(?fi)\\b(\\w+) +\\1\\", " stra\\N{LATIN SMALL LETTER SHARP S}e STRASSE ")?.span()).toStrictEqual((1, 15);
+    // Python: self.assertEqual(regex.search(r"(?fi)\x08(\w+) +\1\", " stra\N{LATIN SMALL LETTER SHARP S}e STRASSE ").span(),(1, 15),)
+    expect(await re.search("(?fi)\\x08(\\w+) +\\1\\", " stra\\N{LATIN SMALL LETTER SHARP S}e STRASSE ")?.span()).toStrictEqual((1, 15);
   });
 
   it('regex.search test 15', async () => {
-    // Python: self.assertEqual(regex.search(r"(?fi)\b(\w+) +\1\", " STRASSE stra\N{LATIN SMALL LETTER SHARP S}e ").span(),(1, 15),)
-    expect(await re.search("(?fi)\\b(\\w+) +\\1\\", " STRASSE stra\\N{LATIN SMALL LETTER SHARP S}e ")?.span()).toStrictEqual((1, 15);
+    // Python: self.assertEqual(regex.search(r"(?fi)\x08(\w+) +\1\", " STRASSE stra\N{LATIN SMALL LETTER SHARP S}e ").span(),(1, 15),)
+    expect(await re.search("(?fi)\\x08(\\w+) +\\1\\", " STRASSE stra\\N{LATIN SMALL LETTER SHARP S}e ")?.span()).toStrictEqual((1, 15);
   });
 
   it('regex.search test 16', async () => {

@@ -158,8 +158,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.sub test 33', async () => {
-    // Python: # test_replacementdef test_replacement(self):self.assertEqual(regex.sub(r"test\?", "result\\?\\.\a\n", "test?"),"result\\?\\.\a\n")
-    expect(await re.sub("test\\?", "result\\\\?\\\\.\\a\\n", "test?")).toBe("result\\?\\.\a\n");
+    // Python: # test_replacementdef test_replacement(self):self.assertEqual(regex.sub(r"test\?", "result\\?\\.\x07\n", "test?"),"result\\?\\.\x07\n")
+    expect(await re.sub("test\\?", "result\\\\?\\\\.\\x07\\n", "test?")).toBe("result\\?\\.\x07\n");
   });
 
   it('regex.sub test 34', async () => {

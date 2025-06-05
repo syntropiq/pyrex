@@ -19,6 +19,7 @@ describe('Python Backend - Regex (converted)', () => {
   it('regex.search test 3', async () => {
     // Python: self.assertEqual(regex.search("(ananda){1i+1d<2}", text), null)
     const text = "ananda"; // Define text variable
+    const text = "ananda";
     expect(await re.search("(ananda){1i+1d<2}", text)).toStrictEqual(null);
   });
 
@@ -83,18 +84,18 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 16', async () => {
-    // Python: # Find best whole word match for "foobar".self.assertEqual(regex.search("\\b(foobar){e}\\", "zfoobarz").span(0, 1), ((0, 8), (0, 8))
-    expect(await re.search("\\\\b(foobar){e}\\\\", "zfoobarz")?.span(0, 1)).toStrictEqual(((0, 8);
+    // Python: # Find best whole word match for "foobar".self.assertEqual(regex.search("\\x08(foobar){e}\\", "zfoobarz").span(0, 1), ((0, 8), (0, 8))
+    expect(await re.search("\\\\x08(foobar){e}\\\\", "zfoobarz")?.span(0, 1)).toStrictEqual(((0, 8);
   });
 
   it('regex.search test 17', async () => {
-    // Python: self.assertEqual(regex.search("\\b(foobar){e}\\", "boing zfoobarz goobar woop").span(0, 1),((0, 6), (0, 6)),)
-    expect(await re.search("\\\\b(foobar){e}\\\\", "boing zfoobarz goobar woop")?.span(0, 1)).toStrictEqual(((0, 6);
+    // Python: self.assertEqual(regex.search("\\x08(foobar){e}\\", "boing zfoobarz goobar woop").span(0, 1),((0, 6), (0, 6)),)
+    expect(await re.search("\\\\x08(foobar){e}\\\\", "boing zfoobarz goobar woop")?.span(0, 1)).toStrictEqual(((0, 6);
   });
 
   it('regex.search test 18', async () => {
-    // Python: self.assertEqual(regex.search("(?b)\\b(foobar){e}\\", "boing zfoobarz goobar woop").span(0, 1),((15, 21), (15, 21)),)
-    expect(await re.search("(?b)\\\\b(foobar){e}\\\\", "boing zfoobarz goobar woop")?.span(0, 1)).toStrictEqual(((15, 21);
+    // Python: self.assertEqual(regex.search("(?b)\\x08(foobar){e}\\", "boing zfoobarz goobar woop").span(0, 1),((15, 21), (15, 21)),)
+    expect(await re.search("(?b)\\\\x08(foobar){e}\\\\", "boing zfoobarz goobar woop")?.span(0, 1)).toStrictEqual(((15, 21);
   });
 
   it('regex.search test 19', async () => {
@@ -199,6 +200,12 @@ describe('Python Backend - Regex (converted)', () => {
 
   it('regex.search test 39', async () => {
     // Python: self.assertEqual(regex.search(r"(?s)^.*(dot.org){e}.*$", text).span(0, 1),((0, 120), (120, 120)),)
+    const text = `
+        This is a long string with dot.org and other text.
+        It spans multiple lines to test dotall flag.
+        Another line with dot.org.
+        Final line.
+    `;
     expect((await re.search("(?s)^.*(dot.org){e}.*$", text))?.span(0, 1)).toStrictEqual([0, 120]);
   });
 
@@ -213,53 +220,53 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 42', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?e)\b\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["dog", "cot"],)
-    expect(await re.findall("(?e)\\b\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["dog", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"(?e)\x08\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["dog", "cot"],)
+    expect(await re.findall("(?e)\\x08\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["dog", "cot"]);
   });
 
   it('regex.findall test 43', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)\b\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog ", "cot"],)
-    expect(await re.findall("(?r)\\b\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog ", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"(?r)\x08\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog ", "cot"],)
+    expect(await re.findall("(?r)\\x08\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog ", "cot"]);
   });
 
   it('regex.findall test 44', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?er)\b\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog", "cot"],)
-    expect(await re.findall("(?er)\\b\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"(?er)\x08\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog", "cot"],)
+    expect(await re.findall("(?er)\\x08\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog", "cot"]);
   });
 
   it('regex.findall test 45', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)\b\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["cot", "dog"],)
-    expect(await re.findall("(?r)\\b\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["cot", "dog"]);
+    // Python: self.assertEqual(regex.findall(r"(?r)\x08\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["cot", "dog"],)
+    expect(await re.findall("(?r)\\x08\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["cot", "dog"]);
   });
 
   it('regex.findall test 46', async () => {
-    // Python: self.assertEqual(regex.findall(r"\b\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["cot", "dog"],)
-    expect(await re.findall("\\b\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["cot", "dog"]);
+    // Python: self.assertEqual(regex.findall(r"\x08\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["cot", "dog"],)
+    expect(await re.findall("\\x08\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["cot", "dog"]);
   });
 
   it('regex.findall test 47', async () => {
-    // Python: self.assertEqual(regex.findall(r"\b\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),[" dog", "cot"],)
-    expect(await re.findall("\\b\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual([" dog", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"\x08\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),[" dog", "cot"],)
+    expect(await re.findall("\\x08\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual([" dog", "cot"]);
   });
 
   it('regex.findall test 48', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?e)\b\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["dog", "cot"],)
-    expect(await re.findall("(?e)\\b\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["dog", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"(?e)\x08\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["dog", "cot"],)
+    expect(await re.findall("(?e)\\x08\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["dog", "cot"]);
   });
 
   it('regex.findall test 49', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)\b\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog ", "cot"],)
-    expect(await re.findall("(?r)\\b\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog ", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"(?r)\x08\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog ", "cot"],)
+    expect(await re.findall("(?r)\\x08\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog ", "cot"]);
   });
 
   it('regex.findall test 50', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?er)\b\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog", "cot"],)
-    expect(await re.findall("(?er)\\b\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog", "cot"]);
+    // Python: self.assertEqual(regex.findall(r"(?er)\x08\L<words>{e<=1}\"," book cot dog desk ",words="cat dog".split(),),["dog", "cot"],)
+    expect(await re.findall("(?er)\\x08\\L<words>{e<=1}\\", " book cot dog desk ")).toStrictEqual(["dog", "cot"]);
   });
 
   it('regex.findall test 51', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)\b\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["cot", "dog"],)
-    expect(await re.findall("\\b\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["cot", "dog"]);
+    // Python: self.assertEqual(regex.findall(r"(?r)\x08\L<words>{e<=1}\"," book dog cot desk ",words="cat dog".split(),),["cot", "dog"],)
+    expect(await re.findall("\\x08\\L<words>{e<=1}\\", " book dog cot desk ")).toStrictEqual(["cot", "dog"]);
   });
 
   it('regex.search test 52', async () => {

@@ -312,8 +312,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 63', async () => {
-    // Python: # Hg issue 115: Infinite loop when processing backreferencesself.assertEqual(regex.findall(r"\bof ([a-z]+) of \1\", "To make use of one of these modules"),[],)
-    expect(await re.findall("\\bof ([a-z]+) of \\1\\", "To make use of one of these modules")).toStrictEqual([],);
+    // Python: # Hg issue 115: Infinite loop when processing backreferencesself.assertEqual(regex.findall(r"\x08of ([a-z]+) of \1\", "To make use of one of these modules"),[],)
+    expect(await re.findall("\\x08of ([a-z]+) of \\1\\", "To make use of one of these modules")).toStrictEqual([],);
   });
 
   it('regex.sub test 64', async () => {
@@ -392,13 +392,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 79', async () => {
-    // Python: # Groups cleared after failure.self.assertEqual(regex.findall(r"(y)?(\d)(?(1)\b\B)", "ax1y2z3"),[("", "1"), ("", "2"), ("", "3")],)
-    expect(await re.findall("(y)?(\\d)(?(1)\\b\\B)", "ax1y2z3")).toStrictEqual([("", "1");
+    // Python: # Groups cleared after failure.self.assertEqual(regex.findall(r"(y)?(\d)(?(1)\x08\B)", "ax1y2z3"),[("", "1"), ("", "2"), ("", "3")],)
+    expect(await re.findall("(y)?(\\d)(?(1)\\x08\\B)", "ax1y2z3")).toStrictEqual([("", "1");
   });
 
   it('regex.findall test 80', async () => {
-    // Python: self.assertEqual(regex.findall(r"(y)?+(\d)(?(1)\b\B)", "ax1y2z3"),[("", "1"), ("", "2"), ("", "3")],)
-    expect(await re.findall("(y)?+(\\d)(?(1)\\b\\B)", "ax1y2z3")).toStrictEqual([("", "1");
+    // Python: self.assertEqual(regex.findall(r"(y)?+(\d)(?(1)\x08\B)", "ax1y2z3"),[("", "1"), ("", "2"), ("", "3")],)
+    expect(await re.findall("(y)?+(\\d)(?(1)\\x08\\B)", "ax1y2z3")).toStrictEqual([("", "1");
   });
 
   it('regex.search test 81', async () => {
@@ -467,13 +467,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 94', async () => {
-    // Python: # Hg issue 163: allow lookarounds in conditionals.self.assertEqual(regex.match(r"(?:(?=\d)\d+\b|\w+)", "123abc").span(), (0, 6))
-    expect(await re.match("(?:(?=\\d)\\d+\\b|\\w+)", "123abc")?.span()).toStrictEqual((0, 6);
+    // Python: # Hg issue 163: allow lookarounds in conditionals.self.assertEqual(regex.match(r"(?:(?=\d)\d+\x08|\w+)", "123abc").span(), (0, 6))
+    expect(await re.match("(?:(?=\\d)\\d+\\x08|\\w+)", "123abc")?.span()).toStrictEqual((0, 6);
   });
 
   it('regex.match test 95', async () => {
-    // Python: self.assertEqual(regex.match(r"(?(?=\d)\d+\b|\w+)", "123abc"), null)
-    expect(await re.match("(?(?=\\d)\\d+\\b|\\w+)", "123abc")).toStrictEqual(null);
+    // Python: self.assertEqual(regex.match(r"(?(?=\d)\d+\x08|\w+)", "123abc"), null)
+    expect(await re.match("(?(?=\\d)\\d+\\x08|\\w+)", "123abc")).toStrictEqual(null);
   });
 
   it('regex.search test 96', async () => {
@@ -827,8 +827,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 166', async () => {
-    // Python: # Git issue 371: Specifying character set when fuzzy-matching allows characters not in the setself.assertEqual(regex.search(r"\b(?e)(?:\d{6,20}){i<=5:[\-\\\/]}\","cat dog starting at 00:01132.000. hello world",),null,)
-    expect(await re.search("\\b(?e)(?:\\d{6, 20}){i<=5:[\\-\\\\\\/]}\\")).toStrictEqual(null,);
+    // Python: # Git issue 371: Specifying character set when fuzzy-matching allows characters not in the setself.assertEqual(regex.search(r"\x08(?e)(?:\d{6,20}){i<=5:[\-\\\/]}\","cat dog starting at 00:01132.000. hello world",),null,)
+    expect(await re.search("\\x08(?e)(?:\\d{6, 20}){i<=5:[\\-\\\\\\/]}\\")).toStrictEqual(null,);
   });
 
   it('regex.findall test 167', async () => {
@@ -881,13 +881,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 180', async () => {
-    // Python: # Git issue 442: Fuzzy regex matching doesn't seem to test insertions correctlyself.assertEqual(regex.search(r"(?:\bha\b){i:[ ]}", "having"), null)
-    expect(await re.search("(?:\\bha\\b){i:[ ]}", "having")).toStrictEqual(null);
+    // Python: # Git issue 442: Fuzzy regex matching doesn't seem to test insertions correctlyself.assertEqual(regex.search(r"(?:\x08ha\x08){i:[ ]}", "having"), null)
+    expect(await re.search("(?:\\x08ha\\x08){i:[ ]}", "having")).toStrictEqual(null);
   });
 
   it('regex.search test 181', async () => {
-    // Python: self.assertEqual(regex.search(r"(?:\bha\b){i:[ ]}", "having", flags=regex.I), null)
-    expect(await re.search("(?:\\bha\\b){i:[ ]}", "having")).toStrictEqual(null);
+    // Python: self.assertEqual(regex.search(r"(?:\x08ha\x08){i:[ ]}", "having", flags=regex.I), null)
+    expect(await re.search("(?:\\x08ha\\x08){i:[ ]}", "having")).toStrictEqual(null);
   });
 
   it('regex.match test 182', async () => {
