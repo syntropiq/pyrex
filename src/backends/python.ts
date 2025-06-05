@@ -148,13 +148,13 @@ export class PythonBackend {
               'end': match_obj.end(),
               'span': match_obj.span(),
               'groupdict': dict(match_obj.groupdict()),
-              'capturesdict': dict(match_obj.capturesdict())
-          },
-          'captures': {
-              group_name: [match_obj.captures(group_name) for group_name in match_obj.groupdict().keys()],
-              group_index: [match_obj.captures(i) for i in range(match_obj.lastindex + 1)]
-          },
-          'expandf': match_obj.expandf
+              'capturesdict': dict(match_obj.capturesdict()),
+              'captures': {
+                  'by_name': {name: match_obj.captures(name) for name in match_obj.groupdict().keys()},
+                  'by_index': [match_obj.captures(i) for i in range(match_obj.lastindex + 1)]
+              },
+              'expandf_result': match_obj.expandf # Store the bound method
+          }
       
       def create_pattern_data(pattern_obj):
           return {
@@ -360,14 +360,14 @@ export class PythonMatch implements Match {
 
   expandf(template: string): string {
     // Python-style format string substitution implementation
-    return this._data.expandf ? this._data.expandf(template) : template;
+    return this._data.expandf_result(template);
   }
 
   captures(group: number | string): string[] {
     if (typeof group === 'number') {
-      return this._data.captures.group_index[group] || [];
+      return this._data.captures.by_index[group] || [];
     } else {
-      return this._data.captures.group_name[group] || [];
+      return this._data.captures.by_name[group] || [];
     }
   }
 }

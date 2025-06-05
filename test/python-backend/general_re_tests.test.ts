@@ -71,23 +71,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 14', async () => {
-    // Python: self.assertEqual(regex.match(r'^(\()?([^()]+)(?(1)\))$', 'a)'), None)
-    expect(await re.match("^(\\()?([^()]+)(?(1)\\))$", "a)")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r'^(\()?([^()]+)(?(1)\))$', 'a)'), null)
+    expect(await re.match("^(\\()?([^()]+)(?(1)\\))$", "a)")).toStrictEqual(null);
   });
 
   it('regex.match test 15', async () => {
-    // Python: self.assertEqual(regex.match(r'^(\()?([^()]+)(?(1)\))$', '(a'), None)
-    expect(await re.match("^(\\()?([^()]+)(?(1)\\))$", "(a")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r'^(\()?([^()]+)(?(1)\))$', '(a'), null)
+    expect(await re.match("^(\\()?([^()]+)(?(1)\\))$", "(a")).toStrictEqual(null);
   });
 
   it('regex.match test 16', async () => {
-    // Python: self.assertEqual(regex.match(r'^(\|)?([^()]+)\1$', 'a|'), None)
-    expect(await re.match("^(\\|)?([^()]+)\\1$", "a|")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r'^(\|)?([^()]+)\1$', 'a|'), null)
+    expect(await re.match("^(\\|)?([^()]+)\\1$", "a|")).toStrictEqual(null);
   });
 
   it('regex.match test 17', async () => {
-    // Python: self.assertEqual(regex.match(r'^(\|)?([^()]+)\1$', '|a'), None)
-    expect(await re.match("^(\\|)?([^()]+)\\1$", "|a")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r'^(\|)?([^()]+)\1$', '|a'), null)
+    expect(await re.match("^(\\|)?([^()]+)\\1$", "|a")).toStrictEqual(null);
   });
 
   it('regex.findall test 18', async () => {
@@ -96,48 +96,48 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 19', async () => {
-    // Python: # test_repeat_minmaxdef test_repeat_minmax(self):self.assertEqual(regex.match(r"^(\w){1}$", "abc"), None)
-    expect(await re.match("^(\\w){1}$", "abc")).toStrictEqual(None);
+    // Python: # test_repeat_minmaxdef test_repeat_minmax(self):self.assertEqual(regex.match(r"^(\w){1}$", "abc"), null)
+    expect(await re.match("^(\\w){1}$", "abc")).toStrictEqual(null);
   });
 
   it('regex.match test 20', async () => {
-    // Python: self.assertEqual(regex.match(r"^(\w){1}?$", "abc"), None)
-    expect(await re.match("^(\\w){1}?$", "abc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"^(\w){1}?$", "abc"), null)
+    expect(await re.match("^(\\w){1}?$", "abc")).toStrictEqual(null);
   });
 
   it('regex.match test 21', async () => {
-    // Python: self.assertEqual(regex.match(r"^(\w){1,2}$", "abc"), None)
-    expect(await re.match("^(\\w){1, 2}$")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"^(\w){1,2}$", "abc"), null)
+    expect(await re.match("^(\\w){1, 2}$")).toStrictEqual(null);
   });
 
   it('regex.match test 22', async () => {
-    // Python: self.assertEqual(regex.match(r"^(\w){1,2}?$", "abc"), None)
-    expect(await re.match("^(\\w){1, 2}?$")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"^(\w){1,2}?$", "abc"), null)
+    expect(await re.match("^(\\w){1, 2}?$")).toStrictEqual(null);
   });
 
   it('regex.match test 23', async () => {
-    // Python: self.assertEqual(regex.match("^x{1}$", "xxx"), None)
-    expect(await re.match("^x{1}$", "xxx")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("^x{1}$", "xxx"), null)
+    expect(await re.match("^x{1}$", "xxx")).toStrictEqual(null);
   });
 
   it('regex.match test 24', async () => {
-    // Python: self.assertEqual(regex.match("^x{1}?$", "xxx"), None)
-    expect(await re.match("^x{1}?$", "xxx")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("^x{1}?$", "xxx"), null)
+    expect(await re.match("^x{1}?$", "xxx")).toStrictEqual(null);
   });
 
   it('regex.match test 25', async () => {
-    // Python: self.assertEqual(regex.match("^x{1,2}$", "xxx"), None)
-    expect(await re.match("^x{1, 2}$")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("^x{1,2}$", "xxx"), null)
+    expect(await re.match("^x{1, 2}$")).toStrictEqual(null);
   });
 
   it('regex.match test 26', async () => {
-    // Python: self.assertEqual(regex.match("^x{1,2}?$", "xxx"), None)
-    expect(await re.match("^x{1, 2}?$")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("^x{1,2}?$", "xxx"), null)
+    expect(await re.match("^x{1, 2}?$")).toStrictEqual(null);
   });
 
   it('regex.match test 27', async () => {
-    // Python: self.assertEqual(regex.match("^x{}$", "xxx"), None)
-    expect(await re.match("^x{}$", "xxx")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("^x{}$", "xxx"), null)
+    expect(await re.match("^x{}$", "xxx")).toStrictEqual(null);
   });
 // Skipped test 28: incomplete arguments in Python: self.assertEqual(regex.match(regex.escape(chr(i)), chr(i)).span(),(0, 1))
 // Skipped test 29: incomplete arguments in Python: self.assertEqual(regex.match(regex.escape(b), b).span(), (0, 1))
@@ -179,22 +179,22 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 38', async () => {
-    // Python: self.assertEqual(regex.search(r"(\w)(?:(?R)|(\w?))\1", "dontmatchme"),None)
-    expect(await re.search("(\\w)(?:(?R)|(\\w?))\\1", "dontmatchme")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(\w)(?:(?R)|(\w?))\1", "dontmatchme"),null)
+    expect(await re.search("(\\w)(?:(?R)|(\\w?))\\1", "dontmatchme")).toStrictEqual(null);
   });
 
   it('regex.search test 39', async () => {
-    // Python: self.assertEqual(regex.search(r"(?r)\2(?:(\w?)|(?R))(\w)","dontmatchme"), None)
-    expect(await re.search("(?r)\\2(?:(\\w?)|(?R))(\\w)", "dontmatchme")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?r)\2(?:(\w?)|(?R))(\w)","dontmatchme"), null)
+    expect(await re.search("(?r)\\2(?:(\\w?)|(?R))(\\w)", "dontmatchme")).toStrictEqual(null);
   });
 
   it('regex.search test 40', async () => {
-    // Python: self.assertEqual(regex.search(r"\(((?>[^()]+)|(?R))*\)","(ab(cd)ef)").captures(1), ["ab", "cd", "(cd)", "ef"])
-    expect(await re.search("\\(((?>[^()]+)|(?R))*\\)", "(ab(cd)ef)")?.captures(1)).toStrictEqual(["ab", "cd", "(cd);
+    // Python: self.assertEqual(regex.search(r"\(((?>[^()]+)|(?R))*\)","(ab(cd)ef)").captures(1), ["a", "cd", "(cd)", "ef"])
+    expect(await re.search("\\(((?>[^()]+)|(?R))*\\)", "(ab(cd)ef)")?.captures(1)).toStrictEqual(["a", "cd", "(cd);
   });
 
   it('regex.search test 41', async () => {
-    // Python: self.assertEqual(regex.search(r"(?r)\(((?R)|(?>[^()]+))*\)","(ab(cd)ef)").captures(1), ["ef", "cd", "(cd)", "ab"])
+    // Python: self.assertEqual(regex.search(r"(?r)\(((?R)|(?>[^()]+))*\)","(ab(cd)ef)").captures(1), ["ef", "cd", "(cd)", "a"])
     expect(await re.search("(?r)\\(((?R)|(?>[^()]+))*\\)", "(ab(cd)ef)")?.captures(1)).toStrictEqual(["ef", "cd", "(cd);
   });
 });

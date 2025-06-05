@@ -6,8 +6,8 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.match test 1', async () => {
-    // Python: self.assertEqual(regex.match("ab", "a", partial=True).span(), (0, 1))
-    expect(await re.match("ab", "a")?.span()).toStrictEqual((0, 1);
+    // Python: self.assertEqual(regex.match("a", "a", partial=True).span(), (0, 1))
+    expect(await re.match("a", "a")?.span()).toStrictEqual((0, 1);
   });
 
   it('regex.match test 2', async () => {
@@ -16,8 +16,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 3', async () => {
-    // Python: self.assertEqual(regex.match(r"cats", "catch", partial=True), None)
-    expect(await re.match("cats", "catch")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"cats", "catch", partial=True), null)
+    expect(await re.match("cats", "catch")).toStrictEqual(null);
   });
 
   it('regex.match test 4', async () => {
@@ -51,8 +51,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 10', async () => {
-    // Python: self.assertEqual(regex.match(r"(?fi)\L<words>", "po\ufb06", partial=True, words=["POS"]),None,)
-    expect(await re.match("(?fi)\\L<words>", "po\\ufb06")).toStrictEqual(None,);
+    // Python: self.assertEqual(regex.match(r"(?fi)\L<words>", "po\ufb06", partial=True, words=["POS"]),null,)
+    expect(await re.match("(?fi)\\L<words>", "po\\ufb06")).toStrictEqual(null,);
   });
 
   it('regex.match test 11', async () => {
@@ -61,8 +61,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 12', async () => {
-    // Python: self.assertEqual(regex.match(r"[a-z]*4R$", "ab", partial=True).span(), (0, 2))
-    expect(await re.match("[a-z]*4R$", "ab")?.span()).toStrictEqual((0, 2);
+    // Python: self.assertEqual(regex.match(r"[a-z]*4R$", "a", partial=True).span(), (0, 2))
+    expect(await re.match("[a-z]*4R$", "a")?.span()).toStrictEqual((0, 2);
   });
 
   it('regex.match test 13', async () => {
@@ -81,12 +81,12 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 16', async () => {
-    // Python: self.assertEqual(regex.match(r"[a-z]*4R$", "4a", partial=True), None)
-    expect(await re.match("[a-z]*4R$", "4a")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"[a-z]*4R$", "4a", partial=True), null)
+    expect(await re.match("[a-z]*4R$", "4a")).toStrictEqual(null);
   });
 
   it('regex.match test 17', async () => {
-    // Python: self.assertEqual(regex.match(r"[a-z]*4R$", "a44", partial=True), None)
-    expect(await re.match("[a-z]*4R$", "a44")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"[a-z]*4R$", "a44", partial=True), null)
+    expect(await re.match("[a-z]*4R$", "a44")).toStrictEqual(null);
   });
 });

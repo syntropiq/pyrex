@@ -132,8 +132,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 26', async () => {
-    // Python: # test_capturesdef test_captures(self):self.assertEqual(regex.search(r"(\w)+", "abc").captures(1), ["a", "b", "c"])
-    expect((await re.search("(\\w)+", "abc"))?.captures(1)).toStrictEqual(["a", "b", "c"]);
+    // Python: # test_capturesdef test_captures(self):self.assertEqual(regex.search(r"(\w)+", "abc").captures(1), ["a", "", "c"])
+    expect((await re.search("(\\w)+", "abc"))?.captures(1)).toStrictEqual(["a", "", "c"]);
   });
 
   it('regex.search test 27', async () => {
@@ -157,13 +157,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 31', async () => {
-    // Python: self.assertEqual(regex.search(r".*?(?=(.)+)b", "ab").captures(1), ["b"])
-    expect((await re.search(".*?(?=(.)+)b", "ab"))?.captures(1)).toStrictEqual(["b"]);
+    // Python: self.assertEqual(regex.search(r".*?(?=(.)+)", "a").captures(1), [""])
+    expect((await re.search(".*?(?=(.)+)", "a"))?.captures(1)).toStrictEqual([""]);
   });
 
   it('regex.search test 32', async () => {
-    // Python: self.assertEqual(regex.search(r".*?(?>(.){0,2})d", "abcd").captures(1), ["b", "c"])
-    expect((await re.search(".*?(?>(.){0,2})d", "abcd"))?.captures(1)).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.search(r".*?(?>(.){0,2})d", "abcd").captures(1), ["", "c"])
+    expect((await re.search(".*?(?>(.){0,2})d", "abcd"))?.captures(1)).toStrictEqual(["", "c"]);
   });
 
   it('regex.search test 33', async () => {

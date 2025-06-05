@@ -7,8 +7,8 @@ import * as re from '../../src/index';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 1', async () => {
-    // Python: import regeximport unittestimport sysclass TestGeneralBu(unittest.TestCase):FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"PATTERN_CLASS = "<class '_regex.Pattern'>"BAD_SET = "unterminated character set"# test_bug_449964def test_bug_449964(self):# Fails for group followed by other escape.self.assertEqual(regex.sub(r"(?P<unk>x)", r"\g<1>\g<1>\b", "xx"), "xx\bxx\b")
-    expect(await re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\b", "xx")).toBe("xx\bxx\b");
+    // Python: import regeximport unittestimport sysclass TestGeneralBu(unittest.TestCase):FLAGS_WITH_COMPILED_PAT = "cannot process flags argument with a compiled pattern"PATTERN_CLASS = "<class '_regex.Pattern'>"BAD_SET = "unterminated character set"# test_bug_449964def test_bug_449964(self):# Fails for group followed by other escape.self.assertEqual(regex.sub(r"(?P<unk>x)", r"\g<1>\g<1>\", "xx"), "xx\bxx\")
+    expect(await re.sub("(?P<unk>x)", "\\g<1>\\g<1>\\", "xx")).toBe("xx\bxx\");
   });
 
   it('regex.sub test 2', async () => {
@@ -63,33 +63,33 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 12', async () => {
-    // Python: # test_bug_117612def test_bug_117612(self):self.assertEqual(regex.findall(r"(a|(b))", "aba"), [("a", ""), ("b", "b"), ("a", "")])
-    expect(await re.findall("(a|(b))", "aba")).toStrictEqual([["a", null], ["b", "b"], ["a", null]]);
+    // Python: # test_bug_117612def test_bug_117612(self):self.assertEqual(regex.findall(r"(a|(b))", "aba"), [("a", ""), ("", ""), ("a", "")])
+    expect(await re.findall("(a|(b))", "aba")).toStrictEqual([["a", null], ["", ""], ["a", null]]);
   });
 
   it('regex.match test 13', async () => {
-    // Python: # test_bug_113254def test_bug_113254(self):self.assertEqual(regex.match(r"(a)|(b)", "b").start(1), -1)
-    expect((await re.match("(a)|(b)", "b"))?.start(1)).toStrictEqual(-1);
+    // Python: # test_bug_113254def test_bug_113254(self):self.assertEqual(regex.match(r"(a)|(b)", "").start(1), -1)
+    expect((await re.match("(a)|(b)", ""))?.start(1)).toStrictEqual(-1);
   });
 
   it('regex.match test 14', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)|(b)", "b").end(1), -1)
-    expect((await re.match("(a)|(b)", "b"))?.end(1)).toStrictEqual(-1);
+    // Python: self.assertEqual(regex.match(r"(a)|(b)", "").end(1), -1)
+    expect((await re.match("(a)|(b)", ""))?.end(1)).toStrictEqual(-1);
   });
 
   it('regex.match test 15', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)|(b)", "b").span(1), (-1, -1))
-    expect((await re.match("(a)|(b)", "b"))?.span(1)).toStrictEqual([-1, -1]);
+    // Python: self.assertEqual(regex.match(r"(a)|(b)", "").span(1), (-1, -1))
+    expect((await re.match("(a)|(b)", ""))?.span(1)).toStrictEqual([-1, -1]);
   });
 
   it('regex.match test 16', async () => {
-    // Python: # test_bug_418626def test_bug_418626(self):# Bugs 418626 at al. -- Testing Greg Chapman's addition of op code# SRE_OP_MIN_REPEAT_ONE for eliminating recursion on simple uses of# pattern '*?' on a long string.self.assertEqual(regex.match(".*?c", 10000 * "ab" + "cd").end(0), 20001)
-    expect((await re.match(".*?c", "ab".repeat(10000) + "cd"))?.end(0)).toStrictEqual(20001);
+    // Python: # test_bug_418626def test_bug_418626(self):# Bugs 418626 at al. -- Testing Greg Chapman's addition of op code# SRE_OP_MIN_REPEAT_ONE for eliminating recursion on simple uses of# pattern '*?' on a long string.self.assertEqual(regex.match(".*?c", 10000 * "a" + "cd").end(0), 20001)
+    expect((await re.match(".*?c", "a".repeat(10000) + "cd"))?.end(0)).toStrictEqual(20001);
   });
 
   it('regex.match test 17', async () => {
-    // Python: self.assertEqual(regex.match(".*?cd", 5000 * "ab" + "c" + 5000 * "ab" + "cde").end(0), 20003)
-    expect((await re.match(".*?cd", "ab".repeat(5000) + "c" + "ab".repeat(5000) + "cde"))?.end(0)).toStrictEqual(20003);
+    // Python: self.assertEqual(regex.match(".*?cd", 5000 * "a" + "c" + 5000 * "a" + "cde").end(0), 20003)
+    expect((await re.match(".*?cd", "a".repeat(5000) + "c" + "a".repeat(5000) + "cde"))?.end(0)).toStrictEqual(20003);
   });
 
   it('regex.match test 18', async () => {
@@ -98,8 +98,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 19', async () => {
-    // Python: # Non-simple '*?' still used to hit the recursion limit, before the# non-recursive scheme was implemented.self.assertEqual(regex.search("(a|b)*?c", 10000 * "ab" + "cd").end(0), 20001)
-    expect((await re.search("(a|b)*?c", "ab".repeat(10000) + "cd"))?.end(0)).toStrictEqual(20001);
+    // Python: # Non-simple '*?' still used to hit the recursion limit, before the# non-recursive scheme was implemented.self.assertEqual(regex.search("(a|b)*?c", 10000 * "a" + "cd").end(0), 20001)
+    expect((await re.search("(a|b)*?c", "a".repeat(10000) + "cd"))?.end(0)).toStrictEqual(20001);
   });
-// Skipped test 20: incomplete arguments in Python: # test_bug_931848def test_bug_931848(self):pattern = "[\u002e\u3002\uff0e\uff61]"self.assertEqual(regex.compile(pattern).split("a.b.c"), ["a", "b", "c"])
+// Skipped test 20: incomplete arguments in Python: # test_bug_931848def test_bug_931848(self):pattern = "[\u002e\u3002\uff0e\uff61]"self.assertEqual(regex.compile(pattern).split("a.b.c"), ["a", "", "c"])
 });

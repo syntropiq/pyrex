@@ -86,12 +86,12 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.sub test 17', async () => {
-    // Python: self.assertEqual(regex.sub(b'x', br'\400', b'x'), b"\x00")
+    // Python: self.assertEqual(regex.sub(b'x', br'\400', b'x'), "\x00")
     expect(await re.sub("x", br'\\x100", "x")).toBe("\x00");
   });
 
   it('regex.sub test 18', async () => {
-    // Python: self.assertEqual(regex.sub(b'x', br'\777', b'x'), b"\xFF")
+    // Python: self.assertEqual(regex.sub(b'x', br'\777', b'x'), "\xFF")
     expect(await re.sub("x", br'\\x1ff", "x")).toBe("\xFF");
   });
 

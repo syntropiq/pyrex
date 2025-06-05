@@ -7,11 +7,11 @@ describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 1', async () => {
     // Python: import regeximport unittestimport sysclass TestGeneralQu(unittest.TestCase):# test_qualified_re_subdef test_qualified_re_sub(self):self.assertEqual(regex.sub('a', 'b', 'aaaaa'), 'bbbbb')
-    expect(await re.sub("a", "b", "aaaaa")).toBe('bbbbb');
+    expect(await re.sub("a", "", "aaaaa")).toBe('bbbbb');
   });
 
   it('regex.sub test 2', async () => {
     // Python: self.assertEqual(regex.sub('a', 'b', 'aaaaa', 1), 'baaaa')
-    expect(await re.sub("a", "b", "aaaaa")).toBe('baaaa');
+    expect(await re.sub("a", "", "aaaaa")).toBe('baaaa');
   });
 });

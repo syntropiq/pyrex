@@ -6,78 +6,78 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.match test 1', async () => {
-    // Python: import regeximport unittestclass TestGeneralPr(unittest.TestCase):# test_propertiesdef test_properties(self):self.assertEqual(regex.match(b'(?ai)\xC0', b'\xE0'), None)
-    expect(await re.match("(?ai)\\xC0", "\\xE0")).toStrictEqual(None);
+    // Python: import regeximport unittestclass TestGeneralPr(unittest.TestCase):# test_propertiesdef test_properties(self):self.assertEqual(regex.match(b'(?ai)\xC0', b'\xE0'), null)
+    expect(await re.match("(?ai)\\xC0", "\\xE0")).toStrictEqual(null);
   });
 
   it('regex.match test 2', async () => {
-    // Python: self.assertEqual(regex.match(br'(?ai)\xC0', b'\xE0'), None)
-    expect(await re.match(br'(?ai)\\xC0", "\\xE0")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?ai)\xC0', b'\xE0'), null)
+    expect(await re.match(br'(?ai)\\xC0", "\\xE0")).toStrictEqual(null);
   });
 
   it('regex.match test 3', async () => {
-    // Python: self.assertEqual(regex.match(br'(?a)\w', b'\xE0'), None)
-    expect(await re.match(br'(?a)\\w", "\\xE0")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?a)\w', b'\xE0'), null)
+    expect(await re.match(br'(?a)\\w", "\\xE0")).toStrictEqual(null);
   });
 
   it('regex.match test 4', async () => {
-    // Python: self.assertEqual(regex.match(br'(?L)\d', b'?'), None)
-    expect(await re.match(br'(?L)\\d", "?")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?L)\d', b'?'), null)
+    expect(await re.match(br'(?L)\\d", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 5', async () => {
-    // Python: self.assertEqual(regex.match(br'(?L)\s', b'?'), None)
-    expect(await re.match(br'(?L)\\s", "?")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?L)\s', b'?'), null)
+    expect(await re.match(br'(?L)\\s", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 6', async () => {
-    // Python: self.assertEqual(regex.match(br'(?L)\w', b'?'), None)
-    expect(await re.match(br'(?L)\\w", "?")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?L)\w', b'?'), null)
+    expect(await re.match(br'(?L)\\w", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 7', async () => {
-    // Python: self.assertEqual(regex.match(br'(?L)\D', b'0'), None)
-    expect(await re.match(br'(?L)\\D", "0")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?L)\D', b'0'), null)
+    expect(await re.match(br'(?L)\\D", "0")).toStrictEqual(null);
   });
 
   it('regex.match test 8', async () => {
-    // Python: self.assertEqual(regex.match(br'(?L)\S', b' '), None)
-    expect(await re.match(br'(?L)\\S", " ")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?L)\S', b' '), null)
+    expect(await re.match(br'(?L)\\S", " ")).toStrictEqual(null);
   });
 
   it('regex.match test 9', async () => {
-    // Python: self.assertEqual(regex.match(br'(?L)\W', b'a'), None)
-    expect(await re.match(br'(?L)\\W", "a")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(br'(?L)\W', b'a'), null)
+    expect(await re.match(br'(?L)\\W", "a")).toStrictEqual(null);
   });
 
   it('regex.match test 10', async () => {
-    // Python: self.assertEqual(regex.match(r"\d", "?"), None)
-    expect(await re.match("\\d", "?")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"\d", "?"), null)
+    expect(await re.match("\\d", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 11', async () => {
-    // Python: self.assertEqual(regex.match(r"\s", "?"), None)
-    expect(await re.match("\\s", "?")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"\s", "?"), null)
+    expect(await re.match("\\s", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 12', async () => {
-    // Python: self.assertEqual(regex.match(r"\w", "?"), None)
-    expect(await re.match("\\w", "?")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"\w", "?"), null)
+    expect(await re.match("\\w", "?")).toStrictEqual(null);
   });
 
   it('regex.match test 13', async () => {
-    // Python: self.assertEqual(regex.match(r"\D", "0"), None)
-    expect(await re.match("\\D", "0")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"\D", "0"), null)
+    expect(await re.match("\\D", "0")).toStrictEqual(null);
   });
 
   it('regex.match test 14', async () => {
-    // Python: self.assertEqual(regex.match(r"\S", " "), None)
-    expect(await re.match("\\S", " ")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"\S", " "), null)
+    expect(await re.match("\\S", " ")).toStrictEqual(null);
   });
 
   it('regex.match test 15', async () => {
-    // Python: self.assertEqual(regex.match(r"\W", "A"), None)
-    expect(await re.match("\\W", "A")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"\W", "A"), null)
+    expect(await re.match("\\W", "A")).toStrictEqual(null);
   });
 
   it('regex.match test 16', async () => {

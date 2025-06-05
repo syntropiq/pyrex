@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
 describe('Python Backend - Regex (converted)', () => {
 
   it('regex.match test 1', async () => {
-    // Python: self.assertEqual(regex.match(r"a(?i)", "A"), None)
-    expect(await re.match("a(?i)", "A")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"a(?i)", "A"), null)
+    expect(await re.match("a(?i)", "A")).toStrictEqual(null);
   });
 });

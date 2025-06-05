@@ -31,12 +31,12 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 6', async () => {
-    // Python: # Hg issue 32: regex.search("a(bc)d", "abcd", regex.I|regex.V1) returns# Noneself.assertEqual(regex.search("a(bc)d", "abcd", regex.I | regex.V1).group(0), "abcd")
+    // Python: # Hg issue 32: regex.search("a(bc)d", "abcd", regex.I|regex.V1) returns# nullself.assertEqual(regex.search("a(bc)d", "abcd", regex.I | regex.V1).group(0), "abcd")
     expect(await re.search("a(bc)d", "abcd")?.group(0)).toStrictEqual("abcd");
   });
 
   it('regex.search test 7', async () => {
-    // Python: # returns Noneself.assertEqual(regex.search(r"([\da-f:]+)$", "E", regex.I | regex.V1).group(0), "E")
+    // Python: # returns nullself.assertEqual(regex.search(r"([\da-f:]+)$", "E", regex.I | regex.V1).group(0), "E")
     expect(await re.search("([\\da-f:]+)$", "E")?.group(0)).toStrictEqual("E");
   });
 
@@ -51,23 +51,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 10', async () => {
-    // Python: # Hg issue 36: regex.search("^(a|)\1{2}b", "b") returns Noneself.assertEqual(regex.search(r"^(a|)\1{2}b", "b").group(0, 1), ("b", ""))
-    expect(await re.search("^(a|)\\1{2}b", "b")?.group(0, 1)).toStrictEqual(("b", "");
+    // Python: # Hg issue 36: regex.search("^(a|)\1{2}", "") returns nullself.assertEqual(regex.search(r"^(a|)\1{2}", "").group(0, 1), ("", ""))
+    expect(await re.search("^(a|)\\1{2}", "")?.group(0, 1)).toStrictEqual(("", "");
   });
 
   it('regex.search test 11', async () => {
-    // Python: self.assertEqual(regex.search("^(a){0,0}", "abc").group(0, 1), ("", None))
-    expect(await re.search("^(a){0, 0}")?.group(0, 1)).toStrictEqual(("", None);
+    // Python: self.assertEqual(regex.search("^(a){0,0}", "abc").group(0, 1), ("", null))
+    expect(await re.search("^(a){0, 0}")?.group(0, 1)).toStrictEqual(("", null);
   });
 
   it('regex.search test 12', async () => {
-    // Python: # Hg issue 38: regex.search("(?>.*/)b", "a/b") returns Noneself.assertEqual(regex.search("(?>.*/)b", "a/b").group(0), "a/b")
-    expect(await re.search("(?>.*/)b", "a/b")?.group(0)).toStrictEqual("a/b");
+    // Python: # Hg issue 38: regex.search("(?>.*/)", "a/") returns nullself.assertEqual(regex.search("(?>.*/)", "a/").group(0), "a/")
+    expect(await re.search("(?>.*/)", "a/")?.group(0)).toStrictEqual("a/");
   });
 
   it('regex.search test 13', async () => {
-    // Python: # Hg issue 39: regex.search("((?i)blah)\\s+\\1", "blah BLAH") doesn't# return None# Changed to positional flags in regex 2023.12.23.self.assertEqual(regex.search(r"((?i)blah)\s+\1", "blah BLAH"), None)
-    expect(await re.search("((?i)blah)\\s+\\1", "blah BLAH")).toStrictEqual(None);
+    // Python: # Hg issue 39: regex.search("((?i)blah)\\s+\\1", "blah BLAH") doesn't# return null# Changed to positional flags in regex 2023.12.23.self.assertEqual(regex.search(r"((?i)blah)\s+\1", "blah BLAH"), null)
+    expect(await re.search("((?i)blah)\\s+\\1", "blah BLAH")).toStrictEqual(null);
   });
 
   it('regex.search test 14', async () => {
@@ -141,7 +141,7 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 28', async () => {
-    // Python: # Hg issue 49: regex.search("(a)(?<=b(?1))", "baz", regex.V1) returns# None incorrectlyself.assertEqual(regex.search("(?V1)(a)(?<=b(?1))", "baz").group(0), "a")
+    // Python: # Hg issue 49: regex.search("(a)(?<=b(?1))", "baz", regex.V1) returns# null incorrectlyself.assertEqual(regex.search("(?V1)(a)(?<=b(?1))", "baz").group(0), "a")
     expect(await re.search("(?V1)(a)(?<=b(?1))", "baz")?.group(0)).toStrictEqual("a");
   });
 
@@ -166,8 +166,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 33', async () => {
-    // Python: # returns None incorrectlyself.assertEqual(regex.search("(?V1)((a)(?1)|(?2))", "a").group(0, 1, 2), ("a", "a", None)
-    expect(await re.search("(?V1)((a)(?1)|(?2))", "a")?.group(0, 1, 2)).toStrictEqual(("a", "a", None);
+    // Python: # returns null incorrectlyself.assertEqual(regex.search("(?V1)((a)(?1)|(?2))", "a").group(0, 1, 2), ("a", "a", null)
+    expect(await re.search("(?V1)((a)(?1)|(?2))", "a")?.group(0, 1, 2)).toStrictEqual(("a", "a", null);
   });
 
   it('regex.search test 34', async () => {
@@ -181,33 +181,33 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 36', async () => {
-    // Python: # Hg issue 54: regex.search("(a|)*\\d", "a"*80) causes MemoryErrorself.assertEqual(regex.search(r"(a|)*\d", "a" * 80), None)
-    expect(await re.search("(a|)*\\d", "a" * 80)).toStrictEqual(None);
+    // Python: # Hg issue 54: regex.search("(a|)*\\d", "a"*80) causes MemoryErrorself.assertEqual(regex.search(r"(a|)*\d", "a" * 80), null)
+    expect(await re.search("(a|)*\\d", "a" * 80)).toStrictEqual(null);
   });
 
   it('regex.search test 37', async () => {
-    // Python: # Hg issue 55: regex.search("^(?:a?b?)*$", "ac") take a very long time.self.assertEqual(regex.search("^(?:a?b?)*$", "ac"), None)
-    expect(await re.search("^(?:a?b?)*$", "ac")).toStrictEqual(None);
+    // Python: # Hg issue 55: regex.search("^(?:a?b?)*$", "ac") take a very long time.self.assertEqual(regex.search("^(?:a?b?)*$", "ac"), null)
+    expect(await re.search("^(?:a?b?)*$", "ac")).toStrictEqual(null);
   });
 
   it('regex.search test 38', async () => {
-    // Python: # Hg issue 59: regex.search("\\Z", "a\na\n") returns None incorrectlyself.assertEqual(regex.search("\\Z", "a\na\n").span(0), (4, 4))
+    // Python: # Hg issue 59: regex.search("\\Z", "a\na\n") returns null incorrectlyself.assertEqual(regex.search("\\Z", "a\na\n").span(0), (4, 4))
     expect(await re.search("\\\\Z", "a\\na\\n")?.span(0)).toStrictEqual((4, 4);
   });
 
   it('regex.search test 39', async () => {
-    // Python: # returns None incorrectlyself.assertEqual(regex.search("(q1|.)*(q2|.)*(x(a|bc)*y){2,}", "xayxay").group(0), "xayxay")
+    // Python: # returns null incorrectlyself.assertEqual(regex.search("(q1|.)*(q2|.)*(x(a|bc)*y){2,}", "xayxay").group(0), "xayxay")
     expect(await re.search("(q1|.)*(q2|.)*(x(a|bc)*y){2, }")?.group(0)).toStrictEqual("xayxay");
   });
 
   it('regex.search test 40', async () => {
-    // Python: # Hg issue 61: regex.search("[^a]", "A", regex.I).group(0) returns ''# incorrectlyself.assertEqual(regex.search("(?i)[^a]", "A"), None)
-    expect(await re.search("(?i)[^a]", "A")).toStrictEqual(None);
+    // Python: # Hg issue 61: regex.search("[^a]", "A", regex.I).group(0) returns ''# incorrectlyself.assertEqual(regex.search("(?i)[^a]", "A"), null)
+    expect(await re.search("(?i)[^a]", "A")).toStrictEqual(null);
   });
 
   it('regex.search test 41', async () => {
-    // Python: # Hg issue 63: regex.search("[[:ascii:]]", "\N{KELVIN SIGN}",# flags=regex.I|regex.V1) doesn't return Noneself.assertEqual(regex.search("(?i)[[:ascii:]]", "\N{KELVIN SIGN}"), None)
-    expect(await re.search("(?i)[[:ascii:]]", "\\N{KELVIN SIGN}")).toStrictEqual(None);
+    // Python: # Hg issue 63: regex.search("[[:ascii:]]", "\N{KELVIN SIGN}",# flags=regex.I|regex.V1) doesn't return nullself.assertEqual(regex.search("(?i)[[:ascii:]]", "\N{KELVIN SIGN}"), null)
+    expect(await re.search("(?i)[[:ascii:]]", "\\N{KELVIN SIGN}")).toStrictEqual(null);
   });
 
   it('regex.search test 42', async () => {
@@ -241,8 +241,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 48', async () => {
-    // Python: # Hg issue 78: "Captures" doesn't work for recursive callsself.assertEqual(regex.search(r"(?<rec>\((?:[^()]++|(?&rec))*\))", "aaa(((1+0)+1)+1)bbb").captures("rec"),["(1+0)", "((1+0)+1)", "(((1+0)+1)+1)"],)
-    expect(await re.search("(?<rec>\\((?:[^()]++|(?&rec))*\\))", "aaa(((1+0)+1)+1)bbb")?.captures("rec")).toStrictEqual(["(1+0);
+    // Python: # Hg issue 78: "Captures" doesn't work for recursive callsself.assertEqual(regex.search(r"(?<rec>\((?:[^()]++|(?&rec))*\))", "aaa(((1+0)+1)+1)bb").captures("rec"),["(1+0)", "((1+0)+1)", "(((1+0)+1)+1)"],)
+    expect(await re.search("(?<rec>\\((?:[^()]++|(?&rec))*\\))", "aaa(((1+0)+1)+1)bb")?.captures("rec")).toStrictEqual(["(1+0);
   });
 
   it('regex.findall test 49', async () => {
@@ -251,13 +251,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 50', async () => {
-    // Python: # Hg issue 88: regex.match() hangsself.assertEqual(regex.match(r".*a.*ba.*aa", "ababba"), None)
-    expect(await re.match(".*a.*ba.*aa", "ababba")).toStrictEqual(None);
+    // Python: # Hg issue 88: regex.match() hangsself.assertEqual(regex.match(r".*a.*ba.*aa", "ababba"), null)
+    expect(await re.match(".*a.*ba.*aa", "ababba")).toStrictEqual(null);
   });
 
   it('regex.match test 51', async () => {
-    // Python: # Hg issue 87: Allow duplicate names of groupsself.assertEqual(regex.match(r"(?<x>a(?<x>b))", "ab").spans("x"), [(1, 2), (0, 2)])
-    expect(await re.match("(?<x>a(?<x>b))", "ab")?.spans("x")).toStrictEqual([(1, 2);
+    // Python: # Hg issue 87: Allow duplicate names of groupsself.assertEqual(regex.match(r"(?<x>a(?<x>b))", "a").spans("x"), [(1, 2), (0, 2)])
+    expect(await re.match("(?<x>a(?<x>b))", "a")?.spans("x")).toStrictEqual([(1, 2);
   });
 // Skipped test 52: incomplete arguments in Python: # Hg issue 91: match.expand is extremely slow# Check that the replacement cache works.self.assertEqual(regex.sub(r"(-)", lambda m: m.expand(r"x"), "a-b-c"), "axbxc")
 
@@ -312,8 +312,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 63', async () => {
-    // Python: # Hg issue 115: Infinite loop when processing backreferencesself.assertEqual(regex.findall(r"\bof ([a-z]+) of \1\b", "To make use of one of these modules"),[],)
-    expect(await re.findall("\\bof ([a-z]+) of \\1\\b", "To make use of one of these modules")).toStrictEqual([],);
+    // Python: # Hg issue 115: Infinite loop when processing backreferencesself.assertEqual(regex.findall(r"\bof ([a-z]+) of \1\", "To make use of one of these modules"),[],)
+    expect(await re.findall("\\bof ([a-z]+) of \\1\\", "To make use of one of these modules")).toStrictEqual([],);
   });
 
   it('regex.sub test 64', async () => {
@@ -322,23 +322,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 65', async () => {
-    // Python: # Hg issue 131: nested sets behaviourself.assertEqual(regex.findall(r"(?V1)[[b-e]--cd]", "abcdef"), ["b", "e"])
-    expect(await re.findall("(?V1)[[b-e]--cd]", "abcdef")).toStrictEqual(["b", "e"]);
+    // Python: # Hg issue 131: nested sets behaviourself.assertEqual(regex.findall(r"(?V1)[[b-e]--cd]", "abcdef"), ["", "e"])
+    expect(await re.findall("(?V1)[[b-e]--cd]", "abcdef")).toStrictEqual(["", "e"]);
   });
 
   it('regex.findall test 66', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?V1)[b-e--cd]", "abcdef"), ["b", "e"])
-    expect(await re.findall("(?V1)[b-e--cd]", "abcdef")).toStrictEqual(["b", "e"]);
+    // Python: self.assertEqual(regex.findall(r"(?V1)[b-e--cd]", "abcdef"), ["", "e"])
+    expect(await re.findall("(?V1)[b-e--cd]", "abcdef")).toStrictEqual(["", "e"]);
   });
 
   it('regex.findall test 67', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?V1)[[bcde]--cd]", "abcdef"), ["b", "e"])
-    expect(await re.findall("(?V1)[[bcde]--cd]", "abcdef")).toStrictEqual(["b", "e"]);
+    // Python: self.assertEqual(regex.findall(r"(?V1)[[bcde]--cd]", "abcdef"), ["", "e"])
+    expect(await re.findall("(?V1)[[bcde]--cd]", "abcdef")).toStrictEqual(["", "e"]);
   });
 
   it('regex.findall test 68', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?V1)[bcde--cd]", "abcdef"), ["b", "e"])
-    expect(await re.findall("(?V1)[bcde--cd]", "abcdef")).toStrictEqual(["b", "e"]);
+    // Python: self.assertEqual(regex.findall(r"(?V1)[bcde--cd]", "abcdef"), ["", "e"])
+    expect(await re.findall("(?V1)[bcde--cd]", "abcdef")).toStrictEqual(["", "e"]);
   });
 
   it('regex.match test 69', async () => {
@@ -357,13 +357,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.sub test 72', async () => {
-    // Python: # Hg issue 140: Replace with REVERSE and groups has unexpected# behavior.self.assertEqual(regex.sub(r"(.)", r"x\1y", "ab"), "xayxby")
-    expect(await re.sub("(.)", "x\\1y", "ab")).toBe("xayxby");
+    // Python: # Hg issue 140: Replace with REVERSE and groups has unexpected# behavior.self.assertEqual(regex.sub(r"(.)", r"x\1y", "a"), "xayxby")
+    expect(await re.sub("(.)", "x\\1y", "a")).toBe("xayxby");
   });
 
   it('regex.sub test 73', async () => {
-    // Python: self.assertEqual(regex.sub(r"(?r)(.)", r"x\1y", "ab"), "xayxby")
-    expect(await re.sub("(?r)(.)", "x\\1y", "ab")).toBe("xayxby");
+    // Python: self.assertEqual(regex.sub(r"(?r)(.)", r"x\1y", "a"), "xayxby")
+    expect(await re.sub("(?r)(.)", "x\\1y", "a")).toBe("xayxby");
   });
 
   it('regex.search test 74', async () => {
@@ -387,18 +387,18 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 78', async () => {
-    // Python: # Hg issue 146: Forced-fail (?!) works improperly in conditional.self.assertEqual(regex.match(r"(.)(?(1)(?!))", "xy"), None)
-    expect(await re.match("(.)(?(1)(?!))", "xy")).toStrictEqual(None);
+    // Python: # Hg issue 146: Forced-fail (?!) works improperly in conditional.self.assertEqual(regex.match(r"(.)(?(1)(?!))", "xy"), null)
+    expect(await re.match("(.)(?(1)(?!))", "xy")).toStrictEqual(null);
   });
 
   it('regex.findall test 79', async () => {
-    // Python: # Groups cleared after failure.self.assertEqual(regex.findall(r"(y)?(\d)(?(1)\b\B)", "ax1y2z3b"),[("", "1"), ("", "2"), ("", "3")],)
-    expect(await re.findall("(y)?(\\d)(?(1)\\b\\B)", "ax1y2z3b")).toStrictEqual([("", "1");
+    // Python: # Groups cleared after failure.self.assertEqual(regex.findall(r"(y)?(\d)(?(1)\b\B)", "ax1y2z3"),[("", "1"), ("", "2"), ("", "3")],)
+    expect(await re.findall("(y)?(\\d)(?(1)\\b\\B)", "ax1y2z3")).toStrictEqual([("", "1");
   });
 
   it('regex.findall test 80', async () => {
-    // Python: self.assertEqual(regex.findall(r"(y)?+(\d)(?(1)\b\B)", "ax1y2z3b"),[("", "1"), ("", "2"), ("", "3")],)
-    expect(await re.findall("(y)?+(\\d)(?(1)\\b\\B)", "ax1y2z3b")).toStrictEqual([("", "1");
+    // Python: self.assertEqual(regex.findall(r"(y)?+(\d)(?(1)\b\B)", "ax1y2z3"),[("", "1"), ("", "2"), ("", "3")],)
+    expect(await re.findall("(y)?+(\\d)(?(1)\\b\\B)", "ax1y2z3")).toStrictEqual([("", "1");
   });
 
   it('regex.search test 81', async () => {
@@ -417,13 +417,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 84', async () => {
-    // Python: self.assertEqual(regex.search(r"(?r)(ab\Kcd)", "abcd").group(0, 1), ("ab", "abcd")
-    expect(await re.search("(?r)(ab\\Kcd)", "abcd")?.group(0, 1)).toStrictEqual(("ab", "abcd");
+    // Python: self.assertEqual(regex.search(r"(?r)(ab\Kcd)", "abcd").group(0, 1), ("a", "abcd")
+    expect(await re.search("(?r)(ab\\Kcd)", "abcd")?.group(0, 1)).toStrictEqual(("a", "abcd");
   });
 
   it('regex.findall test 85', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)\w\w\K\w\w", "abcdefgh"), ["ef", "ab"])
-    expect(await re.findall("(?r)\\w\\w\\K\\w\\w", "abcdefgh")).toStrictEqual(["ef", "ab"]);
+    // Python: self.assertEqual(regex.findall(r"(?r)\w\w\K\w\w", "abcdefgh"), ["ef", "a"])
+    expect(await re.findall("(?r)\\w\\w\\K\\w\\w", "abcdefgh")).toStrictEqual(["ef", "a"]);
   });
 
   it('regex.findall test 86', async () => {
@@ -432,8 +432,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 87', async () => {
-    // Python: self.assertEqual(regex.search(r"(?&routine)(?(DEFINE)(?<routine>.))", "a").group("routine"),None,)
-    expect(await re.search("(?&routine)(?(DEFINE)(?<routine>.))", "a")?.group("routine")).toStrictEqual(None,);
+    // Python: self.assertEqual(regex.search(r"(?&routine)(?(DEFINE)(?<routine>.))", "a").group("routine"),null,)
+    expect(await re.search("(?&routine)(?(DEFINE)(?<routine>.))", "a")?.group("routine")).toStrictEqual(null,);
   });
 
   it('regex.search test 88', async () => {
@@ -442,13 +442,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 89', async () => {
-    // Python: self.assertEqual(regex.search(r"\d+(*PRUNE)\d", "123"), None)
-    expect(await re.search("\\d+(*PRUNE)\\d", "123")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"\d+(*PRUNE)\d", "123"), null)
+    expect(await re.search("\\d+(*PRUNE)\\d", "123")).toStrictEqual(null);
   });
 
   it('regex.search test 90', async () => {
-    // Python: self.assertEqual(regex.search(r"(?r)\d(*PRUNE)\d+", "123"), None)
-    expect(await re.search("(?r)\\d(*PRUNE)\\d+", "123")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?r)\d(*PRUNE)\d+", "123"), null)
+    expect(await re.search("(?r)\\d(*PRUNE)\\d+", "123")).toStrictEqual(null);
   });
 
   it('regex.match test 91', async () => {
@@ -472,8 +472,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 95', async () => {
-    // Python: self.assertEqual(regex.match(r"(?(?=\d)\d+\b|\w+)", "123abc"), None)
-    expect(await re.match("(?(?=\\d)\\d+\\b|\\w+)", "123abc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"(?(?=\d)\d+\b|\w+)", "123abc"), null)
+    expect(await re.match("(?(?=\\d)\\d+\\b|\\w+)", "123abc")).toStrictEqual(null);
   });
 
   it('regex.search test 96', async () => {
@@ -487,23 +487,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 98', async () => {
-    // Python: # Hg issue 180: bug of POSIX matching.self.assertEqual(regex.search(r"(?p)a*(.*?)", "aaabbb").group(0, 1), ("aaabbb", "bbb")
-    expect(await re.search("(?p)a*(.*?)", "aaabbb")?.group(0, 1)).toStrictEqual(("aaabbb", "bbb");
+    // Python: # Hg issue 180: bug of POSIX matching.self.assertEqual(regex.search(r"(?p)a*(.*?)", "aaabb").group(0, 1), ("aaabb", "bb")
+    expect(await re.search("(?p)a*(.*?)", "aaabb")?.group(0, 1)).toStrictEqual(("aaabb", "bb");
   });
 
   it('regex.search test 99', async () => {
-    // Python: self.assertEqual(regex.search(r"(?p)a*(.*)", "aaabbb").group(0, 1), ("aaabbb", "bbb")
-    expect(await re.search("(?p)a*(.*)", "aaabbb")?.group(0, 1)).toStrictEqual(("aaabbb", "bbb");
+    // Python: self.assertEqual(regex.search(r"(?p)a*(.*)", "aaabb").group(0, 1), ("aaabb", "bb")
+    expect(await re.search("(?p)a*(.*)", "aaabb")?.group(0, 1)).toStrictEqual(("aaabb", "bb");
   });
 
   it('regex.sub test 100', async () => {
-    // Python: self.assertEqual(regex.sub(r"(?p)a*(.*?)", r"\1", "aaabbb"), "bbb")
-    expect(await re.sub("(?p)a*(.*?)", "\\1", "aaabbb")).toBe("bbb");
+    // Python: self.assertEqual(regex.sub(r"(?p)a*(.*?)", r"\1", "aaabb"), "bb")
+    expect(await re.sub("(?p)a*(.*?)", "\\1", "aaabb")).toBe("bb");
   });
 
   it('regex.sub test 101', async () => {
-    // Python: self.assertEqual(regex.sub(r"(?p)a*(.*)", r"\1", "aaabbb"), "bbb")
-    expect(await re.sub("(?p)a*(.*)", "\\1", "aaabbb")).toBe("bbb");
+    // Python: self.assertEqual(regex.sub(r"(?p)a*(.*)", r"\1", "aaabb"), "bb")
+    expect(await re.sub("(?p)a*(.*)", "\\1", "aaabb")).toBe("bb");
   });
 
   it('regex.match test 102', async () => {
@@ -517,13 +517,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 104', async () => {
-    // Python: # Hg issue 193: Alternation and .REVERSE flag.self.assertEqual(regex.search("a|b", "111a222").span(), (3, 4))
-    expect(await re.search("a|b", "111a222")?.span()).toStrictEqual((3, 4);
+    // Python: # Hg issue 193: Alternation and .REVERSE flag.self.assertEqual(regex.search("a|", "111a222").span(), (3, 4))
+    expect(await re.search("a|", "111a222")?.span()).toStrictEqual((3, 4);
   });
 
   it('regex.search test 105', async () => {
-    // Python: self.assertEqual(regex.search("(?r)a|b", "111a222").span(), (3, 4))
-    expect(await re.search("(?r)a|b", "111a222")?.span()).toStrictEqual((3, 4);
+    // Python: self.assertEqual(regex.search("(?r)a|", "111a222").span(), (3, 4))
+    expect(await re.search("(?r)a|", "111a222")?.span()).toStrictEqual((3, 4);
   });
 
   it('regex.search test 106', async () => {
@@ -552,8 +552,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 111', async () => {
-    // Python: self.assertEqual(regex.match("(x{6}){e<=1}", "x", flags=regex.BESTMATCH), None)
-    expect(await re.match("(x{6}){e<=1}", "x")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("(x{6}){e<=1}", "x", flags=regex.BESTMATCH), null)
+    expect(await re.match("(x{6}){e<=1}", "x")).toStrictEqual(null);
   });
 
   it('regex.match test 112', async () => {
@@ -567,8 +567,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 114', async () => {
-    // Python: self.assertEqual(regex.match("(?r)(x{6}){e<=1}", "x", flags=regex.BESTMATCH), None)
-    expect(await re.match("(?r)(x{6}){e<=1}", "x")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("(?r)(x{6}){e<=1}", "x", flags=regex.BESTMATCH), null)
+    expect(await re.match("(?r)(x{6}){e<=1}", "x")).toStrictEqual(null);
   });
 
   it('regex.findall test 115', async () => {
@@ -582,12 +582,12 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 117', async () => {
-    // Python: # Hg issue 208: Named list, (?ri) flags, Backreferenceself.assertEqual(regex.search(r"(?r)\1dog..(?<=(\L<aa>))$", "ccdogcc", aa=["bcb", "cc"]).span(),(0, 7),)
+    // Python: # Hg issue 208: Named list, (?ri) flags, Backreferenceself.assertEqual(regex.search(r"(?r)\1dog..(?<=(\L<aa>))$", "ccdogcc", aa=["bc", "cc"]).span(),(0, 7),)
     expect(await re.search("(?r)\\1dog..(?<=(\\L<aa>))$", "ccdogcc")?.span()).toStrictEqual((0, 7);
   });
 
   it('regex.search test 118', async () => {
-    // Python: self.assertEqual(regex.search(r"(?ir)\1dog..(?<=(\L<aa>))$", "ccdogcc", aa=["bcb", "cc"]).span(),(0, 7),)
+    // Python: self.assertEqual(regex.search(r"(?ir)\1dog..(?<=(\L<aa>))$", "ccdogcc", aa=["bc", "cc"]).span(),(0, 7),)
     expect(await re.search("(?ir)\\1dog..(?<=(\\L<aa>))$", "ccdogcc")?.span()).toStrictEqual((0, 7);
   });
 
@@ -607,8 +607,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 122', async () => {
-    // Python: self.assertEqual(regex.match(r"""\A(?P<whole>(?>\((?&whole)\)|[+\-]))\Z""", "((-)+)"), None)
-    expect(await re.match("""\\A(?P<whole>(?>\\((?&whole)\\)|[+\\-]))\\Z""", "((-)+)")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"""\A(?P<whole>(?>\((?&whole)\)|[+\-]))\Z""", "((-)+)"), null)
+    expect(await re.match("""\\A(?P<whole>(?>\\((?&whole)\\)|[+\\-]))\\Z""", "((-)+)")).toStrictEqual(null);
   });
 
   it('regex.match test 123', async () => {
@@ -762,13 +762,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 153', async () => {
-    // Python: # Hg issue 252: Empty capture strings when using DEFINE group reference# within look-behind expressionself.assertEqual(regex.search(r"(?(DEFINE)(?<func>.))(?&func)", "abc").groups(), (None,)
-    expect(await re.search("(?(DEFINE)(?<func>.))(?&func)", "abc")?.groups()).toStrictEqual((None,);
+    // Python: # Hg issue 252: Empty capture strings when using DEFINE group reference# within look-behind expressionself.assertEqual(regex.search(r"(?(DEFINE)(?<func>.))(?&func)", "abc").groups(), (null,)
+    expect(await re.search("(?(DEFINE)(?<func>.))(?&func)", "abc")?.groups()).toStrictEqual((null,);
   });
 
   it('regex.search test 154', async () => {
-    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.))(?&func)", "abc").groupdict(),{"func": None},)
-    expect(await re.search("(?(DEFINE)(?<func>.))(?&func)", "abc")?.groupdict()).toStrictEqual({"func": None},);
+    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.))(?&func)", "abc").groupdict(),{"func": null},)
+    expect(await re.search("(?(DEFINE)(?<func>.))(?&func)", "abc")?.groupdict()).toStrictEqual({"func": null},);
   });
 
   it('regex.search test 155', async () => {
@@ -777,13 +777,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 156', async () => {
-    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groups(),(None,),)
-    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groups()).toStrictEqual((None,);
+    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groups(),(null,),)
+    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groups()).toStrictEqual((null,);
   });
 
   it('regex.search test 157', async () => {
-    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groupdict(),{"func": None},)
-    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groupdict()).toStrictEqual({"func": None},);
+    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groupdict(),{"func": null},)
+    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groupdict()).toStrictEqual({"func": null},);
   });
 
   it('regex.search test 158', async () => {
@@ -792,13 +792,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 159', async () => {
-    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groups(),(None,),)
-    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groups()).toStrictEqual((None,);
+    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groups(),(null,),)
+    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groups()).toStrictEqual((null,);
   });
 
   it('regex.search test 160', async () => {
-    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groupdict(),{"func": None},)
-    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groupdict()).toStrictEqual({"func": None},);
+    // Python: self.assertEqual(regex.search(r"(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc").groupdict(),{"func": null},)
+    expect(await re.search("(?(DEFINE)(?<func>.)).(?<=(?&func))", "abc")?.groupdict()).toStrictEqual({"func": null},);
   });
 
   it('regex.search test 161', async () => {
@@ -827,8 +827,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 166', async () => {
-    // Python: # Git issue 371: Specifying character set when fuzzy-matching allows characters not in the setself.assertEqual(regex.search(r"\b(?e)(?:\d{6,20}){i<=5:[\-\\\/]}\b","cat dog starting at 00:01132.000. hello world",),None,)
-    expect(await re.search("\\b(?e)(?:\\d{6, 20}){i<=5:[\\-\\\\\\/]}\\b")).toStrictEqual(None,);
+    // Python: # Git issue 371: Specifying character set when fuzzy-matching allows characters not in the setself.assertEqual(regex.search(r"\b(?e)(?:\d{6,20}){i<=5:[\-\\\/]}\","cat dog starting at 00:01132.000. hello world",),null,)
+    expect(await re.search("\\b(?e)(?:\\d{6, 20}){i<=5:[\\-\\\\\\/]}\\")).toStrictEqual(null,);
   });
 
   it('regex.findall test 167', async () => {
@@ -847,8 +847,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 170', async () => {
-    // Python: self.assertEqual(regex.match(r"t(?:es){s<=1:\d}t", "tezt"), None)
-    expect(await re.match("t(?:es){s<=1:\\d}t", "tezt")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"t(?:es){s<=1:\d}t", "tezt"), null)
+    expect(await re.match("t(?:es){s<=1:\\d}t", "tezt")).toStrictEqual(null);
   });
 
   it('regex.match test 171', async () => {
@@ -857,8 +857,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 172', async () => {
-    // Python: self.assertEqual(regex.match(r"t(?:es){i<=1:\d}t", "teszt"), None)
-    expect(await re.match("t(?:es){i<=1:\\d}t", "teszt")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"t(?:es){i<=1:\d}t", "teszt"), null)
+    expect(await re.match("t(?:es){i<=1:\\d}t", "teszt")).toStrictEqual(null);
   });
 
   it('regex.match test 173', async () => {
@@ -867,8 +867,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 // Skipped test 174: incomplete arguments in Python: # Git issue 421: Fatal Python error: Segmentation faultself.assertEqual(regex.compile(r"(\d+ week|\d+ days)").split("7 days"), ["", "7 days", ""])
 // Skipped test 175: incomplete arguments in Python: self.assertEqual(regex.compile(r"(\d+ week|\d+ days)").split("10 days"), ["", "10 days", ""])
-// Skipped test 176: incomplete arguments in Python: self.assertEqual(regex.compile(r"[ ]* Name[ ]*\* ").search("  Name *"), None)
-// Skipped test 177: incomplete arguments in Python: self.assertEqual(regex.compile("a|\\.*pb\\.py").search(".geojs"), None)
+// Skipped test 176: incomplete arguments in Python: self.assertEqual(regex.compile(r"[ ]* Name[ ]*\* ").search("  Name *"), null)
+// Skipped test 177: incomplete arguments in Python: self.assertEqual(regex.compile("a|\\.*pb\\.py").search(".geojs"), null)
 
   it('regex.sub test 178', async () => {
     // Python: # Git issue 439: Unmatched groups: sub vs subfself.assertEqual(regex.sub(r"(test1)|(test2)", r"matched: \1\2", "test1"), "matched: test1")
@@ -881,13 +881,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 180', async () => {
-    // Python: # Git issue 442: Fuzzy regex matching doesn't seem to test insertions correctlyself.assertEqual(regex.search(r"(?:\bha\b){i:[ ]}", "having"), None)
-    expect(await re.search("(?:\\bha\\b){i:[ ]}", "having")).toStrictEqual(None);
+    // Python: # Git issue 442: Fuzzy regex matching doesn't seem to test insertions correctlyself.assertEqual(regex.search(r"(?:\bha\b){i:[ ]}", "having"), null)
+    expect(await re.search("(?:\\bha\\b){i:[ ]}", "having")).toStrictEqual(null);
   });
 
   it('regex.search test 181', async () => {
-    // Python: self.assertEqual(regex.search(r"(?:\bha\b){i:[ ]}", "having", flags=regex.I), None)
-    expect(await re.search("(?:\\bha\\b){i:[ ]}", "having")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?:\bha\b){i:[ ]}", "having", flags=regex.I), null)
+    expect(await re.search("(?:\\bha\\b){i:[ ]}", "having")).toStrictEqual(null);
   });
 
   it('regex.match test 182', async () => {
@@ -901,8 +901,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 184', async () => {
-    // Python: # Git issue 473: Emoji classified as letterself.assertEqual(regex.match(r"^\p{LC}+$", "\N{SMILING CAT FACE WITH OPEN MOUTH}"), None)
-    expect(await re.match("^\\p{LC}+$", "\\N{SMILING CAT FACE WITH OPEN MOUTH}")).toStrictEqual(None);
+    // Python: # Git issue 473: Emoji classified as letterself.assertEqual(regex.match(r"^\p{LC}+$", "\N{SMILING CAT FACE WITH OPEN MOUTH}"), null)
+    expect(await re.match("^\\p{LC}+$", "\\N{SMILING CAT FACE WITH OPEN MOUTH}")).toStrictEqual(null);
   });
 
   it('regex.match test 185', async () => {
@@ -911,8 +911,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 186', async () => {
-    // Python: # Git issue 474: regex has no equivalent to `re.Match.groups()` for capturesself.assertEqual(regex.match(r"(.)+", "abc").allcaptures(), (["abc"], ["a", "b", "c"])
-    expect(await re.match("(.)+", "abc")?.allcaptures()).toStrictEqual((["abc"], ["a", "b", "c"]);
+    // Python: # Git issue 474: regex has no equivalent to `re.Match.groups()` for capturesself.assertEqual(regex.match(r"(.)+", "abc").allcaptures(), (["abc"], ["a", "", "c"])
+    expect(await re.match("(.)+", "abc")?.allcaptures()).toStrictEqual((["abc"], ["a", "", "c"]);
   });
 
   it('regex.match test 187', async () => {
@@ -921,8 +921,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 188', async () => {
-    // Python: # Git issue 479: Segmentation fault when using conditional patternself.assertEqual(regex.match(r"(?(?<=A)|(?(?![^B])C|D))", "A"), None)
-    expect(await re.match("(?(?<=A)|(?(?![^B])C|D))", "A")).toStrictEqual(None);
+    // Python: # Git issue 479: Segmentation fault when using conditional patternself.assertEqual(regex.match(r"(?(?<=A)|(?(?![^B])C|D))", "A"), null)
+    expect(await re.match("(?(?<=A)|(?(?![^B])C|D))", "A")).toStrictEqual(null);
   });
 
   it('regex.search test 189', async () => {
@@ -936,23 +936,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 191', async () => {
-    // Python: # Git issue 498: Conditional negative lookahead inside positive lookahead fails to matchself.assertEqual(regex.match(r"(?(?=a).|..)", "ab").span(), (0, 1))
-    expect(await re.match("(?(?=a).|..)", "ab")?.span()).toStrictEqual((0, 1);
+    // Python: # Git issue 498: Conditional negative lookahead inside positive lookahead fails to matchself.assertEqual(regex.match(r"(?(?=a).|..)", "a").span(), (0, 1))
+    expect(await re.match("(?(?=a).|..)", "a")?.span()).toStrictEqual((0, 1);
   });
 
   it('regex.match test 192', async () => {
-    // Python: self.assertEqual(regex.match(r"(?(?=b).|..)", "ab").span(), (0, 2))
-    expect(await re.match("(?(?=b).|..)", "ab")?.span()).toStrictEqual((0, 2);
+    // Python: self.assertEqual(regex.match(r"(?(?=b).|..)", "a").span(), (0, 2))
+    expect(await re.match("(?(?=b).|..)", "a")?.span()).toStrictEqual((0, 2);
   });
 
   it('regex.match test 193', async () => {
-    // Python: self.assertEqual(regex.match(r"(?(?!a).|..)", "ab").span(), (0, 2))
-    expect(await re.match("(?(?!a).|..)", "ab")?.span()).toStrictEqual((0, 2);
+    // Python: self.assertEqual(regex.match(r"(?(?!a).|..)", "a").span(), (0, 2))
+    expect(await re.match("(?(?!a).|..)", "a")?.span()).toStrictEqual((0, 2);
   });
 
   it('regex.match test 194', async () => {
-    // Python: self.assertEqual(regex.match(r"(?(?!b).|..)", "ab").span(), (0, 1))
-    expect(await re.match("(?(?!b).|..)", "ab")?.span()).toStrictEqual((0, 1);
+    // Python: self.assertEqual(regex.match(r"(?(?!b).|..)", "a").span(), (0, 1))
+    expect(await re.match("(?(?!b).|..)", "a")?.span()).toStrictEqual((0, 1);
   });
 
   it('regex.match test 195', async () => {
@@ -972,8 +972,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 199', async () => {
-    // Python: self.assertEqual(regex.match(r"[^/]*b/ccc", "b/ccb", partial=True), None)
-    expect(await re.match("[^/]*b/ccc", "b/ccb")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"[^/]*b/ccc", "b/cc", partial=True), null)
+    expect(await re.match("[^/]*b/ccc", "b/cc")).toStrictEqual(null);
   });
 
   it('regex.match test 200', async () => {
@@ -987,8 +987,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 202', async () => {
-    // Python: self.assertEqual(regex.match(r"[^/]*b/xyz", "b/yz", partial=True), None)
-    expect(await re.match("[^/]*b/xyz", "b/yz")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"[^/]*b/xyz", "b/yz", partial=True), null)
+    expect(await re.match("[^/]*b/xyz", "b/yz")).toStrictEqual(null);
   });
 
   it('regex.match test 203', async () => {
@@ -997,8 +997,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 204', async () => {
-    // Python: self.assertEqual(regex.match(r"(?i)[^/]*b/ccc", "b/ccb", partial=True), None)
-    expect(await re.match("(?i)[^/]*b/ccc", "b/ccb")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"(?i)[^/]*b/ccc", "b/cc", partial=True), null)
+    expect(await re.match("(?i)[^/]*b/ccc", "b/cc")).toStrictEqual(null);
   });
 
   it('regex.match test 205', async () => {
@@ -1012,12 +1012,12 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 207', async () => {
-    // Python: self.assertEqual(regex.match(r"(?i)[^/]*b/xyz", "b/yz", partial=True), None)
-    expect(await re.match("(?i)[^/]*b/xyz", "b/yz")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match(r"(?i)[^/]*b/xyz", "b/yz", partial=True), null)
+    expect(await re.match("(?i)[^/]*b/xyz", "b/yz")).toStrictEqual(null);
   });
 
   it('regex.search test 208', async () => {
-    // Python: self.assertEqual(regex.search(r"(?ifu)(H\N{LATIN SMALL LETTER O WITH DIAERESIS}gskolan?)[\\s\\S]*p","Yrkesh\N{LATIN SMALL LETTER O WITH DIAERESIS}gskola . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen",),None,)
-    expect(await re.search("(?ifu)(H\\N{LATIN SMALL LETTER O WITH DIAERESIS}gskolan?)[\\\\s\\\\S]*p", "Yrkesh\\N{LATIN SMALL LETTER O WITH DIAERESIS}gskola . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen")).toStrictEqual(None,);
+    // Python: self.assertEqual(regex.search(r"(?ifu)(H\N{LATIN SMALL LETTER O WITH DIAERESIS}gskolan?)[\\s\\S]*p","Yrkesh\N{LATIN SMALL LETTER O WITH DIAERESIS}gskola . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen",),null,)
+    expect(await re.search("(?ifu)(H\\N{LATIN SMALL LETTER O WITH DIAERESIS}gskolan?)[\\\\s\\\\S]*p", "Yrkesh\\N{LATIN SMALL LETTER O WITH DIAERESIS}gskola . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen . Studie\\N{LATIN SMALL LETTER A WITH DIAERESIS}mnen")).toStrictEqual(null,);
   });
 });

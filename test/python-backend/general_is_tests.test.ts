@@ -12,12 +12,12 @@ describe('Python Backend - Regex (converted)', () => {
 // Skipped test 2: incomplete arguments in Python: self.assertTypedEqual(regex.sub("y", StrSubclass("a"), StrSubclass("xyz")), "xaz")
 
   it('regex.sub test 3', async () => {
-    // Python: self.assertTypedEqual(regex.sub(b"y", b"a", b"xyz"), b"xaz")
+    // Python: self.assertTypedEqual(regex.sub("y", "a", "xyz"), "xaz")
     expect(await re.sub("y", "a", "xyz")).toBe("xaz");
   });
-// Skipped test 4: incomplete arguments in Python: self.assertTypedEqual(regex.sub(b"y", BytesSubclass(b"a"), BytesSubclass(b"xyz")), b"xaz")
-// Skipped test 5: incomplete arguments in Python: self.assertTypedEqual(regex.sub(b"y", bytearray(b"a"), bytearray(b"xyz")), b"xaz")
-// Skipped test 6: incomplete arguments in Python: self.assertTypedEqual(regex.sub(b"y", memoryview(b"a"), memoryview(b"xyz")), b"xaz")
+// Skipped test 4: incomplete arguments in Python: self.assertTypedEqual(regex.sub("y", BytesSubclass("a"), BytesSubclass("xyz")), "xaz")
+// Skipped test 5: incomplete arguments in Python: self.assertTypedEqual(regex.sub("y", bytearray("a"), bytearray("xyz")), "xaz")
+// Skipped test 6: incomplete arguments in Python: self.assertTypedEqual(regex.sub("y", memoryview("a"), memoryview("xyz")), "xaz")
 
   it('regex.findall test 7', async () => {
     // Python: for string in "a:b::c:::d", StrSubclass("a:b::c:::d"):self.assertTypedEqual(regex.findall(":+", string), [":", "::", ":::"])
@@ -35,18 +35,18 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 10', async () => {
-    // Python: for string in (b"a:b::c:::d",BytesSubclass(b"a:b::c:::d"),bytearray(b"a:b::c:::d"),memoryview(b"a:b::c:::d"),):self.assertTypedEqual(regex.findall(b":+", string), [b":", b"::", b":::"])
-    expect(await re.findall(":+", string)).toStrictEqual([b":", b"::", b":::"]);
+    // Python: for string in ("a:b::c:::d",BytesSubclass("a:b::c:::d"),bytearray("a:b::c:::d"),memoryview("a:b::c:::d"),):self.assertTypedEqual(regex.findall(":+", string), [":", "::", ":::"])
+    expect(await re.findall(":+", string)).toStrictEqual([":", "::", ":::"]);
   });
 
   it('regex.findall test 11', async () => {
-    // Python: self.assertTypedEqual(regex.findall(b"(:+)", string), [b":", b"::", b":::"])
-    expect(await re.findall("(:+)", string)).toStrictEqual([b":", b"::", b":::"]);
+    // Python: self.assertTypedEqual(regex.findall("(:+)", string), [":", "::", ":::"])
+    expect(await re.findall("(:+)", string)).toStrictEqual([":", "::", ":::"]);
   });
 
   it('regex.findall test 12', async () => {
-    // Python: self.assertTypedEqual(regex.findall(b"(:)(:*)", string),[(b":", b""), (b":", b":"), (b":", b"::")],)
-    expect(await re.findall("(:)(:*)", string)).toStrictEqual([(b":", b"");
+    // Python: self.assertTypedEqual(regex.findall("(:)(:*)", string),[(":", ""), (":", ":"), (":", "::")],)
+    expect(await re.findall("(:)(:*)", string)).toStrictEqual([(":", "");
   });
 
   it('regex.match test 13', async () => {
@@ -75,27 +75,27 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 18', async () => {
-    // Python: for string in (b"a", BytesSubclass(b"a"), bytearray(b"a"), memoryview(b"a")):self.assertEqual(regex.match(b"a", string).groups(), ())
+    // Python: for string in ("a", BytesSubclass("a"), bytearray("a"), memoryview("a")):self.assertEqual(regex.match("a", string).groups(), ())
     expect(await re.match("a", string)?.groups()).toStrictEqual(();
   });
 
   it('regex.match test 19', async () => {
-    // Python: self.assertEqual(regex.match(b"(a)", string).groups(), (b"a",))
-    expect(await re.match("(a)", string)?.groups()).toStrictEqual((b"a",);
+    // Python: self.assertEqual(regex.match("(a)", string).groups(), ("a",))
+    expect(await re.match("(a)", string)?.groups()).toStrictEqual(("a",);
   });
 
   it('regex.match test 20', async () => {
-    // Python: self.assertEqual(regex.match(b"(a)", string).group(0), b"a")
+    // Python: self.assertEqual(regex.match("(a)", string).group(0), "a")
     expect(await re.match("(a)", string)?.group(0)).toStrictEqual("a");
   });
 
   it('regex.match test 21', async () => {
-    // Python: self.assertEqual(regex.match(b"(a)", string).group(1), b"a")
+    // Python: self.assertEqual(regex.match("(a)", string).group(1), "a")
     expect(await re.match("(a)", string)?.group(1)).toStrictEqual("a");
   });
 
   it('regex.match test 22', async () => {
-    // Python: self.assertEqual(regex.match(b"(a)", string).group(1, 1), (b"a", b"a"))
-    expect(await re.match("(a)", string)?.group(1, 1)).toStrictEqual((b"a", b"a");
+    // Python: self.assertEqual(regex.match("(a)", string).group(1, 1), ("a", "a"))
+    expect(await re.match("(a)", string)?.group(1, 1)).toStrictEqual(("a", "a");
   });
 });

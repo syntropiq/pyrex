@@ -41,13 +41,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 8', async () => {
-    // Python: self.assertEqual(regex.search(r"^abc", "\nabc"), None)
-    expect(await re.search("^abc", "\\nabc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"^abc", "\nabc"), null)
+    expect(await re.search("^abc", "\\nabc")).toStrictEqual(null);
   });
 
   it('regex.search test 9', async () => {
-    // Python: self.assertEqual(regex.search(r"^abc", "\rabc"), None)
-    expect(await re.search("^abc", "\\rabc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"^abc", "\rabc"), null)
+    expect(await re.search("^abc", "\\rabc")).toStrictEqual(null);
   });
 
   it('regex.search test 10', async () => {
@@ -56,13 +56,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 11', async () => {
-    // Python: self.assertEqual(regex.search(r"(?w)^abc", "\nabc"), None)
-    expect(await re.search("(?w)^abc", "\\nabc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?w)^abc", "\nabc"), null)
+    expect(await re.search("(?w)^abc", "\\nabc")).toStrictEqual(null);
   });
 
   it('regex.search test 12', async () => {
-    // Python: self.assertEqual(regex.search(r"(?w)^abc", "\rabc"), None)
-    expect(await re.search("(?w)^abc", "\\rabc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?w)^abc", "\rabc"), null)
+    expect(await re.search("(?w)^abc", "\\rabc")).toStrictEqual(null);
   });
 
   it('regex.search test 13', async () => {
@@ -76,8 +76,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 15', async () => {
-    // Python: self.assertEqual(regex.search(r"abc$", "abc\r"), None)
-    expect(await re.search("abc$", "abc\\r")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"abc$", "abc\r"), null)
+    expect(await re.search("abc$", "abc\\r")).toStrictEqual(null);
   });
 
   it('regex.search test 16', async () => {
@@ -106,8 +106,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 21', async () => {
-    // Python: self.assertEqual(regex.search(r"(?m)^abc", "\rabc"), None)
-    expect(await re.search("(?m)^abc", "\\rabc")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?m)^abc", "\rabc"), null)
+    expect(await re.search("(?m)^abc", "\\rabc")).toStrictEqual(null);
   });
 
   it('regex.search test 22', async () => {
@@ -136,8 +136,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 27', async () => {
-    // Python: self.assertEqual(regex.search(r"(?m)abc$", "abc\r"), None)
-    expect(await re.search("(?m)abc$", "abc\\r")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search(r"(?m)abc$", "abc\r"), null)
+    expect(await re.search("(?m)abc$", "abc\\r")).toStrictEqual(null);
   });
 
   it('regex.search test 28', async () => {
@@ -156,12 +156,12 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 31', async () => {
-    // Python: # test_line_endingdef test_line_ending(self):self.assertEqual(regex.findall(r"\R", "\r\n\n\x0b\f\r\x85\u2028\u2029"),["\r\n", "\n", "\x0b", "\f", "\r", "\x85", "\u2028", "\u2029"],)
-    expect(await re.findall("\\R", "\\r\\n\\n\\x0b\\f\\r\\x85\\u2028\\u2029")).toStrictEqual(["\r\n", "\n", "\x0b", "\f", "\r", "\x85", "\u2028", "\u2029"],);
+    // Python: # test_line_endingdef test_line_ending(self):self.assertEqual(regex.findall(r"\R", "\r\n\n\x0b\f\r\x85\u2028\u2029"),["\r\n", "\n", "\x0", "\f", "\r", "\x85", "\u2028", "\u2029"],)
+    expect(await re.findall("\\R", "\\r\\n\\n\\x0b\\f\\r\\x85\\u2028\\u2029")).toStrictEqual(["\r\n", "\n", "\x0", "\f", "\r", "\x85", "\u2028", "\u2029"],);
   });
 
   it('regex.findall test 32', async () => {
-    // Python: self.assertEqual(regex.findall(rb"\R", b"\r\n\n\x0b\f\r\x85"),[b"\r\n", b"\n", b"\x0b", b"\f", b"\r"],)
-    expect(await re.findall("\\R", "\\r\\n\\n\\x0b\\f\\r\\x85")).toStrictEqual([b"\r\n", b"\n", b"\x0b", b"\f", b"\r"],);
+    // Python: self.assertEqual(regex.findall(r"\R", "\r\n\n\x0b\f\r\x85"),["\r\n", "\n", "\x0", "\f", "\r"],)
+    expect(await re.findall("\\R", "\\r\\n\\n\\x0b\\f\\r\\x85")).toStrictEqual(["\r\n", "\n", "\x0", "\f", "\r"],);
   });
 });

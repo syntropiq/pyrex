@@ -26,8 +26,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.search test 5', async () => {
-    // Python: self.assertEqual(regex.search("x", "aaa"), None)
-    expect(await re.search("x", "aaa")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.search("x", "aaa"), null)
+    expect(await re.search("x", "aaa")).toStrictEqual(null);
   });
 
   it('regex.match test 6', async () => {
@@ -51,23 +51,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 10', async () => {
-    // Python: self.assertEqual(regex.match("a+", "xxx"), None)
-    expect(await re.match("a+", "xxx")).toStrictEqual(None);
+    // Python: self.assertEqual(regex.match("a+", "xxx"), null)
+    expect(await re.match("a+", "xxx")).toStrictEqual(null);
   });
 
   it('regex.findall test 11', async () => {
-    // Python: # test_search_anchordef test_search_anchor(self):self.assertEqual(regex.findall(r"\G\w{2}", "abcd ef"), ["ab", "cd"])
-    expect(await re.findall("\\G\\w{2}", "abcd ef")).toStrictEqual(["ab", "cd"]);
+    // Python: # test_search_anchordef test_search_anchor(self):self.assertEqual(regex.findall(r"\G\w{2}", "abcd ef"), ["a", "cd"])
+    expect(await re.findall("\\G\\w{2}", "abcd ef")).toStrictEqual(["a", "cd"]);
   });
 
   it('regex.findall test 12', async () => {
-    // Python: # test_search_reversedef test_search_reverse(self):self.assertEqual(regex.findall(r"(?r).", "abc"), ["c", "b", "a"])
-    expect(await re.findall("(?r).", "abc")).toStrictEqual(["c", "b", "a"]);
+    // Python: # test_search_reversedef test_search_reverse(self):self.assertEqual(regex.findall(r"(?r).", "abc"), ["c", "", "a"])
+    expect(await re.findall("(?r).", "abc")).toStrictEqual(["c", "", "a"]);
   });
 
   it('regex.findall test 13', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r).", "abc", overlapped=True), ["c", "b", "a"])
-    expect(await re.findall("(?r).", "abc")).toStrictEqual(["c", "b", "a"]);
+    // Python: self.assertEqual(regex.findall(r"(?r).", "abc", overlapped=True), ["c", "", "a"])
+    expect(await re.findall("(?r).", "abc")).toStrictEqual(["c", "", "a"]);
   });
 
   it('regex.findall test 14', async () => {
@@ -76,13 +76,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 15', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)..", "abcde", overlapped=True), ["de", "cd", "bc", "ab"])
-    expect(await re.findall("(?r)..", "abcde")).toStrictEqual(["de", "cd", "bc", "ab"]);
+    // Python: self.assertEqual(regex.findall(r"(?r)..", "abcde", overlapped=True), ["de", "cd", "bc", "a"])
+    expect(await re.findall("(?r)..", "abcde")).toStrictEqual(["de", "cd", "bc", "a"]);
   });
 
   it('regex.findall test 16', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r)(.)(-)(.)", "a-b-c", overlapped=True),[("b", "-", "c"), ("a", "-", "b")],)
-    expect(await re.findall("(?r)(.)(-)(.)", "a-b-c")).toStrictEqual([("b", "-", "c");
+    // Python: self.assertEqual(regex.findall(r"(?r)(.)(-)(.)", "a-b-c", overlapped=True),[("", "-", "c"), ("a", "-", "")],)
+    expect(await re.findall("(?r)(.)(-)(.)", "a-b-c")).toStrictEqual([("", "-", "c");
   });
 
   it('regex.findall test 17', async () => {
@@ -106,13 +106,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 21', async () => {
-    // Python: self.assertEqual(regex.findall(r"\G\w{2}", "abcd ef"), ["ab", "cd"])
-    expect(await re.findall("\\G\\w{2}", "abcd ef")).toStrictEqual(["ab", "cd"]);
+    // Python: self.assertEqual(regex.findall(r"\G\w{2}", "abcd ef"), ["a", "cd"])
+    expect(await re.findall("\\G\\w{2}", "abcd ef")).toStrictEqual(["a", "cd"]);
   });
 
   it('regex.findall test 22', async () => {
-    // Python: self.assertEqual(regex.findall(r".{2}(?<=\G.*)", "abcd"), ["ab", "cd"])
-    expect(await re.findall(".{2}(?<=\\G.*)", "abcd")).toStrictEqual(["ab", "cd"]);
+    // Python: self.assertEqual(regex.findall(r".{2}(?<=\G.*)", "abcd"), ["a", "cd"])
+    expect(await re.findall(".{2}(?<=\\G.*)", "abcd")).toStrictEqual(["a", "cd"]);
   });
 
   it('regex.findall test 23', async () => {
@@ -146,23 +146,23 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 29', async () => {
-    // Python: self.assertEqual(regex.findall(".", "abcd", pos=1, endpos=3), ["b", "c"])
-    expect(await re.findall(".", "abcd")).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.findall(".", "abcd", pos=1, endpos=3), ["", "c"])
+    expect(await re.findall(".", "abcd")).toStrictEqual(["", "c"]);
   });
 
   it('regex.findall test 30', async () => {
-    // Python: self.assertEqual(regex.findall(".", "abcd", pos=1, endpos=-1), ["b", "c"])
-    expect(await re.findall(".", "abcd")).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.findall(".", "abcd", pos=1, endpos=-1), ["", "c"])
+    expect(await re.findall(".", "abcd")).toStrictEqual(["", "c"]);
   });
 
   it('regex.findall test 31', async () => {
-    // Python: self.assertEqual(regex.findall("(?r).", "abcd", pos=1, endpos=3), ["c", "b"])
-    expect(await re.findall("(?r).", "abcd")).toStrictEqual(["c", "b"]);
+    // Python: self.assertEqual(regex.findall("(?r).", "abcd", pos=1, endpos=3), ["c", ""])
+    expect(await re.findall("(?r).", "abcd")).toStrictEqual(["c", ""]);
   });
 
   it('regex.findall test 32', async () => {
-    // Python: self.assertEqual(regex.findall("(?r).", "abcd", pos=1, endpos=-1), ["c", "b"])
-    expect(await re.findall("(?r).", "abcd")).toStrictEqual(["c", "b"]);
+    // Python: self.assertEqual(regex.findall("(?r).", "abcd", pos=1, endpos=-1), ["c", ""])
+    expect(await re.findall("(?r).", "abcd")).toStrictEqual(["c", ""]);
   });
 
   it('regex.findall test 33', async () => {
@@ -181,8 +181,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 36', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?r).{2}", "abc", overlapped=True), ["bc", "ab"])
-    expect(await re.findall("(?r).{2}", "abc")).toStrictEqual(["bc", "ab"]);
+    // Python: self.assertEqual(regex.findall(r"(?r).{2}", "abc", overlapped=True), ["bc", "a"])
+    expect(await re.findall("(?r).{2}", "abc")).toStrictEqual(["bc", "a"]);
   });
 
   it('regex.findall test 37', async () => {
@@ -261,8 +261,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 52', async () => {
-    // Python: self.assertEqual(regex.findall(r"[a\p{Alpha}]", "ab0"), ["a", "b"])
-    expect(await re.findall("[a\\p{Alpha}]", "ab0")).toStrictEqual(["a", "b"]);
+    // Python: self.assertEqual(regex.findall(r"[a\p{Alpha}]", "ab0"), ["a", ""])
+    expect(await re.findall("[a\\p{Alpha}]", "ab0")).toStrictEqual(["a", ""]);
   });
 
   it('regex.findall test 53', async () => {
@@ -271,8 +271,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 54', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?i)[a\p{Alpha}]", "ab0"), ["a", "b"])
-    expect(await re.findall("(?i)[a\\p{Alpha}]", "ab0")).toStrictEqual(["a", "b"]);
+    // Python: self.assertEqual(regex.findall(r"(?i)[a\p{Alpha}]", "ab0"), ["a", ""])
+    expect(await re.findall("(?i)[a\\p{Alpha}]", "ab0")).toStrictEqual(["a", ""]);
   });
 
   it('regex.findall test 55', async () => {
@@ -281,13 +281,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 56', async () => {
-    // Python: self.assertEqual(regex.findall(r"[a-b\p{Alpha}]", "abC0"), ["a", "b", "C"])
-    expect(await re.findall("[a-b\\p{Alpha}]", "abC0")).toStrictEqual(["a", "b", "C"]);
+    // Python: self.assertEqual(regex.findall(r"[a-b\p{Alpha}]", "abC0"), ["a", "", "C"])
+    expect(await re.findall("[a-b\\p{Alpha}]", "abC0")).toStrictEqual(["a", "", "C"]);
   });
 
   it('regex.findall test 57', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?i)[a-b\p{Alpha}]", "AbC0"), ["A", "b", "C"])
-    expect(await re.findall("(?i)[a-b\\p{Alpha}]", "AbC0")).toStrictEqual(["A", "b", "C"]);
+    // Python: self.assertEqual(regex.findall(r"(?i)[a-b\p{Alpha}]", "AbC0"), ["A", "", "C"])
+    expect(await re.findall("(?i)[a-b\\p{Alpha}]", "AbC0")).toStrictEqual(["A", "", "C"]);
   });
 
   it('regex.findall test 58', async () => {
@@ -311,22 +311,22 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.findall test 62', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?V1)[[a-z]--[aei]]", "abc"), ["b", "c"])
-    expect(await re.findall("(?V1)[[a-z]--[aei]]", "abc")).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.findall(r"(?V1)[[a-z]--[aei]]", "abc"), ["", "c"])
+    expect(await re.findall("(?V1)[[a-z]--[aei]]", "abc")).toStrictEqual(["", "c"]);
   });
 
   it('regex.findall test 63', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?iV1)[[a-z]--[aei]]", "abc"), ["b", "c"])
-    expect(await re.findall("(?iV1)[[a-z]--[aei]]", "abc")).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.findall(r"(?iV1)[[a-z]--[aei]]", "abc"), ["", "c"])
+    expect(await re.findall("(?iV1)[[a-z]--[aei]]", "abc")).toStrictEqual(["", "c"]);
   });
 
   it('regex.findall test 64', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?V1)[\w--a]", "abc"), ["b", "c"])
-    expect(await re.findall("(?V1)[\\w--a]", "abc")).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.findall(r"(?V1)[\w--a]", "abc"), ["", "c"])
+    expect(await re.findall("(?V1)[\\w--a]", "abc")).toStrictEqual(["", "c"]);
   });
 
   it('regex.findall test 65', async () => {
-    // Python: self.assertEqual(regex.findall(r"(?iV1)[\w--a]", "abc"), ["b", "c"])
-    expect(await re.findall("(?iV1)[\\w--a]", "abc")).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.findall(r"(?iV1)[\w--a]", "abc"), ["", "c"])
+    expect(await re.findall("(?iV1)[\\w--a]", "abc")).toStrictEqual(["", "c"]);
   });
 });

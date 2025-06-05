@@ -11,17 +11,17 @@ describe('Python Backend - Regex (converted)', () => {
     // They are commented out to prevent test runner failures.
     /*
     it('regex.match test 1', async () => {
-      // Python: import regeximport unittestclass TestGeneralBr(unittest.TestCase):# test_branch_resetdef test_branch_reset(self):self.assertEqual(regex.match(r"(?:(a)|(b))(c)", "ac").groups(), ("a", None, "c")
+      // Python: import regeximport unittestclass TestGeneralBr(unittest.TestCase):# test_branch_resetdef test_branch_reset(self):self.assertEqual(regex.match(r"(?:(a)|(b))(c)", "ac").groups(), ("a", null, "c")
       expect((await re.match("(?:(a)|(b))(c)", "ac"))?.groups()).toStrictEqual(["a", null, "c"]);
     });
 
     it('regex.match test 2', async () => {
-      // Python: self.assertEqual(regex.match(r"(?:(a)|(b))(c)", "bc").groups(), (None, "b", "c")
-      expect((await re.match("(?:(a)|(b))(c)", "bc"))?.groups()).toStrictEqual([null, "b", "c"]);
+      // Python: self.assertEqual(regex.match(r"(?:(a)|(b))(c)", "bc").groups(), (null, "", "c")
+      expect((await re.match("(?:(a)|(b))(c)", "bc"))?.groups()).toStrictEqual([null, "", "c"]);
     });
 
     it('regex.match test 3', async () => {
-      // Python: self.assertEqual(regex.match(r"(?:(?<a>a)|(?<b>b))(?<c>c)", "ac").groups(), ("a", None, "c")
+      // Python: self.assertEqual(regex.match(r"(?:(?<a>a)|(?<b>b))(?<c>c)", "ac").groups(), ("a", null, "c")
       expect((await re.match("(?:(?<a>a)|(?<b>b))(?<c>c)", "ac"))?.groups()).toStrictEqual(["a", null, "c"]);
     });
     */
@@ -29,43 +29,43 @@ describe('Python Backend - Regex (converted)', () => {
   // All auto-generated tests below are removed due to invalid syntax and require manual review.
 
   it('regex.match test 4', async () => {
-    // Python: self.assertEqual(regex.match(r"(?:(?<a>a)|(?<b>b))(?<c>c)", "bc").groups(), (None, "b", "c")
-    expect((await re.match("(?:(?<a>a)|(?<b>b))(?<c>c)", "bc"))?.groups()).toStrictEqual([null, "b", "c"]);
+    // Python: self.assertEqual(regex.match(r"(?:(?<a>a)|(?<b>b))(?<c>c)", "bc").groups(), (null, "", "c")
+    expect((await re.match("(?:(?<a>a)|(?<b>b))(?<c>c)", "bc"))?.groups()).toStrictEqual([null, "", "c"]);
   });
 
   it('regex.match test 5', async () => {
-    // Python: self.assertEqual(regex.match(r"(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "abd").groups(),("a", "b", None, "d"),)
-    expect((await re.match("(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "abd"))?.groups()).toStrictEqual(["a", "b", null, "d"]);
+    // Python: self.assertEqual(regex.match(r"(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "abd").groups(),("a", "", null, "d"),)
+    expect((await re.match("(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "abd"))?.groups()).toStrictEqual(["a", "", null, "d"]);
   });
 
   it('regex.match test 6', async () => {
-    // Python: self.assertEqual(regex.match(r"(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "acd").groups(),("a", None, "c", "d"),)
+    // Python: self.assertEqual(regex.match(r"(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "acd").groups(),("a", null, "c", "d"),)
     expect((await re.match("(?<a>a)(?:(?<b>b)|(?<c>c))(?<d>d)", "acd"))?.groups()).toStrictEqual(["a", null, "c", "d"]);
   });
 
   it('regex.match test 7', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)(?:(b)|(c))(d)", "abd").groups(), ("a", "b", None, "d")
-    expect((await re.match("(a)(?:(b)|(c))(d)", "abd"))?.groups()).toStrictEqual(["a", "b", null, "d"]);
+    // Python: self.assertEqual(regex.match(r"(a)(?:(b)|(c))(d)", "abd").groups(), ("a", "", null, "d")
+    expect((await re.match("(a)(?:(b)|(c))(d)", "abd"))?.groups()).toStrictEqual(["a", "", null, "d"]);
   });
 
   it('regex.match test 8', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)(?:(b)|(c))(d)", "acd").groups(), ("a", None, "c", "d")
+    // Python: self.assertEqual(regex.match(r"(a)(?:(b)|(c))(d)", "acd").groups(), ("a", null, "c", "d")
     expect((await re.match("(a)(?:(b)|(c))(d)", "acd"))?.groups()).toStrictEqual(["a", null, "c", "d"]);
   });
 
   it('regex.match test 9', async () => {
-    // Python: self.assertEqual(regex.match(r"(a)(?|(b)|(b))(d)", "abd").groups(), ("a", "b", "d")
-    expect((await re.match("(a)(?|(b)|(b))(d)", "abd"))?.groups()).toStrictEqual(["a", "b", "d"]);
+    // Python: self.assertEqual(regex.match(r"(a)(?|(b)|(b))(d)", "abd").groups(), ("a", "", "d")
+    expect((await re.match("(a)(?|(b)|(b))(d)", "abd"))?.groups()).toStrictEqual(["a", "", "d"]);
   });
 
   it('regex.match test 10', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)|(?<b>b))(c)", "ac").groups(), ("a", None, "c")
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)|(?<b>b))(c)", "ac").groups(), ("a", null, "c")
     expect((await re.match("(?|(?<a>a)|(?<b>b))(c)", "ac"))?.groups()).toStrictEqual(["a", null, "c"]);
   });
 
   it('regex.match test 11', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)|(?<b>b))(c)", "bc").groups(), (None, "b", "c")
-    expect((await re.match("(?|(?<a>a)|(?<b>b))(c)", "bc"))?.groups()).toStrictEqual([null, "b", "c"]);
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)|(?<b>b))(c)", "bc").groups(), (null, "", "c")
+    expect((await re.match("(?|(?<a>a)|(?<b>b))(c)", "bc"))?.groups()).toStrictEqual([null, "", "c"]);
   });
 
   it('regex.match test 12', async () => {
@@ -74,13 +74,13 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 13', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)|(?<a>b))(c)", "bc").groups(), ("b", "c")
-    expect((await re.match("(?|(?<a>a)|(?<a>b))(c)", "bc"))?.groups()).toStrictEqual(["b", "c"]);
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)|(?<a>b))(c)", "bc").groups(), ("", "c")
+    expect((await re.match("(?|(?<a>a)|(?<a>b))(c)", "bc"))?.groups()).toStrictEqual(["", "c"]);
   });
 
   it('regex.match test 14', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(?<b>c)(?<a>d))(e)", "abe").groups(),("a", "b", "e"),)
-    expect((await re.match("(?|(?<a>a)(?<b>b)|(?<b>c)(?<a>d))(e)", "abe"))?.groups()).toStrictEqual(["a", "b", "e"]);
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(?<b>c)(?<a>d))(e)", "abe").groups(),("a", "", "e"),)
+    expect((await re.match("(?|(?<a>a)(?<b>b)|(?<b>c)(?<a>d))(e)", "abe"))?.groups()).toStrictEqual(["a", "", "e"]);
   });
 
   it('regex.match test 15', async () => {
@@ -89,8 +89,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 16', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(?<b>c)(d))(e)", "abe").groups(),("a", "b", "e"),)
-    expect((await re.match("(?|(?<a>a)(?<b>b)|(?<b>c)(d))(e)", "abe"))?.groups()).toStrictEqual(["a", "b", "e"]);
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(?<b>c)(d))(e)", "abe").groups(),("a", "", "e"),)
+    expect((await re.match("(?|(?<a>a)(?<b>b)|(?<b>c)(d))(e)", "abe"))?.groups()).toStrictEqual(["a", "", "e"]);
   });
 
   it('regex.match test 17', async () => {
@@ -99,8 +99,8 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 18', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(d))(e)", "abe").groups(),("a", "b", "e"),)
-    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(d))(e)", "abe"))?.groups()).toStrictEqual(["a", "b", "e"]);
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(d))(e)", "abe").groups(),("a", "", "e"),)
+    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(d))(e)", "abe"))?.groups()).toStrictEqual(["a", "", "e"]);
   });
 
   it('regex.match test 19', async () => {
@@ -109,22 +109,22 @@ describe('Python Backend - Regex (converted)', () => {
   });
 
   it('regex.match test 20', async () => {
-    // Python: # Hg issue 87: Allow duplicate names of groupsself.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe").groups(),("a", "b", "e"),)
-    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe"))?.groups()).toStrictEqual(["a", "b", "e"]);
+    // Python: # Hg issue 87: Allow duplicate names of groupsself.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe").groups(),("a", "", "e"),)
+    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe"))?.groups()).toStrictEqual(["a", "", "e"]);
   });
 
   it('regex.match test 21', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe").capturesdict(),{"a": ["a"], "b": ["b"]},)
-    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe"))?.capturesdict()).toStrictEqual({"a": ["a"], "b": ["b"]});
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe").capturesdict(),{"a": ["a"], "": [""]},)
+    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "abe"))?.capturesdict()).toStrictEqual({"a": ["a"], "": [""]});
   });
 
   it('regex.match test 22', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde").groups(),("d", None, "e"),)
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde").groups(),("d", null, "e"),)
     expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde"))?.groups()).toStrictEqual(["d", null, "e"]);
   });
 
   it('regex.match test 23', async () => {
-    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde").capturesdict(),{"a": ["c", "d"], "b": []},)
-    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde"))?.capturesdict()).toStrictEqual({"a": ["c", "d"], "b": []});
+    // Python: self.assertEqual(regex.match(r"(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde").capturesdict(),{"a": ["c", "d"], "": []},)
+    expect((await re.match("(?|(?<a>a)(?<b>b)|(c)(?<a>d))(e)", "cde"))?.capturesdict()).toStrictEqual({"a": ["c", "d"], "": []});
   });
 });

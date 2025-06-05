@@ -5,5 +5,5 @@ import * as re from '../../src/index';
 // You must implement or import a 'sub' function that mimics Python's regex.sub behavior.
 
 describe('Python Backend - Regex (converted)', () => {
-// Skipped test 1: incomplete arguments in Python: self.assertEqual(regex.compile(b"bla").match(a), None)
+// Skipped test 1: incomplete arguments in Python: self.assertEqual(regex.compile("bla").match(a), null)
 });
