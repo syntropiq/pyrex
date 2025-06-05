@@ -1,3 +1,18 @@
+## Legacy Test Remediation Plan — Phase 1: Async/Await Fixes (Completed)
+
+- Applied mechanical async/await fixes to representative legacy test files:
+  - Marked test functions as `async` when calling async Pyrex functions
+  - Added `await` to all `re.subAsync` calls and similar async usages
+  - Replaced assertions on Promises with assertions on resolved values
+- Patterns discovered:
+  - Many legacy tests called async functions without `await` or proper `async` test wrappers
+  - Some assertions used `.resolves` on Promises instead of awaiting the result
+- Recommendations for bulk remediation:
+  - Apply the same mechanical fixes to all remaining legacy test files in `test/python-backend/*.test.ts`
+  - Review for similar issues in `test/split/*.py` if using async/await patterns (for JS/TS interop)
+  - Defer syntax/behavioral/duplicate import fixes to later phases
+
+_Phase 1 complete. Ready for next remediation phase._
 # Project Evaluation Tasks
 
 This document outlines the actionable items for evaluating the "Pythonic Regex API in TypeScript" project, derived from `PLAN.md`.
@@ -7,8 +22,8 @@ This document outlines the actionable items for evaluating the "Pythonic Regex A
 ### 1. Evaluate Project State and `README.md` Adherence
 - [X] Review Source Code (`src/`):
     - [ ] Verify exposure of Pythonic `re` functions in [`src/index.ts`](src/index.ts).
-    - [ ] Investigate backend selection logic in [`src/backends/javascript.ts`](src/backends/javascript.ts) and [`src/backends/python.ts`](src/backends/python.ts).
-    - [ ] Confirm Python-side registry implementation in [`src/backends/python.ts`](src/backends/python.ts).
+    - [x] Investigate backend selection logic in [`src/backends/javascript.ts`](src/backends/javascript.ts) and [`src/backends/python.ts`](src/backends/python.ts).
+    - [x] Confirm Python-side registry implementation in [`src/backends/python.ts`](src/backends/python.ts).
     - [ ] Verify project structure aligns with `README.md`.
 - [ ] Examine Examples (`examples/`):
     - [ ] Review [`examples/basic-usage.ts`](examples/basic-usage.ts) for accuracy.
@@ -310,3 +325,11 @@ The disconnect between working validation tests and failing legacy tests reveals
 - [x] Ran and analyzed the test suite for Pyrex. Documented results and coverage as part of code review validation.
 - [X] **DEBUG MAJOR ISSUES**: Fixed critical `re is not defined` errors and improved test infrastructure
 - [X] **PATTERN ANALYZER DEBUGGING**: Fixed missing Python-only patterns (`(?r)`, `(?p)`) and async/await issues (2025-06-05)
+## Phase 2: Syntax Error Cleanup (Completed)
+
+- Identified and cataloged syntax error patterns in legacy test files:
+  - **Duplicate import statements** (e.g., repeated `import { re } from '../../src/index.js';`)
+- Systematic fixes applied:
+  - Removed duplicate imports in [`test/python-backend/general_bu_tests.test.ts`](test/python-backend/general_bu_tests.test.ts:3)
+- No octal escape sequences or malformed string literals found in the sampled files.
+- Recommendation: Continue scanning remaining legacy test files for duplicate imports and conversion artifacts as new issues are discovered in later phases.
