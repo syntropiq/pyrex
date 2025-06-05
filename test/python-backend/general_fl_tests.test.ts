@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import * as re from '../../src/index';
 // Auto-converted from /Users/steve/Projects/amjur.org/pyrex/test/split/general_fl_tests.py
 
 // You must implement or import a 'sub' function that mimics Python's regex.sub behavior.

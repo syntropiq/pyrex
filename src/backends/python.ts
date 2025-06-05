@@ -153,7 +153,8 @@ export class PythonBackend {
           'captures': {
               group_name: [match_obj.captures(group_name) for group_name in match_obj.groupdict().keys()],
               group_index: [match_obj.captures(i) for i in range(match_obj.lastindex + 1)]
-          }
+          },
+          'expandf': match_obj.expandf
       
       def create_pattern_data(pattern_obj):
           return {
@@ -356,6 +357,12 @@ export class PythonMatch implements Match {
     });
   }
 
+
+  expandf(template: string): string {
+    // Python-style format string substitution implementation
+    return this._data.expandf ? this._data.expandf(template) : template;
+  }
+
   captures(group: number | string): string[] {
     if (typeof group === 'number') {
       return this._data.captures.group_index[group] || [];
@@ -374,13 +381,11 @@ export class PythonPattern implements AsyncPattern {
   public readonly groups: number;
   public readonly groupindex: Record<string, number>;
 
-  private _pythonFlags: string;
   private _handle: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(pattern: string, flags: string, data: any, handle: string) {
     this.pattern = pattern;
-    this._pythonFlags = flags;
     this.flags = data.flags;
     this.groups = data.groups;
     this.groupindex = data.groupindex;

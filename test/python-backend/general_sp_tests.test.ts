@@ -7,11 +7,11 @@ describe('Python Backend - Regex (converted)', () => {
 
   it('regex.search test 1', async () => {
     // Python: self.assertEqual(regex.search(r"^\Aabc\Z$", "\nabc\n", regex.M), None)
-    expect(await re.search("^\\Aabc\\Z$", "\\nabc\\n", { backend: 'python' })).toStrictEqual(None);
+    expect(await re.search("^\\Aabc\\Z$", "\\nabc\\n")).toStrictEqual(None);
   });
 
   it('regex.search test 2', async () => {
     // Python: self.assertEqual(regex.search(rb"^\Aabc\Z$", b"\nabc\n", regex.M), None)
-    expect(await re.search("^\\Aabc\\Z$", "\\nabc\\n", { backend: 'python' })).toStrictEqual(None);
+    expect(await re.search("^\\Aabc\\Z$", "\\nabc\\n")).toStrictEqual(None);
   });
 });

@@ -72,6 +72,12 @@ export interface Match {
    * Return the string obtained by doing backslash substitution
    */
   expand(template: string): string;
+
+ /**
+  * Return the string obtained by doing backslash substitution and
+  * Python-style format string substitution.
+  */
+ expandf(template: string): string;
 }
 
 /**

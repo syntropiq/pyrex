@@ -7,11 +7,11 @@ describe('Python Backend - Regex (converted)', () => {
 
   it('regex.sub test 1', async () => {
     // Python: self.assertEqual(regex.sub(r"\b|:+", "-", "a::bc"), "-a---bc-")
-    expect(await re.sub("\\b|:+", "-", "a::bc", { backend: 'python' })).toBe("-a---bc-");
+    expect(await re.sub("\\b|:+", "-", "a::bc")).toBe("-a---bc-");
   });
 
   it('regex.findall test 2', async () => {
     // Python: self.assertEqual(regex.findall(r"\b|:+", "a::bc"), ["", "", "::", "", ""])
-    expect(await re.findall("\\b|:+", "a::bc", { backend: 'python' })).toStrictEqual(["", "", "::", "", ""]);
+    expect(await re.findall("\\b|:+", "a::bc")).toStrictEqual(["", "", "::", "", ""]);
   });
 });

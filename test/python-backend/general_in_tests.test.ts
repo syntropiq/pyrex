@@ -7,6 +7,6 @@ describe('Python Backend - Regex (converted)', () => {
 
   it('regex.match test 1', async () => {
     // Python: self.assertEqual(regex.match(r"a(?i)", "A"), None)
-    expect(await re.match("a(?i)", "A", { backend: 'python' })).toStrictEqual(None);
+    expect(await re.match("a(?i)", "A")).toStrictEqual(None);
   });
 });
