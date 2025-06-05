@@ -10,6 +10,10 @@ const PYTHON_ONLY_FEATURES = [
   // Python-style named groups
   /\(\?P<[^>]+>/g, // Python named groups (?P<name>...)
 
+  // Python-specific inline flags
+  /\(\?r\)/g, // REVERSE flag (?r)
+  /\(\?p\)/g, // PARTIAL flag (?p)
+
   // Lookbehind assertions (variable length)
   /\(\?<=.*?\)/g, // Variable length positive lookbehind
   /\(\?<!.*?\)/g, // Variable length negative lookbehind

@@ -203,6 +203,56 @@ The Pyrex library now successfully provides:
 
 **The core mission is complete. Pyrex delivers on its promise of seamless Python-to-TypeScript regex migration. 🎉**
 
+## Debug Session - Pattern Analyzer Fix (2025-06-05)
+
+### 🎯 CRITICAL BUG FIXES COMPLETED ✅
+
+#### **Issue Investigation**: Systematic debugging identified root cause
+- **7 Potential Sources Analyzed**: Pattern detection, backend selection, async API, Python initialization, regex substitution, test infrastructure, documentation staleness
+- **Evidence-Based Diagnosis**: Used validation logs to confirm pattern analyzer was missing Python-only features
+- **Validation Tests**: All 13/13 validation tests pass - core functionality confirmed working
+
+#### **PRIMARY FIX: Missing Python-Only Pattern Detection** 🔧
+- **✅ RESOLVED**: Added missing `(?r)` - REVERSE flag pattern detection
+- **✅ RESOLVED**: Added missing `(?p)` - PARTIAL flag pattern detection
+- **✅ IMPACT**: Eliminated "Invalid regular expression: /(?r)(.)/: Invalid group" errors
+- **✅ CONFIRMED**: Patterns now correctly route to Python backend (validation logs prove success)
+
+#### **SECONDARY FIX: Legacy Test Async Updates** 🔧
+- **✅ RESOLVED**: Updated `test/python-backend/general_hg_tests.test.ts` with `async/await`
+- **✅ IMPACT**: Eliminated "expected Promise{…} to be 'value'" errors
+- **✅ PROGRESS**: Tests now execute with Python backend (3/11 tests passing vs 0/11 before)
+
+#### **Evidence of Success** 📊
+**BEFORE:**
+```
+SyntaxError: Invalid regular expression: /(?r)(.)/: Invalid group
+SyntaxError: Invalid regular expression: /(?p)a*(.*?)/: Invalid group
+expected Promise{…} to be 'xx' // Object.is equality
+```
+
+**AFTER:**
+```
+✅ All validation tests pass (13/13)
+✅ No more "Invalid group" errors
+✅ Python patterns correctly route to Python backend
+✅ Some legacy tests now passing (progress made)
+```
+
+#### **Technical Details** 🛠️
+- **File Modified**: `src/utils/pattern-analyzer.ts` - Added `(?r)` and `(?p)` to `PYTHON_ONLY_FEATURES`
+- **File Modified**: `test/python-backend/general_hg_tests.test.ts` - Added `async/await` to test functions
+- **Validation Method**: Debug logs confirmed pattern detection working correctly
+- **Quality Assurance**: Validation tests continue to pass (no regressions)
+
+### 🏆 NET IMPACT
+- **✅ CORE FUNCTIONALITY**: Pattern analyzer now correctly identifies all tested Python-only features
+- **✅ ERROR REDUCTION**: Eliminated critical "Invalid group" runtime errors
+- **✅ TEST PROGRESS**: Moved from complete failures to partial success in legacy tests
+- **✅ FOUNDATION**: Solid base for further legacy test improvements
+
+---
+
 ## Previous Completion Status
 - [X] Read `README.md` and summarize key information. (Completed: 2025-06-05)
 - [X] Create `CODE_REVIEW_PLAN.md` outlining code review steps.
@@ -211,3 +261,4 @@ The Pyrex library now successfully provides:
 - [X] **ISSUES.md RESTRUCTURE**: Proper categorization of test infrastructure problems
 - [x] Ran and analyzed the test suite for Pyrex. Documented results and coverage as part of code review validation.
 - [X] **DEBUG MAJOR ISSUES**: Fixed critical `re is not defined` errors and improved test infrastructure
+- [X] **PATTERN ANALYZER DEBUGGING**: Fixed missing Python-only patterns (`(?r)`, `(?p)`) and async/await issues (2025-06-05)
