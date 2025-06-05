@@ -1,20 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { re } from '../../src/index.js';
 // Auto-converted from /Users/steve/Projects/amjur.org/pyrex/test/split/general_qu_tests.py
 
 // You must implement or import a 'sub' function that mimics Python's regex.sub behavior.
 
 describe('Python Backend - Regex (converted)', () => {
 
-  it('test 1', () => {
-    
-    // Use PyRex's Python backend for sub
-    expect(re.sub("a", "b", "aaaaa")).toBe('bbbbb');
+  it('regex.sub test 1', async () => {
+    // Python: import regeximport unittestimport sysclass TestGeneralQu(unittest.TestCase):# test_qualified_re_subdef test_qualified_re_sub(self):self.assertEqual(regex.sub('a', 'b', 'aaaaa'), 'bbbbb')
+    expect(await re.sub("a", "b", "aaaaa", { backend: 'python' })).toBe('bbbbb');
   });
 
-  it('test 2', () => {
-    
-    // Use PyRex's Python backend for sub
-    expect(re.sub("a", "b", "aaaaa")).toBe('baaaa');
+  it('regex.sub test 2', async () => {
+    // Python: self.assertEqual(regex.sub('a', 'b', 'aaaaa', 1), 'baaaa')
+    expect(await re.sub("a", "b", "aaaaa", { backend: 'python' })).toBe('baaaa');
   });
 });

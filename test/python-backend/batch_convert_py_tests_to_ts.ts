@@ -7,43 +7,86 @@ import * as path from 'path';
 
 function extractTests(py: string) {
   const lines = py.split('\n');
-  const tests: { py: string; pattern: string; repl: string; input: string; expected: string }[] = [];
-  const assertEqRegex = /self\.assertEqual\s*\(\s*regex\.sub\((.+?)\),\s*([^\)]+)\)/;
+  const tests: any[] = [];
+
+  // Patterns for various regex function calls in assertions
+  const patterns = [
+    {
+      // regex.sub
+      regex: /self\.(assertEqual|assertTypedEqual)\s*\(\s*regex\.sub\((.+?)\),\s*([^\)]+)\)/,
+      type: 'sub'
+    },
+    {
+      // regex.match
+      regex: /self\.(assertEqual|assertTypedEqual)\s*\(\s*regex\.match\((.+?)\)(?:\.(\w+)\((.*?)\))?,\s*([^\)]+)\)/,
+      type: 'match'
+    },
+    {
+      // regex.search
+      regex: /self\.(assertEqual|assertTypedEqual)\s*\(\s*regex\.search\((.+?)\)(?:\.(\w+)\((.*?)\))?,\s*([^\)]+)\)/,
+      type: 'search'
+    },
+    {
+      // regex.findall
+      regex: /self\.(assertEqual|assertTypedEqual)\s*\(\s*regex\.findall\((.+?)\),\s*([^\)]+)\)/,
+      type: 'findall'
+    },
+    {
+      // regex.compile
+      regex: /self\.(assertEqual|assertTypedEqual)\s*\(\s*regex\.compile\((.+?)\)(?:\.(\w+)\((.*?)\))?,\s*([^\)]+)\)/,
+      type: 'compile'
+    }
+  ];
 
   for (let i = 0; i < lines.length; ++i) {
-    const line = lines[i].trim();
-    if (line.startsWith('self.assertEqual(') && line.includes('regex.sub')) {
-      const m = assertEqRegex.exec(line);
+    let line = lines[i].trim();
+    // Join multi-line assertions
+    if (!line.endsWith(')')) {
+      let joined = line;
+      let j = i + 1;
+      while (!joined.endsWith(')') && j < lines.length) {
+        joined += lines[j].trim();
+        j++;
+      }
+      line = joined;
+      i = j - 1;
+    }
+
+    for (const pat of patterns) {
+      const m = pat.regex.exec(line);
       if (m) {
-        const args = m[1].split(',').map(s => s.trim());
-        const expected = m[2].trim();
-        tests.push({
-          py: line,
-          pattern: args[0],
-          repl: args[1],
-          input: args[2],
-          expected,
-        });
-      } else {
-        let joined = line;
-        let j = i + 1;
-        while (!joined.includes(')') && j < lines.length) {
-          joined += lines[j].trim();
-          j++;
-        }
-        const m2 = assertEqRegex.exec(joined);
-        if (m2) {
-          const args = m2[1].split(',').map(s => s.trim());
-          const expected = m2[2].trim();
+        if (pat.type === 'sub') {
+          const args = m[2].split(',').map(s => s.trim());
           tests.push({
-            py: joined,
+            py: line,
+            type: 'sub',
             pattern: args[0],
             repl: args[1],
             input: args[2],
-            expected,
+            expected: m[3].trim(),
+          });
+        } else if (pat.type === 'findall') {
+          const args = m[2].split(',').map(s => s.trim());
+          tests.push({
+            py: line,
+            type: 'findall',
+            pattern: args[0],
+            input: args[1],
+            expected: m[3].trim(),
+          });
+        } else if (pat.type === 'match' || pat.type === 'search' || pat.type === 'compile') {
+          const args = m[2].split(',').map(s => s.trim());
+          tests.push({
+            py: line,
+            type: pat.type,
+            pattern: args[0],
+            input: args[1],
+            method: m[3], // e.g., group, groups, span, captures
+            methodArgs: m[4],
+            expected: m[5].trim(),
           });
         }
-        i = j - 1;
+        break;
       }
     }
   }
@@ -77,32 +120,51 @@ function pyExpectedToTs(expected: string) {
   return s;
 }
 
-function toTsTest({ pattern, repl, input, expected, py }: any, idx: number) {
-  // If any argument is missing, output a commented test
-  if (pattern === undefined || repl === undefined || input === undefined || expected === undefined) {
-    return `// Skipped test ${idx + 1}: incomplete arguments in Python: ${py}`;
+function toTsTest(test: any, idx: number) {
+  // Handle missing args
+  if (!test.pattern || !test.input || !test.expected) {
+    return `// Skipped test ${idx + 1}: incomplete arguments in Python: ${test.py}`;
   }
-  let tsRepl = repl;
-  if (repl.includes('lambda') || repl.match(/self\.\w+/)) {
-    tsRepl = '// TODO: Manual conversion needed for callable replacement';
-  } else {
-    tsRepl = pyArgToTs(repl);
-  }
-  const tsPattern = pyArgToTs(pattern);
-  const tsInput = pyArgToTs(input);
-  const tsExpected = pyExpectedToTs(expected);
+  const tsPattern = pyArgToTs(test.pattern);
+  const tsInput = pyArgToTs(test.input);
+  const tsExpected = pyExpectedToTs(test.expected);
 
-  let comment = '';
-  if (tsRepl.startsWith('//')) {
-    comment = `// Python: ${py}`;
-  }
-
-  return `
-  it('test ${idx + 1}', () => {
+  let comment = `// Python: ${test.py}`;
+  if (test.type === 'sub') {
+    let tsRepl = test.repl;
+    if (tsRepl && (tsRepl.includes('lambda') || tsRepl.match(/self\.\w+/))) {
+      tsRepl = '// TODO: Manual conversion needed for callable replacement';
+    } else {
+      tsRepl = pyArgToTs(tsRepl);
+    }
+    return `
+  it('regex.sub test ${idx + 1}', async () => {
     ${comment}
-    // Use PyRex's Python backend for sub
-    expect(re.sub(${tsPattern}, ${tsRepl}, ${tsInput}, { backend: 'python' })).toBe(${tsExpected});
+    expect(await re.sub(${tsPattern}, ${tsRepl}, ${tsInput}, { backend: 'python' })).toBe(${tsExpected});
   });`;
+  } else if (test.type === 'findall') {
+    return `
+  it('regex.findall test ${idx + 1}', async () => {
+    ${comment}
+    expect(await re.findall(${tsPattern}, ${tsInput}, { backend: 'python' })).toStrictEqual(${tsExpected});
+  });`;
+  } else if (test.type === 'match' || test.type === 'search' || test.type === 'compile') {
+    // Compose the function call chain
+    let call = `await re.${test.type}(${tsPattern}, ${tsInput}, { backend: 'python' })`;
+    if (test.method) {
+      if (test.methodArgs) {
+        call += `?.${test.method}(${test.methodArgs})`;
+      } else {
+        call += `?.${test.method}()`;
+      }
+    }
+    return `
+  it('regex.${test.type} test ${idx + 1}', async () => {
+    ${comment}
+    expect(${call}).toStrictEqual(${tsExpected});
+  });`;
+  }
+  return `// Skipped test ${idx + 1}: unsupported pattern in Python: ${test.py}`;
 }
 
 function convertPyTestFile(pyPath: string, tsOutPath: string) {
