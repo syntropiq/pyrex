@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import * as re from '../../src/index.js';
-import { PythonPattern } from '../../src/backends/python.js';
-import { TestPatternManager, PerformanceConfig } from '../utils/test-helpers.js';
+import * as re from '../../src/index';
+import { PythonPattern } from '../../src/backends/python';
+import { TestPatternManager, PerformanceConfig } from '../utils/test-helpers';
 
 describe('Performance and Stress Tests', () => {
   let patternManager: TestPatternManager;

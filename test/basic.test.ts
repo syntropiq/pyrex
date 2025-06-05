@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import * as re from '../src/index.js';
-import { PythonBackend, PythonPattern } from '../src/backends/python.js';
+import * as re from '../src/index';
+import { PythonBackend, PythonPattern } from '../src/backends/python';
 
 describe('Basic JavaScript Regex Operations', () => {
   it('should compile and search with basic patterns', () => {

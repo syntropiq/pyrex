@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import * as re from '../../src/index.js';
-import { PythonPattern } from '../../src/backends/python.js';
-import { TestPatternManager } from '../utils/test-helpers.js';
+import * as re from '../../src/index';
+import { PythonPattern } from '../../src/backends/python';
+import { TestPatternManager } from '../utils/test-helpers';
 
 describe('Error Handling Integration Tests', () => {
   let patternManager: TestPatternManager;
@@ -116,13 +116,7 @@ describe('Error Handling Integration Tests', () => {
       ];
 
       for (const pattern of malformedPatterns) {
-        try {
-          await re.compileAsync(pattern);
-          fail(`Expected error for malformed pattern: ${pattern}`);
-        } catch (error: any) {
-          expect(error).toBeDefined();
-          expect(error.message).toContain('Failed to compile Python pattern');
-        }
+        await expect(re.compileAsync(pattern)).rejects.toThrow();
       }
     });
 

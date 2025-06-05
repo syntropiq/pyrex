@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import * as re from '../../src/index.js';
-import { PythonPattern } from '../../src/backends/python.js';
-import { TestPatternManager, TestPatterns, TestStrings } from '../utils/test-helpers.js';
+import * as re from '../../src/index';
+import { PythonPattern } from '../../src/backends/python';
+import { TestPatternManager, TestPatterns, TestStrings } from '../utils/test-helpers';
 
 describe('Python Pattern Operations (Unit Tests)', () => {
   let patternManager: TestPatternManager;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import * as re from '../../src/index.js';
+import * as re from '../../src/index';
 
 describe('Pattern Analysis (Unit Tests)', () => {
   describe('JavaScript Pattern Detection', () => {

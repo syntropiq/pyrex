@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { PythonPattern } from '../../src/backends/python.js';
+import { PythonPattern, PythonBackend } from '../../src/backends/python';
 
 /**
  * Test utilities and helpers for regex tests
@@ -42,10 +42,9 @@ export class TestPatternManager {
  * Mock spy utilities for testing Python backend calls
  */
 export class PythonBackendSpy {
-  private spy: ReturnType<typeof vi.spyOn>;
+  private spy: any;
 
   constructor() {
-    const { PythonBackend } = require('../../src/backends/python.js');
     this.spy = vi.spyOn(PythonBackend, 'runPython');
   }
 
