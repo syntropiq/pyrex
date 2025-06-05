@@ -37,6 +37,7 @@ export interface Match {
    */
   group(): string | null;
   group(index: number): string | null;
+  group(name: string): string | null;
   group(index: number, ...indices: number[]): (string | null)[];
 
   /**
@@ -48,6 +49,12 @@ export interface Match {
    * Return a dictionary containing all the named subgroups of the match
    */
   groupdict(default_?: string): Record<string, string | null>;
+
+ /**
+  * Return a dictionary containing all the named subgroups of the match,
+  * where each value is a list of all captures for that group.
+  */
+ capturesdict(): Record<string, string[]>;
 
   /**
    * Return the indices of the start and end of the substring matched by group

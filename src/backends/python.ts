@@ -147,7 +147,8 @@ export class PythonBackend {
               'start': match_obj.start(),
               'end': match_obj.end(),
               'span': match_obj.span(),
-              'groupdict': dict(match_obj.groupdict())
+              'groupdict': dict(match_obj.groupdict()),
+              'capturesdict': dict(match_obj.capturesdict())
           }
       
       def create_pattern_data(pattern_obj):
@@ -284,20 +285,28 @@ export class PythonMatch implements Match {
 
   group(): string | null;
   group(index: number): string | null;
+  group(name: string): string | null;
   group(index: number, ...indices: number[]): (string | null)[];
   group(
-    index?: number,
+    indexOrName?: number | string,
     ...indices: number[]
   ): string | null | (string | null)[] {
-    if (index === undefined) {
+    if (indexOrName === undefined) {
       return this._groups[0] ?? null;
     }
 
-    if (indices.length === 0) {
-      return index < this._groups.length ? (this._groups[index] ?? null) : null;
+    if (typeof indexOrName === 'string') {
+      // Handle named groups
+      const groupIndex = this.re.groupindex[indexOrName];
+      return groupIndex !== undefined ? (this._groups[groupIndex] ?? null) : null;
     }
 
-    const allIndices = [index, ...indices];
+    // Handle numeric groups
+    if (indices.length === 0) {
+      return indexOrName < this._groups.length ? (this._groups[indexOrName] ?? null) : null;
+    }
+
+    const allIndices = [indexOrName, ...indices];
     return allIndices.map((i) =>
       i < this._groups.length ? (this._groups[i] ?? null) : null
     );
@@ -311,6 +320,14 @@ export class PythonMatch implements Match {
     const result: Record<string, string | null> = {};
     for (const [name, value] of Object.entries(this._data.groupdict)) {
       result[name] = (value as string) ?? default_ ?? null;
+    }
+    return result;
+  }
+
+  capturesdict(): Record<string, string[]> {
+    const result: Record<string, string[]> = {};
+    for (const [name, value] of Object.entries(this._data.capturesdict)) {
+      result[name] = value as string[];
     }
     return result;
   }

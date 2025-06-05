@@ -1,164 +1,138 @@
-# Pyrex Project Analysis: Current State, Verified Issues, and Remediation Plan
+# Pyrex Project Comprehensive Remediation Plan
 
-## 1. Project Overview and Current State
+## Executive Summary
 
-The Pyrex library is a TypeScript library designed to provide a Python-like `re` (regular expression) interface, mirroring Python's `re` module. Its core purpose is to enable seamless Python-to-TypeScript regex migration by automatically selecting between a JavaScript RegExp backend and a Python `regex` package backend (via Pyodide) for Python-only features.
+The Pyrex library has successfully achieved its core mission of providing a seamless Python-to-TypeScript regex migration experience with automatic backend selection. While the core functionality is robust and validated by passing tests, the legacy test suite, which was auto-converted from Python, exhibits systematic issues. This comprehensive plan outlines a phased strategy to remediate these legacy tests, ensuring full regression coverage, maintaining the proven core functionality, and enhancing the overall stability and reliability of the Pyrex library.
 
-**Key Features:**
-*   **Pythonic API:** Offers `re.match`, `re.search`, `re.compile`, `re.sub`, `re.split`, `re.findall`, `re.fullmatch`, `re.escape`.
-*   **Automatic Backend Selection:** Dynamically routes regex operations to either JavaScript or Python based on pattern features.
-*   **Efficient Python Backend:** Compiles patterns once and stores them in a Python-side registry for optimal performance.
-*   **Modern Stack:** Built with TypeScript, Bun, Vite, ESLint, and Prettier.
+## Priority Issues
 
-**Current State (as of 2025-06-05):**
-The project has achieved its core mission: "Seamless Python-to-TypeScript regex migration with automatic backend selection."
-*   **Core Functionality:** Proven working with 13/13 validation tests passing. This includes seamless async API implementation, Python-style flag constants, error handling, and complete API parity with Python's `re` module.
-*   **Build Pipeline:** `bun run build`, `bun run lint:fix`, and `bun run format` commands are all passing.
-*   **Production Readiness:** The library is considered MVP ready and production-ready for its core functionality.
+Based on the analysis of `ISSUES.md` and further investigation, the following issues have been prioritized:
 
-## 2. Verified List of Current Issues
+### High Priority
 
-While the core library functionality is robust, the legacy test suite, auto-converted from Python, exhibits systematic issues. My verification confirms the presence of these issues as described in `ISSUES.md`.
+1.  **Missing Async/Await (Category 1):**
+    *   **Description:** Legacy tests call asynchronous `re` functions without the `await` keyword, leading to Promise vs. value mismatches and preventing correct test execution.
+    *   **Impact:** Masks potential issues, hinders reliable testing.
+    *   **Effort:** Easy (1-2 hours)
 
-Here's a breakdown of the verified issue categories:
+2.  **Backref Processing Issues (Category 6):**
+    *   **Description:** Python regex replacement patterns involving backreferences (`\g<0>`, `\1`) are not working correctly in the Python backend, resulting in literal strings instead of substitutions.
+    *   **Impact:** Indicates a potential core functionality bug in the Python backend's handling of replacement patterns.
+    *   **Effort:** Unknown Difficulty
 
-### Category 1: Missing Async/Await ⚡
-*   **Description:** Legacy tests call async `re` functions without `await`, leading to Promise vs. value mismatches.
-*   **Verification:** Confirmed in [`test/python-backend/general_bu_tests.test.ts`](test/python-backend/general_bu_tests.test.ts) (e.g., line 13: `expect(re.sub(...)).toBe(...)`).
-*   **Impact:** Prevents tests from executing correctly, masking potential issues.
-*   **Priority:** HIGH (Easy Fix)
+### Medium Priority
 
-### Category 2: Syntax Errors from Auto-conversion 🔧
-*   **Description:** Auto-converted Python tests contain invalid TypeScript syntax, such as legacy octal escape sequences and malformed string literals.
-*   **Verification:** Confirmed in [`test/python-backend/general_su_tests.test.ts`](test/python-backend/general_su_tests.test.ts) (e.g., lines 18, 110, 113). Also, duplicate `import { re }` statements are present (e.g., in `general_bu_tests.test.ts` lines 2-3).
-*   **Impact:** Prevents test compilation and execution.
-*   **Priority:** MEDIUM
+1.  **Syntax Errors from Auto-conversion (Category 2):**
+    *   **Description:** Auto-converted Python tests contain invalid TypeScript syntax, such as legacy octal escape sequences (e.g., `"\000"`) and duplicate `import { re }` statements.
+    *   **Impact:** Prevents test compilation and execution.
+    *   **Effort:** Medium (2-4 hours)
 
-### Category 3: Empty/Broken Test Files 📁
-*   **Description:** Many auto-converted test files are empty or contain only a `describe` block, resulting in "No test found in suite" errors.
-*   **Verification:** Confirmed in [`test/python-backend/general_br_tests.test.ts`](test/python-backend/general_br_tests.test.ts), which is largely empty.
-*   **Impact:** Significant gaps in test coverage for legacy Python features.
-*   **Priority:** MEDIUM
+2.  **Empty/Broken Test Files (Category 3):**
+    *   **Description:** Many auto-converted test files (approximately 40) are empty or contain only a `describe` block, resulting in "No test found in suite" errors. This is primarily due to limitations in the initial auto-conversion tool.
+    *   **Impact:** Significant gaps in test coverage for legacy Python features.
+    *   **Effort:** Medium-Hard (4-6 hours)
 
-### Category 4: Test Expectation Mismatches 🎯
-*   **Description:** Tests execute but assert different results than the library produces, indicating potential behavioral differences between Python's `regex` and Pyrex's implementation, or incorrect expectations.
-*   **Verification:** Confirmed in [`test/python-backend/general_hg_tests.test.ts`](test/python-backend/general_hg_tests.test.ts) (e.g., lines 13, 19, 25, 31, 49, 55).
-*   **Impact:** Requires careful analysis to determine if it's a bug or an expected difference.
-*   **Priority:** LOW-MEDIUM (Hard)
+3.  **Timeouts and Backend Issues (Category 5):**
+    *   **Description:** Some tests timeout during Pyodide initialization, suggesting race conditions or environment setup issues within the Python backend.
+    *   **Impact:** Hinders reliable testing of Python backend features.
+    *   **Effort:** Unknown Difficulty
 
-### Category 5: Timeouts and Backend Issues ❓
-*   **Description:** Some tests timeout during Pyodide initialization, suggesting race conditions or environment setup issues.
-*   **Verification:** Mentioned in `ISSUES.md` with examples like [`test/python-backend/general_hg_tests.test.ts:10`](test/python-backend/general_hg_tests.test.ts:10). While the file itself doesn't explicitly show a timeout, the `ISSUES.md` indicates this behavior.
-*   **Impact:** Hinders reliable testing of Python backend features.
-*   **Priority:** MEDIUM (Unknown Difficulty)
+### Low-Medium Priority
 
-### Category 6: Backref Processing Issues 🔍
-*   **Description:** Python regex replacement patterns involving backreferences (`\g<0>`, `\1`) are not working correctly, resulting in literal strings instead of substitutions.
-*   **Verification:** Confirmed in [`test/python-backend/general_hg_tests.test.ts`](test/python-backend/general_hg_tests.test.ts) (e.g., lines 49, 55).
-*   **Impact:** Indicates a potential core functionality bug in the Python backend's handling of replacement patterns.
-*   **Priority:** HIGH (Unknown Difficulty)
+1.  **Test Expectation Mismatches (Category 4):**
+    *   **Description:** Tests execute but assert different results than the library produces, indicating potential behavioral differences between Python's `regex` and Pyrex's implementation, or incorrect expectations.
+    *   **Impact:** Requires careful analysis to determine if it's a bug or an expected difference.
+    *   **Effort:** Hard (6-10 hours)
 
-## 3. Assessment of the Existing Plan's Relevance
+## Detailed Action Plan with Phases
 
-The existing `PLAN.md` (titled "Pyrex Library Comprehensive Plan - LEGACY TEST REMEDIATION ⚡") is highly relevant and well-structured. It accurately identifies the "New Mission" as legacy test suite remediation and outlines a strategic approach.
+The remediation will proceed in distinct phases, prioritizing quick wins and foundational fixes before tackling more complex behavioral issues.
 
-The plan's phased approach is logical and prioritizes "quick wins" before tackling more complex issues:
+### Phase 1: Quick Wins - Async/Await Fixes ⚡
 
-*   **Phase 1: Quick Wins - Async/Await Fixes ⚡** (HIGH Priority, EASY Difficulty) - Directly addresses Category 1.
-*   **Phase 2: Syntax Error Cleanup 🔧** (MEDIUM Priority, MEDIUM Difficulty) - Directly addresses Category 2.
-*   **Phase 3: Empty Test File Investigation 📁** (MEDIUM Priority, MEDIUM-HARD Difficulty) - Directly addresses Category 3.
-*   **Phase 4: Backend Functionality Investigation 🔍** (HIGH Priority, UNKNOWN Difficulty) - Addresses Category 6 (Backref Processing) and Category 5 (Timeouts).
-*   **Phase 5: Test Expectation Validation 🎯** (LOW-MEDIUM Priority, HARD Difficulty) - Addresses Category 4.
+*   **Objective:** Convert all synchronous `re` calls in legacy tests to asynchronous calls with `await` to resolve Promise-related errors.
+*   **Action Items:**
+    *   Identify all test functions calling `re` methods (e.g., `re.sub()`, `re.search()`, `re.match()`) without `await`.
+    *   Add the `async` keyword to the `it` or `describe` function where `await` is needed.
+    *   Prepend `await` to all identified `re` method calls.
+    *   Remove duplicate `import { re }` statements from test files.
+*   **Deliverables:** Updated test files with correct `async/await` syntax and cleaned imports.
+*   **Dependencies:** None.
+*   **Success Criteria:** All "Promise{…} to be 'value'" errors are resolved, and tests proceed to execution without this specific error.
+*   **Mode Allocation:** Code Mode
 
-The plan's "Execution Strategy" and "Risk Mitigation" sections are also sound, emphasizing incremental fixes and preserving validation tests.
+### Phase 2: Syntax Error Cleanup 🔧
 
-## 4. Recommendations for a New Comprehensive Plan
+*   **Objective:** Resolve TypeScript syntax errors introduced during the initial auto-conversion process.
+*   **Action Items:**
+    *   Convert legacy octal escape sequences (e.g., `"\000"`, `"\001"`, `"\111"`) to their equivalent hex escapes (e.g., `"\x00"`, `"\x01"`, `"\x49"`).
+    *   Fix any other malformed string literals or invalid escape sequences identified during compilation.
+*   **Deliverables:** Test files that compile without syntax errors.
+*   **Dependencies:** Completion of Phase 1.
+*   **Success Criteria:** All legacy test files compile successfully without syntax errors.
+*   **Mode Allocation:** Code Mode
 
-The existing `PLAN.md` is already comprehensive and well-aligned with the verified issues. Therefore, my recommendation is to **adopt and execute the current `PLAN.md` as the comprehensive plan** for addressing the verified issues.
+### Phase 3: Empty Test File Investigation & Remediation 📁
 
-To enhance clarity and ensure a smooth transition to implementation, I propose the following minor additions/clarifications to the existing plan:
+*   **Overall Goal:** Populate or properly skip the 40 identified empty/broken test files in `test/python-backend/` by enhancing the auto-conversion process and performing targeted manual remediation.
 
-### Proposed Comprehensive Plan (Based on `PLAN.md` with minor enhancements)
+#### Phase 3.1: Enhance Conversion Tool (`batch_convert_py_tests_to_ts.ts`)
 
-#### Overall Goal: Achieve comprehensive regression coverage by remediating the legacy test suite, while maintaining proven core functionality.
+*   **Objective:** Modify the existing conversion script to correctly parse and convert a wider range of Python `regex` test patterns, specifically `match`, `search`, `compile`, and their associated assertion methods.
+*   **Action Items:**
+    *   Analyze common Python `unittest` patterns involving `regex.match`, `regex.search`, `regex.compile`, and `Match` object methods (`.groups()`, `.span()`, `.captures()`).
+    *   Update the `extractTests` function in `batch_convert_py_tests_to_ts.ts` to recognize and parse these new patterns and their arguments, handling multi-line Python statements.
+    *   Modify the `toTsTest` function to generate appropriate Vitest `it()` blocks for `match`, `search`, and `compile` tests, ensuring correct conversion of Python `Match` object method calls to TypeScript/Vitest equivalents.
+    *   Properly handle Python regex flags (e.g., `regex.I`, `regex.M`) and Unicode escape sequences (`\N{...}`).
+    *   Integrate `await` for all `re` calls in the generated TypeScript tests.
+    *   Add comments for tests that may require manual review (e.g., complex lambda replacements, `assertRaisesRegex`).
+*   **Deliverables:** An enhanced `batch_convert_py_tests_to_ts.ts` script capable of converting more Python test patterns.
+*   **Dependencies:** Completion of Phase 2.
+*   **Success Criteria:** The updated conversion script can successfully process a wider variety of Python regex test patterns, leading to more populated TypeScript test files.
+*   **Mode Allocation:** Code Mode
 
-#### Phase 1: Quick Wins - Async/Await Fixes ⚡
-*   **Objective:** Convert all synchronous `re` calls in legacy tests to asynchronous calls with `await`.
-*   **Tasks:**
-    *   Identify all test functions calling `re` methods without `await`.
-    *   Add `async` keyword to the `it` or `describe` function where `await` is needed.
-    *   Prepend `await` to all `re.sub()`, `re.search()`, `re.match()`, etc., calls.
-    *   Remove duplicate `import { re }` statements.
-*   **Success Criteria:** All "Promise{…} to be 'value'" errors are resolved, and tests proceed to execution.
+#### Phase 3.2: Re-run Automated Conversion
 
-#### Phase 2: Syntax Error Cleanup 🔧
-*   **Objective:** Resolve TypeScript syntax errors introduced during auto-conversion.
-*   **Tasks:**
-    *   Convert legacy octal escape sequences (e.g., `"\000"`) to hex escapes (e.g., `"\x00"`).
-    *   Fix any malformed string literals or invalid escape sequences.
-*   **Success Criteria:** All legacy test files compile without syntax errors.
+*   **Objective:** Apply the enhanced conversion tool to all 40 identified empty test files to regenerate their content.
+*   **Action Items:**
+    *   Execute the updated `batch_convert_py_tests_to_ts.ts` script to regenerate the TypeScript test files in `test/python-backend/`.
+    *   Verify that the previously empty files now contain generated test cases.
+*   **Deliverables:** Regenerated TypeScript test files with new content.
+*   **Dependencies:** Completion of Phase 3.1.
+*   **Success Criteria:** The 40 empty files now contain generated test cases, reducing the number of "No test found in suite" errors.
+*   **Mode Allocation:** Code Mode
 
-#### Phase 3: Empty Test File Investigation 📁
+#### Phase 3.3: Manual Review and Targeted Remediation
 
-**Overall Goal:** Populate or properly skip the 40 identified empty/broken test files in `test/python-backend/` by enhancing the auto-conversion process and performing targeted manual remediation.
+*   **Objective:** Manually review the newly converted test files, fix any remaining issues, and categorize/document files that cannot be fully automated.
+*   **Action Items:**
+    *   Perform an initial test run (`bun run test`) to identify which of the newly converted tests pass, fail, or still show "No test found in suite" errors.
+    *   Categorize remaining issues:
+        *   **Passes:** Mark as complete.
+        *   **Fails (Assertion Mismatch):** Document for Phase 5.
+        *   **Fails (Syntax/Runtime Errors):** Investigate and fix manually (likely edge cases missed by the converter).
+        *   **Still Empty/Broken:** Investigate their original Python source files (`test/split/`) in depth.
+    *   Perform manual remediation for still empty/broken files:
+        *   **Populate with tests:** If the Python source has clear, convertible test logic, manually write the TypeScript Vitest equivalent.
+        *   **Remove as unnecessary:** If the original Python test was truly empty, a placeholder, or irrelevant, propose its removal.
+        *   **Document as intentionally empty/skipped:** If a test cannot be converted due to fundamental differences or is out of scope, add an `it.skip()` block with a clear, concise comment explaining why.
+*   **Deliverables:** Remediated test files, a categorized list of remaining issues for subsequent phases.
+*   **Dependencies:** Completion of Phase 3.2.
+*   **Success Criteria:** All 40 files are either populated with valid tests, removed, or explicitly skipped with clear justification.
+*   **Mode Allocation:** Debug Mode (for analysis and manual fixes), Code Mode (for implementing fixes)
 
-**Objective:** Modify `test/python-backend/batch_convert_py_tests_to_ts.ts` to correctly parse and convert a wider range of Python `regex` test patterns, specifically `match`, `search`, `compile`, and their associated assertion methods.
+#### Phase 3.4: Document Findings and Update TODO.md
 
-**Tasks:**
-1.  **Analyze Python `unittest` patterns:**
-    *   Identify common `self.assertEqual(regex.match(...))` and `self.assertEqual(regex.search(...))` patterns.
-    *   Determine how `.groups()`, `.span()`, `.captures()`, and other `Match` object methods are used in assertions.
-    *   Account for `regex.compile()` usage and subsequent method calls on the compiled pattern object.
-    *   Consider Python's `unittest.TestCase` methods beyond `assertEqual` (e.g., `assertTrue`, `assertFalse`, `assertRaisesRegex`).
-2.  **Update `extractTests` function:**
-    *   Expand the `extractTests` function in `batch_convert_py_tests_to_ts.ts` to recognize and parse `regex.match`, `regex.search`, `regex.compile`, and other relevant `regex` module functions.
-    *   Create new data structures within `tests` array to store arguments for `match`, `search`, etc., similar to how `sub` arguments are currently stored.
-    *   Implement logic to handle multi-line Python test statements.
-3.  **Update `toTsTest` function:**
-    *   Modify `toTsTest` to generate appropriate Vitest `it()` blocks for `match`, `search`, and `compile` tests.
-    *   Ensure correct conversion of Python `Match` object method calls (e.g., `.groups()`, `.span()`, `.captures()`) to their TypeScript/Vitest equivalents.
-    *   Properly handle Python regex flags (e.g., `regex.I`, `regex.M`) and their conversion to `re` object flags or inline `(?i)` patterns.
-    *   Address Unicode escape sequences (`\N{...}`) and ensure they are correctly translated to TypeScript string literals.
-    *   Integrate `await` for all `re` calls, as the library now uses a seamless async API.
-    *   Add comments for tests that require manual review (e.g., complex lambda replacements, `assertRaisesRegex` that might not have a direct `expect().toThrow()` equivalent).
-
-### Phase 3.2: Re-run Automated Conversion
-
-**Objective:** Apply the enhanced conversion tool to all 40 identified empty test files.
-
-**Tasks:**
-1.  **Execute the updated conversion script:** Run `test/python-backend/batch_convert_py_tests_to_ts.ts` to regenerate the TypeScript test files.
-2.  **Verify file generation:** Confirm that the 40 empty files now contain generated test cases.
-
-### Phase 3.3: Manual Review and Targeted Remediation
-
-**Objective:** Manually review the newly converted test files, fix any remaining issues, and categorize/document files that cannot be fully automated.
-
-**Tasks:**
-1.  **Initial Test Run:** Execute `bun run test` to identify which of the newly converted tests pass, fail, or still show "No test found in suite" errors.
-2.  **Categorize Remaining Issues:**
-    *   **Passes:** Mark as complete.
-    *   **Fails (Assertion Mismatch):** These will likely fall into "Category 4: Test Expectation Mismatches" and will be addressed in Phase 5. Document them.
-    *   **Fails (Syntax/Runtime Errors):** Investigate and fix manually. These are likely edge cases the converter missed.
-    *   **Still Empty/Broken:** These are the most problematic. Investigate their original Python source files (`test/split/`) in depth.
-3.  **Manual Remediation for Still Empty/Broken Files:**
-    *   **Populate with tests:** If the Python source has clear, convertible test logic, manually write the TypeScript Vitest equivalent.
-    *   **Remove as unnecessary:** If the original Python test was truly empty, a placeholder, or irrelevant to the Pyrex library's scope, propose its removal. (Based on current analysis, this is unlikely for the 40 files).
-    *   **Document as intentionally empty/skipped:** If a test cannot be converted due to fundamental differences or is out of scope, add an `it.skip()` block with a clear, concise comment explaining why it's skipped.
-
-### Phase 3.4: Document Findings and Update TODO.md
-
-**Objective:** Provide a comprehensive report on the remediation of empty test files and update the project status.
-
-**Tasks:**
-1.  **Generate Comprehensive Report:** Create a markdown report detailing:
-    *   List of all 40 files.
-    *   For each file:
-        *   Original Python source file.
-        *   Status (Populated, Removed, Skipped).
-        *   Brief explanation for the status (e.g., "Converted `regex.match` tests," "Skipped due to complex `lambda` replacement," "Removed as empty placeholder").
-        *   Any remaining issues or notes.
-2.  **Update `TODO.md`:** Mark Phase 3 as completed and add a summary of the work done, including the number of files populated, removed, or skipped.
+*   **Objective:** Provide a comprehensive report on the remediation of empty test files and update the project status.
+*   **Action Items:**
+    *   Generate a markdown report detailing:
+        *   List of all 40 files.
+        *   For each file: Original Python source, final status (Populated, Removed, Skipped), brief explanation, and any remaining issues/notes.
+    *   Update `TODO.md` to mark Phase 3 as completed and add a summary of the work done.
+*   **Deliverables:** Comprehensive remediation report, updated `TODO.md`.
+*   **Dependencies:** Completion of Phase 3.3.
+*   **Success Criteria:** Clear and complete documentation of Phase 3 outcomes.
+*   **Mode Allocation:** Architect Mode
 
 ### Mermaid Diagram for Phase 3 Flow
 
@@ -184,27 +158,34 @@ graph TD
     H --> R[Return Control to Orchestrator];
 ```
 
-#### Phase 4: Backend Functionality Investigation 🔍
-*   **Objective:** Deeply investigate and resolve core functionality issues related to the Python backend.
-*   **Critical Issues:**
-    *   **Backref Processing Problems:** Analyze why `\g<0>` and `\1` patterns are not being processed correctly in replacement strings. This may require debugging the Python backend's `re.sub` implementation or the communication layer.
-    *   **Pyodide Initialization Timeouts:** Investigate the root cause of test timeouts during Pyodide initialization. This could involve optimizing Pyodide loading, managing resources, or addressing race conditions.
-*   **Investigation Methods:** Isolated testing, detailed logging in Python backend, comparison with pure Python `regex` behavior, performance profiling.
-*   **Success Criteria:** Root causes are identified, and either fixes are implemented or expected behavioral differences are clearly documented.
+### Phase 4: Backend Functionality Investigation 🔍
 
-#### Phase 5: Test Expectation Validation 🎯
-*   **Objective:** Analyze and resolve test expectation mismatches.
-*   **Tasks:**
-    *   For each failing test due to output mismatch, compare the expected output with the actual output.
-    *   Determine if the discrepancy is due to a bug in Pyrex, a difference in Python `regex` versions, or an incorrect original expectation.
+*   **Objective:** Deeply investigate and resolve core functionality issues related to the Python backend, specifically backreference processing and Pyodide timeouts.
+*   **Action Items:**
+    *   **Backref Processing:** Analyze why `\g<0>` and `\1` patterns are not being processed correctly in replacement strings. This may require debugging the Python backend's `re.sub` implementation or the communication layer between TypeScript and Pyodide.
+    *   **Pyodide Timeouts:** Investigate the root cause of test timeouts during Pyodide initialization. This could involve optimizing Pyodide loading, managing resources, or addressing race conditions within the test environment.
+*   **Deliverables:** Identified root causes for backref issues and timeouts, implemented fixes, or clear documentation of expected behavioral differences if no fix is required.
+*   **Dependencies:** Completion of Phase 2 (to ensure tests can run without syntax errors).
+*   **Success Criteria:** Backreference issues are resolved, and Pyodide timeouts are mitigated or their root causes are clearly understood and documented.
+*   **Mode Allocation:** Debug Mode (for investigation), Code Mode (for implementation)
+
+### Phase 5: Test Expectation Validation 🎯
+
+*   **Objective:** Analyze and resolve test expectation mismatches, ensuring tests accurately reflect the intended behavior of the Pyrex library.
+*   **Action Items:**
+    *   For each failing test due to output mismatch, carefully compare the expected output with the actual output produced by the library.
+    *   Determine if the discrepancy is due to a bug in Pyrex, a difference in Python `regex` versions, or an incorrect original expectation in the auto-converted test.
     *   Update test expectations if Pyrex's behavior is correct and consistent with the intended Python `regex` behavior.
-    *   Implement fixes if Pyrex's behavior is incorrect.
-    *   Document any intentional behavioral differences.
-*   **Success Criteria:** All tests either pass or are documented as expected differences.
+    *   Implement fixes in the Pyrex library if its behavior is incorrect.
+    *   Document any intentional behavioral differences between Python's `regex` and Pyrex.
+*   **Deliverables:** Corrected test expectations or documented behavioral differences for all identified mismatches.
+*   **Dependencies:** Completion of Phases 1, 2, and 4 (to ensure tests run without syntax errors and core backend issues are addressed).
+*   **Success Criteria:** All tests either pass or are documented as expected differences, providing a reliable regression suite.
+*   **Mode Allocation:** Debug Mode (for analysis), Code Mode (for implementation)
 
 ---
 
-### Mermaid Diagram for the Remediation Plan Flow
+### Mermaid Diagram for the Overall Remediation Plan Flow
 
 ```mermaid
 graph TD
@@ -229,3 +210,21 @@ graph TD
     J -- Failure --> I;
     L -- Failure --> K;
 ```
+
+## Resource Allocation
+
+*   **Architect Mode (Mira):** Responsible for overall planning, high-level issue classification, progress tracking, documentation (e.g., `PLAN.md`, `TODO.md`), and communication with the user. Ensures the plan remains aligned with project goals.
+*   **Code Mode:** Focuses on implementing code changes, refactoring, fixing syntax errors, enhancing the `batch_convert_py_tests_to_ts.ts` script, and writing new or corrected test cases.
+*   **Debug Mode:** Dedicated to investigating test failures, analyzing behavioral differences, debugging complex backend issues (e.g., Pyodide timeouts, backreference processing), and validating implemented fixes.
+
+## Timeline Considerations
+
+This plan will be executed iteratively, with each phase building upon the successful completion of the previous one. While specific timelines for each phase will be determined during the implementation, the approach prioritizes "quick wins" to rapidly improve test suite stability. Continuous integration and testing will be employed throughout the process to ensure that changes do not introduce new regressions.
+
+## Risk Mitigation Strategies
+
+*   **Incremental Fixes:** Changes will be applied in small, verifiable steps. Each phase will be completed and validated before proceeding to the next, minimizing the risk of introducing new, complex issues.
+*   **Validation Tests Preservation:** The existing 13/13 passing validation tests are critical and will be run frequently throughout the remediation process to ensure that core library functionality remains intact and no regressions are introduced.
+*   **Version Control:** All code changes will be managed through a robust version control system, allowing for easy rollback if any issues or unintended side effects arise.
+*   **Thorough Documentation:** Detailed documentation of issues, their root causes, implemented fixes, and any intentional behavioral differences will be maintained to ensure clarity and future maintainability.
+*   **Collaborative Approach:** Close collaboration between the Architect, Code, and Debug modes will ensure efficient problem-solving, shared understanding of issues, and effective implementation of solutions.
