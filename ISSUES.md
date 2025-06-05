@@ -217,14 +217,19 @@ Developers can use familiar Python `re` module syntax with full async support an
 - [`test/python-backend/general_br_tests.test.ts`](test/python-backend/general_br_tests.test.ts)
 - [`test/python-backend/general_by_tests.test.ts`](test/python-backend/general_by_tests.test.ts)
 - [`test/python-backend/general_ca_tests.test.ts`](test/python-backend/general_ca_tests.test.ts)
-- ~30+ files affected
+- **40 files affected**
 
-**Fix Strategy:**
-1. Investigate source Python files in `test/split/` directory
-2. Determine if tests were not converted or conversion failed
-3. Either fix conversion or mark as properly skipped
+**Diagnosis Confirmed:** Auto-conversion tool limitation. The `batch_convert_py_tests_to_ts.ts` script only extracts `regex.sub()` calls, missing `regex.match()`, `regex.search()`, `regex.compile()`, and other assertion methods present in the original Python source files.
 
-**Affected Files:** ~30 test files showing "No test found" errors
+**Remediation Strategy (Phase 3 Plan):**
+1.  **Enhance Conversion Tool:** Modify `batch_convert_py_tests_to_ts.ts` to correctly parse and convert `match`, `search`, `compile`, and their associated assertion methods (`.groups()`, `.span()`, `.captures()`).
+2.  **Re-run Automated Conversion:** Apply the enhanced tool to all 40 empty test files.
+3.  **Manual Review and Targeted Remediation:**
+    *   Run tests to identify remaining failures (syntax/runtime errors, assertion mismatches).
+    *   Manually fix edge cases or complex conversions.
+    *   For truly unconvertible or irrelevant tests, add `it.skip()` with clear explanations.
+
+**Affected Files:** 40 test files showing "No test found" errors
 
 ---
 

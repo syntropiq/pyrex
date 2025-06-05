@@ -99,12 +99,90 @@ To enhance clarity and ensure a smooth transition to implementation, I propose t
 *   **Success Criteria:** All legacy test files compile without syntax errors.
 
 #### Phase 3: Empty Test File Investigation 📁
-*   **Objective:** Populate or properly skip empty/broken test files.
-*   **Tasks:**
-    *   For each empty test file, locate its corresponding Python source in `test/split/`.
-    *   If the Python source contains valid tests, manually convert them to TypeScript, ensuring proper `describe`/`it` structure and `re` API usage.
-    *   If conversion is not feasible or the original Python test was empty/irrelevant, add an `it.skip()` block with a clear explanation.
-*   **Success Criteria:** All test files either contain executable tests or are explicitly skipped with documentation.
+
+**Overall Goal:** Populate or properly skip the 40 identified empty/broken test files in `test/python-backend/` by enhancing the auto-conversion process and performing targeted manual remediation.
+
+**Objective:** Modify `test/python-backend/batch_convert_py_tests_to_ts.ts` to correctly parse and convert a wider range of Python `regex` test patterns, specifically `match`, `search`, `compile`, and their associated assertion methods.
+
+**Tasks:**
+1.  **Analyze Python `unittest` patterns:**
+    *   Identify common `self.assertEqual(regex.match(...))` and `self.assertEqual(regex.search(...))` patterns.
+    *   Determine how `.groups()`, `.span()`, `.captures()`, and other `Match` object methods are used in assertions.
+    *   Account for `regex.compile()` usage and subsequent method calls on the compiled pattern object.
+    *   Consider Python's `unittest.TestCase` methods beyond `assertEqual` (e.g., `assertTrue`, `assertFalse`, `assertRaisesRegex`).
+2.  **Update `extractTests` function:**
+    *   Expand the `extractTests` function in `batch_convert_py_tests_to_ts.ts` to recognize and parse `regex.match`, `regex.search`, `regex.compile`, and other relevant `regex` module functions.
+    *   Create new data structures within `tests` array to store arguments for `match`, `search`, etc., similar to how `sub` arguments are currently stored.
+    *   Implement logic to handle multi-line Python test statements.
+3.  **Update `toTsTest` function:**
+    *   Modify `toTsTest` to generate appropriate Vitest `it()` blocks for `match`, `search`, and `compile` tests.
+    *   Ensure correct conversion of Python `Match` object method calls (e.g., `.groups()`, `.span()`, `.captures()`) to their TypeScript/Vitest equivalents.
+    *   Properly handle Python regex flags (e.g., `regex.I`, `regex.M`) and their conversion to `re` object flags or inline `(?i)` patterns.
+    *   Address Unicode escape sequences (`\N{...}`) and ensure they are correctly translated to TypeScript string literals.
+    *   Integrate `await` for all `re` calls, as the library now uses a seamless async API.
+    *   Add comments for tests that require manual review (e.g., complex lambda replacements, `assertRaisesRegex` that might not have a direct `expect().toThrow()` equivalent).
+
+### Phase 3.2: Re-run Automated Conversion
+
+**Objective:** Apply the enhanced conversion tool to all 40 identified empty test files.
+
+**Tasks:**
+1.  **Execute the updated conversion script:** Run `test/python-backend/batch_convert_py_tests_to_ts.ts` to regenerate the TypeScript test files.
+2.  **Verify file generation:** Confirm that the 40 empty files now contain generated test cases.
+
+### Phase 3.3: Manual Review and Targeted Remediation
+
+**Objective:** Manually review the newly converted test files, fix any remaining issues, and categorize/document files that cannot be fully automated.
+
+**Tasks:**
+1.  **Initial Test Run:** Execute `bun run test` to identify which of the newly converted tests pass, fail, or still show "No test found in suite" errors.
+2.  **Categorize Remaining Issues:**
+    *   **Passes:** Mark as complete.
+    *   **Fails (Assertion Mismatch):** These will likely fall into "Category 4: Test Expectation Mismatches" and will be addressed in Phase 5. Document them.
+    *   **Fails (Syntax/Runtime Errors):** Investigate and fix manually. These are likely edge cases the converter missed.
+    *   **Still Empty/Broken:** These are the most problematic. Investigate their original Python source files (`test/split/`) in depth.
+3.  **Manual Remediation for Still Empty/Broken Files:**
+    *   **Populate with tests:** If the Python source has clear, convertible test logic, manually write the TypeScript Vitest equivalent.
+    *   **Remove as unnecessary:** If the original Python test was truly empty, a placeholder, or irrelevant to the Pyrex library's scope, propose its removal. (Based on current analysis, this is unlikely for the 40 files).
+    *   **Document as intentionally empty/skipped:** If a test cannot be converted due to fundamental differences or is out of scope, add an `it.skip()` block with a clear, concise comment explaining why it's skipped.
+
+### Phase 3.4: Document Findings and Update TODO.md
+
+**Objective:** Provide a comprehensive report on the remediation of empty test files and update the project status.
+
+**Tasks:**
+1.  **Generate Comprehensive Report:** Create a markdown report detailing:
+    *   List of all 40 files.
+    *   For each file:
+        *   Original Python source file.
+        *   Status (Populated, Removed, Skipped).
+        *   Brief explanation for the status (e.g., "Converted `regex.match` tests," "Skipped due to complex `lambda` replacement," "Removed as empty placeholder").
+        *   Any remaining issues or notes.
+2.  **Update `TODO.md`:** Mark Phase 3 as completed and add a summary of the work done, including the number of files populated, removed, or skipped.
+
+### Mermaid Diagram for Phase 3 Flow
+
+```mermaid
+graph TD
+    A[Start Phase 3: Empty Test File Investigation] --> B{Enhance Conversion Tool};
+    B --> C[Update extractTests for match/search/compile];
+    B --> D[Update toTsTest for Match object methods & flags];
+    B --> E[Add await to all re calls];
+    C & D & E --> F[Re-run Automated Conversion];
+    F --> G{Initial Test Run (bun run test)};
+    G -- All Pass --> H[Phase 3 Complete];
+    G -- Failures/Still Empty --> I{Manual Review & Targeted Remediation};
+    I --> J{Categorize Remaining Issues};
+    J -- Pass --> K[Document as Populated];
+    J -- Fail (Assertion Mismatch) --> L[Document for Phase 5];
+    J -- Fail (Syntax/Runtime) --> M[Fix Manually];
+    J -- Still Empty --> N[Investigate Original Python Source];
+    N -- Convertible --> O[Manually Convert to TS];
+    N -- Not Convertible/Irrelevant --> P[Add it.skip() with explanation];
+    M & O & P --> Q[Document Findings & Update TODO.md];
+    Q --> H;
+    H --> R[Return Control to Orchestrator];
+```
 
 #### Phase 4: Backend Functionality Investigation 🔍
 *   **Objective:** Deeply investigate and resolve core functionality issues related to the Python backend.

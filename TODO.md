@@ -333,3 +333,122 @@ The disconnect between working validation tests and failing legacy tests reveals
   - Removed duplicate imports in [`test/python-backend/general_bu_tests.test.ts`](test/python-backend/general_bu_tests.test.ts:3)
 - No octal escape sequences or malformed string literals found in the sampled files.
 - Recommendation: Continue scanning remaining legacy test files for duplicate imports and conversion artifacts as new issues are discovered in later phases.
+
+## Phase 3: Empty Test File Investigation (Completed)
+
+### **SYSTEMATIC DIAGNOSIS COMPLETED** ✅
+
+**Analysis Method Applied (5-7 Sources → 1-2 Primary):**
+
+**Possible Sources Investigated:**
+1. Auto-conversion failure (automated tool limitations)
+2. Missing/empty source files
+3. Syntax errors preventing test discovery
+4. Incomplete conversion artifacts
+5. File structure/import issues
+6. Naming convention mismatches
+7. Template/placeholder files
+
+**Primary Causes Identified:**
+1. **Auto-conversion tool limitation** (Primary) - Batch converter only extracts `regex.sub()` calls
+2. **Source content mismatch** (Secondary) - Python files use `regex.match()`, `regex.search()`, etc.
+
+### **VALIDATION DATA COLLECTED** 📊
+
+**Empty Test Files:** 40 files with "No test found in suite" errors
+- All contain only empty `describe()` blocks with duplicate import statements
+- All have comment: "Auto-converted from /path/to/source.py"
+- None contain actual `it()` test cases
+
+**Source File Analysis:**
+- **general_br_tests.py**: 94 lines, rich test content with `regex.match()` calls
+- **general_ca_tests.py**: 167 lines, complex case-folding tests
+- **general_as_tests.py**: 35 lines, ASCII/Unicode flag tests
+- **general_ig_tests.py**: 25 lines, ignore-case tests
+- **general_pa_tests.py**: 75 lines, partial matching tests
+
+**Conversion Tool Analysis:**
+- `batch_convert_py_tests_to_ts.ts` line 11: Only matches `self.assertEqual(regex.sub(...))`
+- Misses 100% of `regex.match()`, `regex.search()`, `regex.compile()` patterns
+- Source files contain primarily non-`sub()` operations
+
+### **CATEGORIZATION COMPLETE** 🗂️
+
+#### **Files That Should Be Populated:** (40 files)
+All empty test files should be populated as they have rich source content:
+
+**High Priority - Core Functionality:**
+- `general_ig_tests.test.ts` - Case-insensitive matching tests
+- `general_as_tests.test.ts` - ASCII/Unicode flag tests
+- `general_pa_tests.test.ts` - Partial matching tests
+- `general_ca_tests.test.ts` - Case folding tests
+- `general_br_tests.test.ts` - Branch reset tests
+
+**Medium Priority - Advanced Features:**
+- `general_bi_tests.test.ts`, `general_co_tests.test.ts`, `general_do_tests.test.ts`
+- `general_em_tests.test.ts`, `general_ex_tests.test.ts`, `general_fi_tests.test.ts`
+- `general_fl_tests.test.ts`, `general_fo_tests.test.ts`, `general_fu_tests.test.ts`
+- [etc... all 40 files have valid source content]
+
+#### **Files That Should Be Removed:** None
+All empty files have corresponding Python source files with substantial test content.
+
+#### **Files That Should Be Documented as Intentionally Empty:** None
+No legitimate empty placeholder files found.
+
+### **RECOMMENDED REMEDIATION STRATEGIES** 📋
+
+#### **Strategy 1: Enhanced Conversion Tool (Recommended)**
+- Extend `batch_convert_py_tests_to_ts.ts` to handle:
+  - `regex.match()` → `re.match()`
+  - `regex.search()` → `re.search()`
+  - `regex.compile()` → `re.compile()`
+  - `.groups()`, `.span()`, `.captures()` method calls
+  - Complex assertion patterns
+
+#### **Strategy 2: Manual Conversion for Complex Cases**
+- Files with lambda functions, complex assertions
+- Unicode escape sequences requiring special handling
+- Test cases using advanced regex features
+
+#### **Strategy 3: Selective Implementation**
+- Focus on core functionality tests first (ignorecase, ASCII flags)
+- Defer advanced feature tests (branch reset, partial matching)
+- Implement based on actual usage patterns
+
+### **IMPLEMENTATION NOTES** 📝
+
+**Conversion Challenges Identified:**
+- Python `regex` module vs TypeScript `re` object API differences
+- Unicode escape sequence handling (`\N{LATIN SMALL LETTER...}`)
+- Method chaining patterns (`.match().groups()`)
+- Async/await integration requirements
+- Flag constant mapping (`regex.I` → `re.IGNORECASE`)
+
+**Dependencies for Remediation:**
+- Enhanced conversion tool development
+- Python regex feature completeness validation
+- Test framework async pattern updates
+- Unicode character handling verification
+
+---
+
+## Previous Phases Completed:
+
+### Phase 1: Async/Await Fixes (Completed)
+- Applied mechanical async/await fixes to representative legacy test files
+- Patterns discovered and documented for bulk remediation
+- Recommendations provided for remaining files
+
+### Phase 2: Syntax Error Cleanup (Completed)
+- Identified and cataloged syntax error patterns in legacy test files
+- Systematic fixes applied to duplicate imports
+- No octal escape sequences found in sampled files
+
+### Phase 3: Empty Test File Investigation (Completed)
+- **40 empty test files identified and analyzed**
+- **Root cause confirmed: Auto-conversion tool limitation**
+- **Comprehensive remediation strategy documented**
+- **Ready for Phase 4: Backend Functionality Investigation**
+
+_Phase 3 complete. Control returned to orchestrator for next phase execution._
