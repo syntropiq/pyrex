@@ -40,6 +40,17 @@ describe('Pyodide Regex Test Suite', () => {
          const pat = patternByLine[assertion.line];
          if (!pat) continue;
 
+          // Log the source_code and assertion for diagnosis
+          // eslint-disable-next-line no-console
+          console.log(
+            `[DIAGNOSE] Test: ${name}\nAssertion:`,
+            JSON.stringify(assertion, null, 2),
+            '\nPattern:',
+            JSON.stringify(pat, null, 2),
+            '\nSource code:\n',
+            source_code
+          );
+
           const testTitle = `Line ${assertion.line}: ${pat.method}(${JSON.stringify(pat.pattern)})`;
 
           it(testTitle, async () => {
@@ -130,7 +141,7 @@ describe('Pyodide Regex Test Suite', () => {
             }
           });
         }
-      }
-    });
-  }
+       }
+     }
+   }
 });
