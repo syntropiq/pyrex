@@ -20,7 +20,7 @@ export interface Match {
   readonly string: string;
 
   /** The regular expression object */
-  readonly re: Pattern | import('./async.js').AsyncPattern;
+  readonly re: Pattern;
 
   /** The indices of the start and end of the substring matched */
   readonly pos: number;
@@ -85,9 +85,6 @@ export interface Match {
  * Compiled regular expression pattern object similar to Python's re.Pattern
  */
 export interface Pattern {
-  /** The backend used for this pattern */
-  readonly backend: RegexBackend;
-
   /** The pattern string from which the pattern object was compiled */
   readonly pattern: string;
 
@@ -103,27 +100,27 @@ export interface Pattern {
   /**
    * Scan through string looking for the first location where this regular expression produces a match
    */
-  search(string: string, pos?: number, endpos?: number): Match | null;
+  search(string: string, pos?: number, endpos?: number): Promise<Match | null>;
 
   /**
    * Check if zero or more characters at the beginning of string match this regular expression
    */
-  match(string: string, pos?: number, endpos?: number): Match | null;
+  match(string: string, pos?: number, endpos?: number): Promise<Match | null>;
 
   /**
    * Check if the whole string matches this regular expression
    */
-  fullmatch(string: string, pos?: number, endpos?: number): Match | null;
+  fullmatch(string: string, pos?: number, endpos?: number): Promise<Match | null>;
 
   /**
    * Split string by the occurrences of pattern
    */
-  split(string: string, maxsplit?: number): string[];
+  split(string: string, maxsplit?: number): Promise<string[]>;
 
   /**
    * Return all non-overlapping matches of pattern in string
    */
-  findall(string: string, pos?: number, endpos?: number): string[];
+  findall(string: string, pos?: number, endpos?: number): Promise<string[]>;
 
   /**
    * Return an iterator over all non-overlapping matches
@@ -132,7 +129,7 @@ export interface Pattern {
     string: string,
     pos?: number,
     endpos?: number
-  ): IterableIterator<Match>;
+  ): AsyncIterableIterator<Match>;
 
   /**
    * Return the string obtained by replacing the leftmost non-overlapping occurrences
@@ -141,7 +138,7 @@ export interface Pattern {
     repl: string | ((match: Match) => string),
     string: string,
     count?: number
-  ): string;
+  ): Promise<string>;
 
   /**
    * Same as sub(), but also return the number of substitutions made
@@ -150,19 +147,5 @@ export interface Pattern {
     repl: string | ((match: Match) => string),
     string: string,
     count?: number
-  ): [string, number];
-}
-
-/**
- * Backend type for regex execution
- */
-export type RegexBackend = 'javascript' | 'python';
-
-/**
- * Configuration for regex pattern analysis
- */
-export interface PatternAnalysis {
-  backend: RegexBackend;
-  hasPythonFeatures: boolean;
-  features: string[];
+  ): Promise<[string, number]>;
 }

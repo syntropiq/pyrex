@@ -1,83 +1,51 @@
 import type { Match, Pattern } from './types/index.js';
-import type { AsyncPattern } from './types/async.js';
-import { analyzePattern, convertFlags, escape } from './utils/pattern-analyzer.js';
-import { compile as jsCompile } from './backends/javascript.js';
 import { compile as pyCompile } from './backends/python.js';
 
 /**
- * Compile a regular expression pattern (async - supports both JavaScript and Python)
- * This is now the primary compilation function - seamlessly handles both backends
+ * Compile a regular expression pattern (async - Python-only)
  */
-export async function compile(pattern: string, flags: string = ''): Promise<Pattern | AsyncPattern> {
-  const analysis = analyzePattern(pattern, flags);
-  
-  if (analysis.backend === 'python') {
-    return await pyCompile(pattern, flags);
-  } else {
-    const jsFlags = convertFlags(flags);
-    return jsCompile(pattern, jsFlags);
-  }
+export async function compile(pattern: string, flags: string = ''): Promise<Pattern> {
+  return await pyCompile(pattern, flags);
 }
 
 /**
  * Legacy alias for compile() - maintained for backward compatibility
- * @deprecated Use compile() instead - it now seamlessly handles both JavaScript and Python patterns
+ * @deprecated Use compile() instead
  */
-export async function compileAsync(pattern: string, flags: string = ''): Promise<Pattern | AsyncPattern> {
+export async function compileAsync(pattern: string, flags: string = ''): Promise<Pattern> {
   return await compile(pattern, flags);
 }
 
 /**
  * Scan through string looking for the first location where the regular expression produces a match
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function search(pattern: string, string: string, flags?: string): Promise<Match | null> {
   const compiledPattern = await compile(pattern, flags);
-  let result = await compiledPattern.search(string);
-  
-  // If JS backend returns null, try Python backend as a fallback
-  if (result === null && compiledPattern.backend === 'javascript') {
-    const pythonPattern = await pyCompile(pattern, flags);
-    result = await pythonPattern.search(string);
-  }
-  return result;
+  return await compiledPattern.search(string);
 }
 
 /**
  * Check if zero or more characters at the beginning of string match the regular expression
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function match(pattern: string, string: string, flags?: string): Promise<Match | null> {
   const compiledPattern = await compile(pattern, flags);
-  let result = await compiledPattern.match(string);
-
-  // If JS backend returns null, try Python backend as a fallback
-  if (result === null && compiledPattern.backend === 'javascript') {
-    const pythonPattern = await pyCompile(pattern, flags);
-    result = await pythonPattern.match(string);
-  }
-  return result;
+  return await compiledPattern.match(string);
 }
 
 /**
  * Check if the whole string matches the regular expression
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function fullmatch(pattern: string, string: string, flags?: string): Promise<Match | null> {
   const compiledPattern = await compile(pattern, flags);
-  let result = await compiledPattern.fullmatch(string);
-
-  // If JS backend returns null, try Python backend as a fallback
-  if (result === null && compiledPattern.backend === 'javascript') {
-    const pythonPattern = await pyCompile(pattern, flags);
-    result = await pythonPattern.fullmatch(string);
-  }
-  return result;
+  return await compiledPattern.fullmatch(string);
 }
 
 /**
  * Split string by the occurrences of pattern
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function split(pattern: string, string: string, maxsplit?: number, flags?: string): Promise<string[]> {
   const compiledPattern = await compile(pattern, flags);
@@ -86,7 +54,7 @@ export async function split(pattern: string, string: string, maxsplit?: number, 
 
 /**
  * Return all non-overlapping matches of pattern in string as a list of strings
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function findall(pattern: string, string: string, flags?: string): Promise<string[]> {
   const compiledPattern = await compile(pattern, flags);
@@ -95,16 +63,16 @@ export async function findall(pattern: string, string: string, flags?: string): 
 
 /**
  * Return an iterator over all non-overlapping matches for the RE pattern in string
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
-export async function finditer(pattern: string, string: string, flags?: string): Promise<AsyncIterableIterator<Match> | IterableIterator<Match>> {
+export async function finditer(pattern: string, string: string, flags?: string): Promise<AsyncIterableIterator<Match>> {
   const compiledPattern = await compile(pattern, flags);
   return await compiledPattern.finditer(string);
 }
 
 /**
  * Return the string obtained by replacing the leftmost non-overlapping occurrences of pattern in string
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function sub(
   pattern: string,
@@ -119,7 +87,7 @@ export async function sub(
 
 /**
  * Same as sub(), but also return the number of substitutions made
- * Now seamlessly supports both JavaScript and Python regex patterns
+ * Python-only implementation
  */
 export async function subn(
   pattern: string,
@@ -133,7 +101,7 @@ export async function subn(
 }
 
 // Legacy async aliases - maintained for backward compatibility
-// @deprecated All main functions are now async - use search(), match(), etc. instead
+// @deprecated All main functions are now async
 export const searchAsync = search;
 export const matchAsync = match;
 export const fullmatchAsync = fullmatch;
@@ -143,22 +111,11 @@ export const subAsync = sub;
 export const subnAsync = subn;
 
 /**
- * Check if a pattern requires Python backend
+ * Escape special regex characters for literal matching
  */
-export function requiresPython(pattern: string, flags?: string): boolean {
-  const analysis = analyzePattern(pattern, flags);
-  return analysis.backend === 'python';
+export function escape(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
-
-/**
- * Analyze a pattern to determine backend requirements
- */
-export function analyze(pattern: string, flags?: string) {
-  return analyzePattern(pattern, flags);
-}
-
-// Export escape function
-export { escape };
 
 // Python-style flag constants (like Python's re.IGNORECASE, re.MULTILINE, etc.)
 export const IGNORECASE = 'i';
@@ -193,26 +150,26 @@ export const error = RegexError;
 
 /**
  * Python-like re module interface
- * Provides the familiar Python re.method() syntax with seamless async support
- * All functions now support both JavaScript and Python regex patterns automatically
+ * Provides the familiar Python re.method() syntax with async support
+ * Python-only implementation
  */
 export const re = {
   // Core compilation functions
   compile,
   compileAsync, // Legacy alias
-  
-  // Pattern matching functions (all async, seamlessly handle both JS and Python patterns)
+
+  // Pattern matching functions (all async, Python-only)
   search,
   match,
   fullmatch,
-  
-  // Pattern operations (all async, seamlessly handle both JS and Python patterns)
+
+  // Pattern operations (all async, Python-only)
   split,
   findall,
   finditer,
   sub,
   subn,
-  
+
   // Legacy async aliases (deprecated - all main functions are now async)
   searchAsync,
   matchAsync,
@@ -221,7 +178,7 @@ export const re = {
   findallAsync,
   subAsync,
   subnAsync,
-  
+
   // Python-style flag constants
   IGNORECASE, I,
   MULTILINE, M,
@@ -231,16 +188,14 @@ export const re = {
   LOCALE, L,
   UNICODE, U,
   DEBUG,
-  
+
   // Python-style error class
   error: RegexError,
-  
+
   // Utility functions
-  requiresPython,
-  analyze,
   escape
 };
 
 // Export types
-export type { Match, Pattern, AsyncPattern };
+export type { Match, Pattern };
 export { RegexFlags } from './types/index.js';

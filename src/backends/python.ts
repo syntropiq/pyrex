@@ -1,5 +1,4 @@
 import type { Match } from '../types/index.js';
-import type { AsyncPattern } from '../types/async.js';
 
 /**
  * Python backend using Pyodide for regex operations
@@ -105,27 +104,27 @@ export class PythonBackend {
       import regex as re
       import json
       import uuid
-      
+
       # Pattern registry to store compiled patterns
       _pattern_registry = {}
-      
+
       def register_pattern(pattern_obj):
           """Register a compiled pattern and return its handle"""
           handle = str(uuid.uuid4())
           _pattern_registry[handle] = pattern_obj
           return handle
-      
+
       def get_pattern(handle):
           """Retrieve a pattern by its handle"""
           return _pattern_registry.get(handle)
-      
+
       def unregister_pattern(handle):
           """Remove a pattern from the registry"""
           if handle in _pattern_registry:
               del _pattern_registry[handle]
               return True
           return False
-      
+
       def create_match_data(match_obj, pattern_obj, string, pos=0, endpos=None):
           print(f"MIRAI DEBUG: create_match_data called with match_obj: {match_obj}")
           print(f"MIRAI DEBUG: create_match_data pattern: {pattern_obj.pattern if pattern_obj else 'None'}")
@@ -133,14 +132,14 @@ export class PythonBackend {
           if match_obj is None:
               print(f"MIRAI DEBUG: create_match_data returning None because match_obj is None")
               return None
-          
+
           groups = []
           for i in range(len(match_obj.groups()) + 1):
               try:
                   groups.append(match_obj.group(i))
               except:
                   groups.append(None)
-          
+
           return {
               'string': string,
               'pos': pos,
@@ -159,7 +158,7 @@ export class PythonBackend {
               },
               'expandf_result': match_obj.expandf # Store the bound method
           }
-      
+
       def create_pattern_data(pattern_obj):
           return {
               'pattern': pattern_obj.pattern,
@@ -196,49 +195,49 @@ export class PythonBackend {
 
     // Set pattern and flags in Python globals to avoid escaping issues
     await this.runPython(`
-_compile_pattern = "${pattern}"
-_compile_flags = "${flags}"
+ _compile_pattern = "${pattern}"
+ _compile_flags = "${flags}"
     `);
 
     // Use globals to pass the result back
     await this.runPython(`
-import regex as re
+ import regex as re
 
-flag_map = {
-    'i': re.IGNORECASE,
-    'm': re.MULTILINE,
-    's': re.DOTALL,
-    'x': re.VERBOSE,
-    'a': re.ASCII,
-    'l': re.LOCALE,
-    'u': re.UNICODE,
-    'd': re.DEBUG
-}
+ flag_map = {
+     'i': re.IGNORECASE,
+     'm': re.MULTILINE,
+     's': re.DOTALL,
+     'x': re.VERBOSE,
+     'a': re.ASCII,
+     'l': re.LOCALE,
+     'u': re.UNICODE,
+     'd': re.DEBUG
+ }
 
-flag_value = 0
-for flag in _compile_flags:
-    if flag in flag_map:
-        flag_value |= flag_map[flag]
+ flag_value = 0
+ for flag in _compile_flags:
+     if flag in flag_map:
+         flag_value |= flag_map[flag]
 
-try:
-    pattern_bytes = _compile_pattern.encode('utf-8')
-    print(f"MIRAI DEBUG: Compiling pattern: {_compile_pattern}")
-    print(f"MIRAI DEBUG: Pattern bytes (before compile): {list(pattern_bytes)}")
-    pattern_obj = re.compile(_compile_pattern, flag_value)
-    
-    # Log the bytes after compilation as well (if compilation succeeds)
-    pattern_bytes_after = pattern_obj.pattern.encode('utf-8')
-    print(f"MIRAI DEBUG: Pattern bytes (after compile): {list(pattern_bytes_after)}")
-    
-    handle = register_pattern(pattern_obj)
-    pattern_data = create_pattern_data(pattern_obj)
-    
-    _compile_result = {
-        'handle': handle,
-        'pattern_data': pattern_data
-    }
-except Exception as e:
-    _compile_result = {'error': str(e), 'pattern': _compile_pattern, 'flags': _compile_flags}
+ try:
+     pattern_bytes = _compile_pattern.encode('utf-8')
+     print(f"MIRAI DEBUG: Compiling pattern: {_compile_pattern}")
+     print(f"MIRAI DEBUG: Pattern bytes (before compile): {list(pattern_bytes)}")
+     pattern_obj = re.compile(_compile_pattern, flag_value)
+
+     # Log the bytes after compilation as well (if compilation succeeds)
+     pattern_bytes_after = pattern_obj.pattern.encode('utf-8')
+     print(f"MIRAI DEBUG: Pattern bytes (after compile): {list(pattern_bytes_after)}")
+
+     handle = register_pattern(pattern_obj)
+     pattern_data = create_pattern_data(pattern_obj)
+
+     _compile_result = {
+         'handle': handle,
+         'pattern_data': pattern_data
+     }
+ except Exception as e:
+     _compile_result = {'error': str(e), 'pattern': _compile_pattern, 'flags': _compile_flags}
     `);
 
     const result = await this.runPython('_compile_result');
@@ -285,7 +284,7 @@ except Exception as e:
  */
 export class PythonMatch implements Match {
   public readonly string: string;
-  public readonly re: AsyncPattern;
+  public readonly re: PythonPattern;
   public readonly pos: number;
   public readonly endpos: number;
   public readonly lastindex: number | null;
@@ -296,7 +295,7 @@ export class PythonMatch implements Match {
   private _groups: (string | null)[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(data: any, pattern: AsyncPattern) {
+  constructor(data: any, pattern: PythonPattern) {
     this._data = data;
     this.string = data.string;
     this.re = pattern;
@@ -310,18 +309,14 @@ export class PythonMatch implements Match {
   group(): string | null;
   group(index: number): string | null;
   group(name: string): string | null;
-  group(index: number, ...indices: number[]): (string | null)[];
-  group(
-    indexOrName?: number | string,
-    ...indices: number[]
-  ): string | null | (string | null)[] {
-    if (indexOrName === undefined) {
+  group(index: number, ...indices: number[]): (string | null)[] {
+    if (index === undefined) {
       return this._groups[0] ?? null;
     }
 
-    if (typeof indexOrName === 'string') {
+    if (typeof index === 'string') {
       // Handle named groups
-      const groupIndex = this.re.groupindex[indexOrName];
+      const groupIndex = this.re.groupindex[index];
       return groupIndex !== undefined
         ? (this._groups[groupIndex] ?? null)
         : null;
@@ -329,12 +324,12 @@ export class PythonMatch implements Match {
 
     // Handle numeric groups
     if (indices.length === 0) {
-      return indexOrName < this._groups.length
-        ? (this._groups[indexOrName] ?? null)
+      return index < this._groups.length
+        ? (this._groups[index] ?? null)
         : null;
     }
 
-    const allIndices = [indexOrName, ...indices];
+    const allIndices = [index, ...indices];
     return allIndices.map((i) =>
       i < this._groups.length ? (this._groups[i] ?? null) : null
     );
@@ -412,8 +407,7 @@ export class PythonMatch implements Match {
 /**
  * Python implementation of Pattern object
  */
-export class PythonPattern implements AsyncPattern {
-  public readonly backend: import('../types/index.js').RegexBackend = 'python';
+export class PythonPattern implements Pattern {
   public readonly pattern: string;
   public readonly flags: number;
   public readonly groups: number;
@@ -439,31 +433,31 @@ export class PythonPattern implements AsyncPattern {
     await PythonBackend.runPython(`_search_string = ${JSON.stringify(string)}`);
 
     const matchData = await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
 
-print(f"MIRAI DIAGNOSTIC: About to search with pattern '{pattern_obj.pattern}' on string '{_search_string}'")
-print(f"MIRAI DIAGNOSTIC: Search parameters: pos=${pos}, endpos=${endpos || string.length}")
+ print(f"MIRAI DIAGNOSTIC: About to search with pattern '${pattern_obj.pattern}' on string '${_search_string}'")
+ print(f"MIRAI DIAGNOSTIC: Search parameters: pos=${pos}, endpos=${endpos || string.length}")
 
-# Test the regex behavior directly
-import regex as re
-direct_pattern = re.compile('a*')
-direct_result = direct_pattern.search('xxx')
-print(f"MIRAI DIAGNOSTIC: Direct regex test: re.compile('a*').search('xxx') = {direct_result}")
-if direct_result:
-    print(f"MIRAI DIAGNOSTIC: Direct result span: {direct_result.span()}")
-    print(f"MIRAI DIAGNOSTIC: Direct result group(0): '{direct_result.group(0)}'")
+ # Test the regex behavior directly
+ import regex as re
+ direct_pattern = re.compile('a*')
+ direct_result = direct_pattern.search('xxx')
+ print(f"MIRAI DIAGNOSTIC: Direct regex test: re.compile('a*').search('xxx') = {direct_result}")
+ if direct_result:
+     print(f"MIRAI DIAGNOSTIC: Direct result span: {direct_result.span()}")
+     print(f"MIRAI DIAGNOSTIC: Direct result group(0): '{direct_result.group(0)}'")
 
-match_obj = pattern_obj.search(_search_string, ${pos}, ${endpos || string.length})
-print(f"MIRAI DIAGNOSTIC: pattern_obj.search result: {match_obj}")
-if match_obj:
-    print(f"MIRAI DIAGNOSTIC: match_obj.span(): {match_obj.span()}")
-    print(f"MIRAI DIAGNOSTIC: match_obj.group(0): '{match_obj.group(0)}'")
+ match_obj = pattern_obj.search(_search_string, ${pos}, ${endpos || string.length})
+ print(f"MIRAI DIAGNOSTIC: pattern_obj.search result: {match_obj}")
+ if match_obj:
+     print(f"MIRAI DIAGNOSTIC: match_obj.span(): {match_obj.span()}")
+     print(f"MIRAI DIAGNOSTIC: match_obj.group(0): '{match_obj.group(0)}'")
 
-match_data = create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
-print(f"MIRAI DIAGNOSTIC: create_match_data result: {match_data}")
-match_data
+ match_data = create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
+ print(f"MIRAI DIAGNOSTIC: create_match_data result: {match_data}")
+ match_data
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
@@ -478,12 +472,12 @@ match_data
     await PythonBackend.runPython(`_match_string = ${JSON.stringify(string)}`);
 
     const matchData = await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
 
-match_obj = pattern_obj.match(_match_string, ${pos}, ${endpos || string.length})
-create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || string.length})
+ match_obj = pattern_obj.match(_match_string, ${pos}, ${endpos || string.length})
+ create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || string.length})
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
@@ -500,12 +494,12 @@ create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || str
     );
 
     const matchData = await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
 
-match_obj = pattern_obj.fullmatch(_fullmatch_string, ${pos}, ${endpos || string.length})
-create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos || string.length})
+ match_obj = pattern_obj.fullmatch(_fullmatch_string, ${pos}, ${endpos || string.length})
+ create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos || string.length})
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
@@ -515,13 +509,16 @@ create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos ||
     // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_split_string = ${JSON.stringify(string)}`);
 
-    return await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+    const result = await PythonBackend.runPython(`
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
 
-pattern_obj.split(_split_string, ${maxsplit})
+ result = pattern_obj.split(_split_string, ${maxsplit})
+ result
     `);
+
+    return result || [];
   }
 
   async findall(
@@ -530,17 +527,18 @@ pattern_obj.split(_split_string, ${maxsplit})
     endpos?: number
   ): Promise<string[]> {
     // Set string in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(
-      `_findall_string = ${JSON.stringify(string)}`
-    );
+    await PythonBackend.runPython(`_findall_string = ${JSON.stringify(string)}`);
 
-    return await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+    const result = await PythonBackend.runPython(`
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
 
-pattern_obj.findall(_findall_string, ${pos}, ${endpos || string.length})
+ result = pattern_obj.findall(_findall_string, ${pos}, ${endpos || string.length})
+ result
     `);
+
+    return result || [];
   }
 
   async *finditer(
@@ -549,20 +547,19 @@ pattern_obj.findall(_findall_string, ${pos}, ${endpos || string.length})
     endpos?: number
   ): AsyncIterableIterator<Match> {
     // Set string in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(
-      `_finditer_string = ${JSON.stringify(string)}`
-    );
+    await PythonBackend.runPython(`_finditer_string = ${JSON.stringify(string)}`);
 
     const matches = await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
 
-matches = []
-for match_obj in pattern_obj.finditer(_finditer_string, ${pos}, ${endpos || string.length}):
-    matches.append(create_match_data(match_obj, pattern_obj, _finditer_string, ${pos}, ${endpos || string.length}))
-matches
+ # Get all matches
+ matches = list(pattern_obj.finditer(_finditer_string, ${pos}, ${endpos || string.length}))
+ matches
     `);
+
+    if (!matches) return;
 
     for (const matchData of matches) {
       yield new PythonMatch(matchData, this);
@@ -572,8 +569,11 @@ matches
   async sub(
     repl: string | ((match: Match) => string),
     string: string,
-    count: number = 1
+    count: number = 0
   ): Promise<string> {
+    // Set string in globals to avoid escaping issues with multiline strings
+    await PythonBackend.runPython(`_sub_string = ${JSON.stringify(string)}`);
+
     const [result] = await this.subn(repl, string, count);
     return result;
   }
@@ -581,62 +581,39 @@ matches
   async subn(
     repl: string | ((match: Match) => string),
     string: string,
-    count: number = 1
+    count: number = 0
   ): Promise<[string, number]> {
-    if (typeof repl === 'function') {
-      // For function replacements, we need to handle this in TypeScript
-      let result = string;
-      let substitutions = 0;
-
-      const matches = [];
-      for await (const match of this.finditer(string)) {
-        matches.push(match);
-        if (count > 0 && matches.length >= count) break;
-      }
-
-      // Process matches in reverse order to maintain correct indices
-      for (let i = matches.length - 1; i >= 0; i--) {
-        const match = matches[i];
-        if (match) {
-          const replacement = repl(match);
-          const start = match.start();
-          const end = match.end();
-
-          result = result.slice(0, start) + replacement + result.slice(end);
-          substitutions++;
-        }
-      }
-
-      return [result, substitutions];
-    }
-
-    // Set strings in globals to avoid escaping issues with multiline strings
-    await PythonBackend.runPython(
-      `_subn_repl = ${JSON.stringify(repl as string)}`
-    );
+    // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_subn_string = ${JSON.stringify(string)}`);
 
-    return await PythonBackend.runPython(`
-pattern_obj = get_pattern("${this._handle}")
-if pattern_obj is None:
-    raise ValueError("Pattern handle not found in registry")
+    // Define the replacement function in Python
+    await PythonBackend.runPython(`
+ def replacement_function(match_obj):
+     # Convert match_obj to match data
+     match_data = create_match_data(match_obj, get_pattern("${this._handle}"), _subn_string)
+     match = PythonMatch(match_data, get_pattern("${this._handle}"))
 
-result = pattern_obj.subn(_subn_repl, _subn_string, ${count})
-[result[0], result[1]]
+     # Call the JavaScript replacement function
+     result = _repl_function(match)
+     return result
     `);
-  }
 
-  /**
-   * Clean up the pattern from the registry
-   */
-  async cleanup(): Promise<boolean> {
-    return await PythonBackend.cleanup(this._handle);
+    // Pass the JavaScript repl function to Python
+    await PythonBackend.runPython(`_repl_function = ${repl instanceof Function ? repl.toString() : `'${repl}'`}`);
+
+    const result = await PythonBackend.runPython(`
+ pattern_obj = get_pattern("${this._handle}")
+ if pattern_obj is None:
+     raise ValueError("Pattern handle not found in registry")
+
+ result = pattern_obj.subn(replacement_function, _subn_string, ${count})
+ result
+    `);
+
+    return result || ['', 0];
   }
 }
 
-/**
- * Compile a pattern using Python regex
- */
 export async function compile(
   pattern: string,
   flags: string = ''
