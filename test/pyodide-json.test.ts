@@ -34,11 +34,11 @@ describe('Pyodide Regex Test Suite', () => {
         }
       }
 
-      // For each assertion, run the corresponding regex operation
-      if (Array.isArray(assertions)) {
-        for (const assertion of assertions) {
-          const pat = patternByLine[assertion.line];
-          if (!pat) continue;
+     // For each assertion, run the corresponding regex operation
+     if (Array.isArray(assertions) && assertions.length > 0) {
+       for (const assertion of assertions) {
+         const pat = patternByLine[assertion.line];
+         if (!pat) continue;
 
           const testTitle = `Line ${assertion.line}: ${pat.method}(${JSON.stringify(pat.pattern)})`;
 
