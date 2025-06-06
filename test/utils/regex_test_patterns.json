@@ -1,7 +1,6 @@
 {
   "source_file": "test/utils/test-regex.py",
   "extraction_timestamp": null,
-  "total_tests": 87,
   "tests": [
     {
       "name": "test_main",

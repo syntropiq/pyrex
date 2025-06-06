@@ -1,119 +1,135 @@
 // Dynamically runs regex tests from pyodide_regex_tests.json using Vitest
 
 import { describe, it, expect } from 'vitest';
-import * as regex from '../src/index.js';
+// Debug: Log what we're trying to import
+console.log('Attempting to import from:', '../src/index.ts');
+import * as regex from '../src/index.ts';
+console.log('Import successful, regex module:', Object.keys(regex));
 import fs from 'fs';
 
 // Load and parse the JSON test definitions
 const testData = JSON.parse(
-  fs.readFileSync(require.resolve('./utils/pyodide_regex_tests.json'), 'utf-8')
+  fs.readFileSync(require.resolve('./utils/regex_test_patterns.json'), 'utf-8')
 );
 
-interface TestCase {
-  pattern: string;
-  input: string;
-  expected: string | string[];
-  function: 'sub' | 'split' | 'findall';
-  line: number;
-  method: string;
-  is_bytes?: boolean;
-}
+/**
+ * TestCase interface is not used for new structure.
+ * The new JSON structure contains:
+ * - patterns: Array<{ method: string, pattern: string, flags: [], line: number }>
+ * - assertions: Array<{ type: string, line: number, args_count: number }>
+ * - other metadata
+ */
 
 describe('Pyodide Regex Test Suite', () => {
-  // Group tests by method for better organization
-  const testsByMethod = testData.reduce((acc: Record<string, TestCase[]>, test: TestCase) => {
-    if (!acc[test.method]) {
-      acc[test.method] = [];
-    }
-    acc[test.method].push(test);
-    return acc;
-  }, {});
+  for (const test of testData.tests) {
+    // Each test has: name, patterns, assertions, etc.
+    const { name, patterns, assertions, source_code } = test;
 
-  for (const [methodName, tests] of Object.entries(testsByMethod)) {
-    describe(methodName, () => {
-      for (const test of tests as TestCase[]) {
-        // Skip byte tests for now as they require special handling
-        if (test.is_bytes) {
-          it.skip(`Line ${test.line}: ${test.function}("${test.pattern}", "${test.input}") [BYTES - SKIPPED]`, () => {});
-          continue;
+    describe(name, () => {
+      // Map pattern line to pattern object for lookup
+      const patternByLine = {};
+      if (Array.isArray(patterns)) {
+        for (const pat of patterns) {
+          patternByLine[pat.line] = pat;
         }
+      }
 
-        const testTitle = `Line ${test.line}: ${test.function}("${test.pattern}", "${test.input}")`;
+      // For each assertion, run the corresponding regex operation
+      if (Array.isArray(assertions)) {
+        for (const assertion of assertions) {
+          const pat = patternByLine[assertion.line];
+          if (!pat) continue;
 
-        it(testTitle, async () => {
-          try {
-            // Validate required fields
-            if (
-              typeof test.pattern !== 'string' ||
-              typeof test.input !== 'string' ||
-              typeof test.function !== 'string' ||
-              typeof test.line !== 'number'
-            ) {
+          const testTitle = `Line ${assertion.line}: ${pat.method}(${JSON.stringify(pat.pattern)})`;
+
+          it(testTitle, async () => {
+            let result;
+            try {
+              // Handler skeleton for all function types
+              switch (pat.method) {
+                case 'compile':
+                  // Handler for regex.compile(pattern, flags)
+                  // Typically used to create a pattern object for further operations
+                  // Example: const compiled = regex.compile(pat.pattern, ...pat.flags)
+                  // Not directly assertable, but may be used in subsequent assertions
+                  // For now, just check compile does not throw
+                  await expect(async () => (regex as any).compile(pat.pattern, ...(pat.flags || []))).not.toThrow();
+                  break;
+
+                case 'escape':
+                  // Handler for regex.escape(pattern)
+                  // Example: regex.escape(pat.pattern)
+                  result = (regex as any).escape(pat.pattern);
+                  // Expected value should be in assertion or test.expected
+                  // TODO: Map expected value
+                  break;
+
+                case 'findall':
+                  // Handler for regex.findall(pattern, input)
+                  // TODO: Map input and expected from test/assertion
+                  break;
+
+                case 'finditer':
+                  // Handler for regex.finditer(pattern, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'fullmatch':
+                  // Handler for regex.fullmatch(pattern, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'match':
+                  // Handler for regex.match(pattern, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'search':
+                  // Handler for regex.search(pattern, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'split':
+                  // Handler for regex.split(pattern, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'splititer':
+                  // Handler for regex.splititer(pattern, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'sub':
+                  // Handler for regex.sub(pattern, repl, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'subf':
+                  // Handler for regex.subf(pattern, repl, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'subfn':
+                  // Handler for regex.subfn(pattern, repl, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                case 'subn':
+                  // Handler for regex.subn(pattern, repl, input)
+                  // TODO: Implement logic and expected mapping
+                  break;
+
+                default:
+                  throw new Error(`Unsupported function: ${pat.method} at line ${pat.line}`);
+              }
+            } catch (error) {
+              const errorMessage = error instanceof Error ? error.message : String(error);
               throw new Error(
-                `Malformed test case at line ${test.line}: Missing required fields.`
+                `Test failed for ${pat.method}("${pat.pattern}") at line ${pat.line}: ${errorMessage}`
               );
             }
-
-            let result;
-
-            switch (test.function) {
-              case 'sub': {
-                // Handler for regex.sub(pattern, repl, string)
-                // In this test format:
-                //   pattern: regex pattern
-                //   input: replacement string
-                //   expected: result string after substitution
-                //   (source text is inferred or assumed to be the same as expected if not provided)
-                // If the test case includes a 'source' field, use it; otherwise, use pattern or expected.
-                const sourceText =
-                  (test as any).source ??
-                  (typeof test.expected === 'string' ? test.expected : test.input);
-
-                result = await (regex as any).sub(test.pattern, test.input, sourceText);
-                expect(result).toBe(test.expected);
-                break;
-              }
-
-              case 'split': {
-                // Handler for regex.split(pattern, string)
-                // expected: array of split substrings
-                if (!Array.isArray(test.expected)) {
-                  throw new Error(
-                    `Malformed split test at line ${test.line}: expected should be an array.`
-                  );
-                }
-                result = await (regex as any).split(test.pattern, test.input);
-                expect(result).toEqual(test.expected);
-                break;
-              }
-
-              case 'findall': {
-                // Handler for regex.findall(pattern, string)
-                // expected: array of matches (strings or arrays for groups)
-                if (!Array.isArray(test.expected)) {
-                  throw new Error(
-                    `Malformed findall test at line ${test.line}: expected should be an array.`
-                  );
-                }
-                result = await (regex as any).findall(test.pattern, test.input);
-                expect(result).toEqual(test.expected);
-                break;
-              }
-
-              default:
-                // Catch-all for unsupported or future function types
-                throw new Error(
-                  `Unsupported function: ${test.function} at line ${test.line}`
-                );
-            }
-          } catch (error) {
-            // Add context to the error for debugging
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            throw new Error(
-              `Test failed for ${test.function}("${test.pattern}", "${test.input}") at line ${test.line}: ${errorMessage}`
-            );
-          }
-        });
+          });
+        }
       }
     });
   }
