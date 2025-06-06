@@ -303,12 +303,16 @@ export class PythonMatch implements Match {
     if (typeof indexOrName === 'string') {
       // Handle named groups
       const groupIndex = this.re.groupindex[indexOrName];
-      return groupIndex !== undefined ? (this._groups[groupIndex] ?? null) : null;
+      return groupIndex !== undefined
+        ? (this._groups[groupIndex] ?? null)
+        : null;
     }
 
     // Handle numeric groups
     if (indices.length === 0) {
-      return indexOrName < this._groups.length ? (this._groups[indexOrName] ?? null) : null;
+      return indexOrName < this._groups.length
+        ? (this._groups[indexOrName] ?? null)
+        : null;
     }
 
     const allIndices = [indexOrName, ...indices];
@@ -371,7 +375,6 @@ export class PythonMatch implements Match {
       return this._groups[index] ?? '';
     });
   }
-
 
   expandf(template: string): string {
     // Python-style format string substitution implementation

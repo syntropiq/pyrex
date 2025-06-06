@@ -45,21 +45,21 @@ export interface Match {
    */
   groups(default_?: string): (string | null)[];
 
- /**
-  * Return a list of all captures for the given group.
-  */
- captures(group: number | string): string[];
+  /**
+   * Return a list of all captures for the given group.
+   */
+  captures(group: number | string): string[];
 
   /**
    * Return a dictionary containing all the named subgroups of the match
    */
   groupdict(default_?: string): Record<string, string | null>;
 
- /**
-  * Return a dictionary containing all the named subgroups of the match,
-  * where each value is a list of all captures for that group.
-  */
- capturesdict(): Record<string, string[]>;
+  /**
+   * Return a dictionary containing all the named subgroups of the match,
+   * where each value is a list of all captures for that group.
+   */
+  capturesdict(): Record<string, string[]>;
 
   /**
    * Return the indices of the start and end of the substring matched by group
@@ -74,11 +74,11 @@ export interface Match {
    */
   expand(template: string): string;
 
- /**
-  * Return the string obtained by doing backslash substitution and
-  * Python-style format string substitution.
-  */
- expandf(template: string): string;
+  /**
+   * Return the string obtained by doing backslash substitution and
+   * Python-style format string substitution.
+   */
+  expandf(template: string): string;
 }
 
 /**

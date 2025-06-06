@@ -2,3 +2,10 @@
 - [x] Successfully tested with 593 passing tests across all regex functions
 - [x] Parser handles complex JSON structure with patterns/assertions mapping
 - [x] Pyodide integration working correctly for Python regex backend
+- Fixed TypeScript implementation issues in [`src/backends/javascript.ts`](src/backends/javascript.ts):
+  - Added `captures(group: number | string): string[]`
+  - Added `capturesdict(): Record<string, string[]>`
+  - Added `expandf(template: string): string`
+  - Updated `span()` to support both number and string group arguments
+  - Verified no unused `flags` parameter in JSMatch constructor
+  - Confirmed TypeScript compilation passes via `bun run build`

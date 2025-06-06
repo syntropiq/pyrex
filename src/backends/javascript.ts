@@ -16,6 +16,49 @@ export class JSMatch implements Match {
   private _match: RegExpMatchArray;
   private _groups: (string | null)[];
 
+  /**
+   * Return a list of all captures for the given group.
+   * Only supports numbered groups for now.
+   */
+  captures(group: number | string): string[] {
+    // TODO: implement named group support
+    if (typeof group === 'number') {
+      // Only one match per group in JS RegExp, unless using matchAll
+      const val = this._groups[group];
+      return val !== undefined && val !== null ? [val] : [];
+    } else if (typeof group === 'string') {
+      // Named group support not implemented
+      return [];
+    }
+    return [];
+  }
+
+  /**
+   * Return a dictionary containing all the named subgroups of the match,
+   * where each value is a list of all captures for that group.
+   */
+  capturesdict(): Record<string, string[]> {
+    // TODO: implement named group support
+    return {};
+  }
+
+  /**
+   * Return the string obtained by doing backslash substitution and
+   * Python-style format string substitution.
+   */
+  expandf(template: string): string {
+    // Simple implementation: replace {group} or {1} with group value
+    return template.replace(/\{(\w+)\}/g, (_, group) => {
+      // Try numeric group
+      const idx = Number(group);
+      if (!isNaN(idx)) {
+        return this._groups[idx] ?? '';
+      }
+      // TODO: support named groups
+      return '';
+    });
+  }
+
   constructor(
     match: RegExpMatchArray,
     pattern: Pattern,
@@ -83,8 +126,14 @@ export class JSMatch implements Match {
     return start + (this._groups[0]?.length ?? 0);
   }
 
-  span(group: number = 0): [number, number] {
-    return [this.start(group), this.end(group)];
+  span(group: number | string = 0): [number, number] {
+    if (typeof group === 'number') {
+      return [this.start(group), this.end(group)];
+    } else if (typeof group === 'string') {
+      // TODO: implement named group support
+      return [this.start(0), this.end(0)];
+    }
+    return [this.start(0), this.end(0)];
   }
 
   expand(template: string): string {
