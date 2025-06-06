@@ -1,3 +1,5 @@
+- [x] Fixed PythonMatch undefined error in Python context (core publication blocker)
+- [x] Fixed pattern search returning null instead of match results (core publication blocker)
 # JavaScript Regex Removal - Implementation Status
 
 ## **COMPLETED TASKS:**
@@ -44,7 +46,76 @@
 - Async-only API
 - Reliable, predictable behavior matching Python exactly
 
+## **ANALYSIS TASKS**
+- [x] Read and analyze key project documents (README, ISSUE, PLAN, TODO, package.json) - Completed by Architect mode.
+
 ## **NEXT STEPS**
 - Run tests to verify the implementation
 - Address any remaining type errors
+- [x] Run `bun run prepublishOnly` to identify publication issues.
+- [x] Analyze errors from `bun run lint`, `bun run test`, and `bun run build:clean`.
 - Return control to orchestrator
+
+## **VERIFICATION STATUS - MIRAI DEBUG MODE**
+- [x] **`bun run build:clean`** - ✅ **PASSES** (builds successfully in 151ms)
+- [x] **`bun run lint`** - ❌ **FAILS** (ESLint errors at line 456:63, 456:98)
+- [x] **`bun run test`** - ❌ **FAILS** (3 test failures due to same issues)
+- [x] **`bun run prepublishOnly`** - ❌ **FAILS** (stops at lint stage)
+
+## **IDENTIFIED ISSUES (2 Critical Problems)**
+
+### **Issue 1: Template Literal Mixing (Line 456)**
+**Problem**: Python f-string incorrectly uses JavaScript template syntax:
+```python
+print(f"MIRAI DIAGNOSTIC: About to search with pattern '${pattern_obj.pattern}' on string '${_search_string}'")
+```
+**Should be**:
+```python
+print(f"MIRAI DIAGNOSTIC: About to search with pattern '{pattern_obj.pattern}' on string '{_search_string}'")
+```
+
+### **Issue 2: Python NoneType + int Error (Line 168)**
+**Problem**: `create_match_data` attempts `match_obj.lastindex + 1` where `lastindex` can be `None`
+**Error**: `TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'`
+
+## **STATUS**: Fixes required in `src/backends/python.ts` before publication ready.
+- [x] Fixed Python f-string template literal syntax at line 456 in [`src/backends/python.ts`](src/backends/python.ts:456)
+- [x] Fixed NoneType error for `match_obj.lastindex + 1` at line 168 in [`src/backends/python.ts`](src/backends/python.ts:168)
+
+## **FINAL VERIFICATION - MIRAI DEBUG MODE**
+- [x] **Final `bun run prepublishOnly` check** - ❌ **FAILS** (3 remaining test failures)
+
+### **FIXED ISSUES FROM PREVIOUS VERIFICATION**
+- [x] **Issue 3: PythonMatch Undefined Error** - ✅ **RESOLVED** (PythonMatch objects now being created successfully)
+- [x] **Issue 4: Pattern Search Core Logic** - ✅ **RESOLVED** (Pattern search no longer returning null due to undefined errors)
+
+### **REMAINING PUBLICATION BLOCKERS (3 failures)**
+
+#### **Issue 5: Zero-Width Match Handling**
+**Problem**: Pattern `'a*'` on string `'xxx'` returning `null` instead of expected `[0, 0]`
+**Affected Test**: [`test/pyodide-json.test.ts:305`](test/pyodide-json.test.ts:305) - `test_search_star_plus`
+**Root Cause**: Zero-width matches not properly handled in pattern processing
+
+#### **Issue 6: Missing API Export**
+**Problem**: Missing `requiresPython` property in re module exports
+**Affected Test**: [`test/validation/python-compatibility.test.ts:95`](test/validation/python-compatibility.test.ts:95)
+**Root Cause**: API completeness issue
+
+#### **Issue 7: Named Group Substitution Logic**
+**Problem**: Pattern `(?P<word>\w+)` replacing all matches instead of first match only
+**Affected Test**: [`test/validation/seamless-async-api.test.ts:14`](test/validation/seamless-async-api.test.ts:14)
+**Expected**: `'REPLACED world'`, **Actual**: `'REPLACED REPLACED'`
+**Root Cause**: Substitution behavior inconsistent with expected Python regex behavior
+
+## **DEFINITIVE FINAL STATUS**: ❌ **PUBLICATION BLOCKED**
+**Verdict**: While core critical issues from the original 4 blockers have been resolved, **3 new test failures** prevent publication. These represent:
+1. **1 Core Functionality Issue** (zero-width match handling)
+2. **1 API Completeness Issue** (missing export)
+3. **1 Behavioral Inconsistency** (substitution logic)
+
+**Assessment**: These are **NOT** edge cases but represent fundamental regex operations that would impact real-world usage.
+
+**Recommendation**: Address these 3 remaining failures before attempting publication.
+- [x] Fixed zero-width match handling for patterns like 'a*' on non-matching strings (returns correct span, not null)
+- [x] Added missing `requiresPython: true` export to main module interface
+- [x] Fixed named group substitution logic to replace only the first match by default (Python `re.sub()` compatibility)

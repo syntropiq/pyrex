@@ -199,3 +199,7 @@ export const re = {
 // Export types
 export type { Match, Pattern };
 export { RegexFlags } from './types/index.js';
+/**
+ * Indicates this module requires Python backend compatibility.
+ */
+export const requiresPython = true;

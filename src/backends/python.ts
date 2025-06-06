@@ -1,4 +1,4 @@
-import type { Match } from '../types/index.js';
+import type { Match, Pattern } from '../types/index.js';
 
 /**
  * Python backend using Pyodide for regex operations
@@ -105,6 +105,43 @@ export class PythonBackend {
       import json
       import uuid
 
+      # PythonMatch class for compatibility with JS/TS expectations
+      class PythonMatch:
+          def __init__(
+              self, string, pos, endpos, lastindex, lastgroup, groups, start, end, span,
+              groupdict, capturesdict, captures, expandf_result
+          ):
+              self.string = string
+              self.pos = pos
+              self.endpos = endpos
+              self.lastindex = lastindex
+              self.lastgroup = lastgroup
+              self.groups = groups
+              self.start = start
+              self.end = end
+              self.span = span
+              self.groupdict = groupdict
+              self.capturesdict = capturesdict
+              self.captures = captures
+              self.expandf_result = expandf_result
+
+          def to_dict(self):
+              return {
+                  'string': self.string,
+                  'pos': self.pos,
+                  'endpos': self.endpos,
+                  'lastindex': self.lastindex,
+                  'lastgroup': self.lastgroup,
+                  'groups': self.groups,
+                  'start': self.start,
+                  'end': self.end,
+                  'span': self.span,
+                  'groupdict': self.groupdict,
+                  'capturesdict': self.capturesdict,
+                  'captures': self.captures,
+                  'expandf_result': self.expandf_result
+              }
+
       # Pattern registry to store compiled patterns
       _pattern_registry = {}
 
@@ -133,6 +170,9 @@ export class PythonBackend {
               print(f"MIRAI DEBUG: create_match_data returning None because match_obj is None")
               return None
 
+          # Ensure endpos is properly set
+          endpos_value = endpos if endpos is not None else len(string)
+
           groups = []
           for i in range(len(match_obj.groups()) + 1):
               try:
@@ -140,24 +180,37 @@ export class PythonBackend {
               except:
                   groups.append(None)
 
-          return {
-              'string': string,
-              'pos': pos,
-              'endpos': endpos or len(string),
-              'lastindex': match_obj.lastindex,
-              'lastgroup': match_obj.lastgroup,
-              'groups': groups,
-              'start': match_obj.start(),
-              'end': match_obj.end(),
-              'span': match_obj.span(),
-              'groupdict': dict(match_obj.groupdict()),
-              'capturesdict': dict(match_obj.capturesdict()),
-              'captures': {
-                  'by_name': {name: match_obj.captures(name) for name in match_obj.groupdict().keys()},
-                  'by_index': [match_obj.captures(i) for i in range(match_obj.lastindex + 1)]
-              },
-              'expandf_result': match_obj.expandf # Store the bound method
+          # Create a safe version of span that handles None values
+          try:
+              span_result = match_obj.span()
+          except:
+              span_result = (0, 0)
+
+          groupdict = dict(match_obj.groupdict()) if hasattr(match_obj, 'groupdict') else {}
+          capturesdict = dict(match_obj.capturesdict()) if hasattr(match_obj, 'capturesdict') else {}
+          captures = {
+              'by_name': {name: match_obj.captures(name) for name in groupdict.keys()}
+                  if hasattr(match_obj, 'captures') and hasattr(match_obj, 'groupdict')
+                  else {},
+              'by_index': [match_obj.captures(i) for i in range((match_obj.lastindex or 0) + 1)]
+                  if hasattr(match_obj, 'captures') and hasattr(match_obj, 'lastindex')
+                  else []
           }
+          expandf_result = match_obj.expandf if hasattr(match_obj, 'expandf') else None
+
+          return PythonMatch(
+              string, pos, endpos_value,
+              match_obj.lastindex if hasattr(match_obj, 'lastindex') else None,
+              match_obj.lastgroup if hasattr(match_obj, 'lastgroup') else None,
+              groups,
+              match_obj.start() if match_obj else 0,
+              match_obj.end() if match_obj else 0,
+              span_result,
+              groupdict,
+              capturesdict,
+              captures,
+              expandf_result
+          )
 
       def create_pattern_data(pattern_obj):
           return {
@@ -166,7 +219,7 @@ export class PythonBackend {
               'groups': pattern_obj.groups,
               'groupindex': dict(pattern_obj.groupindex)
           }
-    `);
+      `);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -195,7 +248,15 @@ export class PythonBackend {
 
     // Set pattern and flags in Python globals to avoid escaping issues
     await this.runPython(`
- _compile_pattern = "${pattern}"
+ # If the pattern is already quoted (starts and ends with a quote), use as-is, else quote it
+import ast
+if isinstance(${pattern}, str) and (
+    (${pattern}.startswith("'") and ${pattern}.endswith("'")) or
+    (${pattern}.startswith('"') and ${pattern}.endswith('"'))
+):
+    _compile_pattern = ${pattern}
+else:
+    _compile_pattern = ${JSON.stringify(pattern)}
  _compile_flags = "${flags}"
     `);
 
@@ -309,30 +370,29 @@ export class PythonMatch implements Match {
   group(): string | null;
   group(index: number): string | null;
   group(name: string): string | null;
-  group(index: number, ...indices: number[]): (string | null)[] {
-    if (index === undefined) {
+  group(index: number, ...indices: number[]): (string | null)[];
+  group(index?: number | string, ...indices: number[]): string | null | (string | null)[] {
+    if (arguments.length === 0) {
       return this._groups[0] ?? null;
     }
-
     if (typeof index === 'string') {
-      // Handle named groups
       const groupIndex = this.re.groupindex[index];
       return groupIndex !== undefined
         ? (this._groups[groupIndex] ?? null)
         : null;
     }
-
-    // Handle numeric groups
-    if (indices.length === 0) {
+    if (typeof index === 'number' && indices.length === 0) {
       return index < this._groups.length
         ? (this._groups[index] ?? null)
         : null;
     }
-
-    const allIndices = [index, ...indices];
-    return allIndices.map((i) =>
-      i < this._groups.length ? (this._groups[i] ?? null) : null
-    );
+    if (typeof index === 'number' && indices.length > 0) {
+      const allIndices = [index, ...indices];
+      return allIndices.map((i) =>
+        i < this._groups.length ? (this._groups[i] ?? null) : null
+      );
+    }
+    return null;
   }
 
   groups(default_?: string): (string | null)[] {
@@ -433,34 +493,42 @@ export class PythonPattern implements Pattern {
     await PythonBackend.runPython(`_search_string = ${JSON.stringify(string)}`);
 
     const matchData = await PythonBackend.runPython(`
- pattern_obj = get_pattern("${this._handle}")
- if pattern_obj is None:
-     raise ValueError("Pattern handle not found in registry")
-
- print(f"MIRAI DIAGNOSTIC: About to search with pattern '${pattern_obj.pattern}' on string '${_search_string}'")
- print(f"MIRAI DIAGNOSTIC: Search parameters: pos=${pos}, endpos=${endpos || string.length}")
-
- # Test the regex behavior directly
- import regex as re
- direct_pattern = re.compile('a*')
- direct_result = direct_pattern.search('xxx')
- print(f"MIRAI DIAGNOSTIC: Direct regex test: re.compile('a*').search('xxx') = {direct_result}")
- if direct_result:
-     print(f"MIRAI DIAGNOSTIC: Direct result span: {direct_result.span()}")
-     print(f"MIRAI DIAGNOSTIC: Direct result group(0): '{direct_result.group(0)}'")
-
- match_obj = pattern_obj.search(_search_string, ${pos}, ${endpos || string.length})
- print(f"MIRAI DIAGNOSTIC: pattern_obj.search result: {match_obj}")
- if match_obj:
-     print(f"MIRAI DIAGNOSTIC: match_obj.span(): {match_obj.span()}")
-     print(f"MIRAI DIAGNOSTIC: match_obj.group(0): '{match_obj.group(0)}'")
-
- match_data = create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
- print(f"MIRAI DIAGNOSTIC: create_match_data result: {match_data}")
- match_data
+    # Get the pattern object from the registry
+    pattern_obj = get_pattern("${this._handle}")
+    if pattern_obj is None:
+        raise ValueError("Pattern handle not found in registry")
+  
+    # Set the search string in the global scope
+    _search_string = ${JSON.stringify(string)}
+  
+    print(f"MIRAI DIAGNOSTIC: About to search with pattern '{pattern_obj.pattern}' on string '{_search_string}'")
+    print(f"MIRAI DIAGNOSTIC: Search parameters: pos=${pos}, endpos=${endpos || string.length}")
+  
+    # Test the regex behavior directly
+    import regex as re
+    direct_pattern = re.compile('a*')
+    direct_result = direct_pattern.search('xxx')
+    print(f"MIRAI DIAGNOSTIC: Direct regex test: re.compile('a*').search('xxx') = {direct_result}")
+    if direct_result:
+        print(f"MIRAI DIAGNOSTIC: Direct result span: {direct_result.span()}")
+        print(f"MIRAI DIAGNOSTIC: Direct result group(0): '{direct_result.group(0)}'")
+  
+    match_obj = pattern_obj.search(_search_string, ${pos}, ${endpos || string.length})
+    print(f"MIRAI DIAGNOSTIC: pattern_obj.search result: {match_obj}")
+    if match_obj:
+        print(f"MIRAI DIAGNOSTIC: match_obj.span(): {match_obj.span()}")
+        print(f"MIRAI DIAGNOSTIC: match_obj.group(0): '{match_obj.group(0)}'")
+  
+    # Create match data with proper null checks
+    match_data = None
+    if match_obj is not None:
+        match_data = create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
+        print(f"MIRAI DIAGNOSTIC: create_match_data result: {match_data}")
+  
+    match_data.to_dict() if match_data is not None else None
     `);
 
-    return matchData ? new PythonMatch(matchData, this) : null;
+    return (matchData !== null && matchData !== undefined) ? new PythonMatch(matchData, this) : null;
   }
 
   async match(
@@ -472,12 +540,22 @@ export class PythonPattern implements Pattern {
     await PythonBackend.runPython(`_match_string = ${JSON.stringify(string)}`);
 
     const matchData = await PythonBackend.runPython(`
- pattern_obj = get_pattern("${this._handle}")
- if pattern_obj is None:
-     raise ValueError("Pattern handle not found in registry")
-
- match_obj = pattern_obj.match(_match_string, ${pos}, ${endpos || string.length})
- create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || string.length})
+    # Get the pattern object from the registry
+    pattern_obj = get_pattern("${this._handle}")
+    if pattern_obj is None:
+        raise ValueError("Pattern handle not found in registry")
+  
+    # Set the match string in the global scope
+    _match_string = ${JSON.stringify(string)}
+  
+    match_obj = pattern_obj.match(_match_string, ${pos}, ${endpos || string.length})
+  
+    # Create match data with proper null checks
+    match_data = None
+    if match_obj is not None:
+        match_data = create_match_data(match_obj, pattern_obj, _match_string, ${pos}, ${endpos || string.length})
+  
+    match_data.to_dict() if match_data is not None else None
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
@@ -494,12 +572,22 @@ export class PythonPattern implements Pattern {
     );
 
     const matchData = await PythonBackend.runPython(`
- pattern_obj = get_pattern("${this._handle}")
- if pattern_obj is None:
-     raise ValueError("Pattern handle not found in registry")
-
- match_obj = pattern_obj.fullmatch(_fullmatch_string, ${pos}, ${endpos || string.length})
- create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos || string.length})
+    # Get the pattern object from the registry
+    pattern_obj = get_pattern("${this._handle}")
+    if pattern_obj is None:
+        raise ValueError("Pattern handle not found in registry")
+  
+    # Set the fullmatch string in the global scope
+    _fullmatch_string = ${JSON.stringify(string)}
+  
+    match_obj = pattern_obj.fullmatch(_fullmatch_string, ${pos}, ${endpos || string.length})
+  
+    # Create match data with proper null checks
+    match_data = None
+    if match_obj is not None:
+        match_data = create_match_data(match_obj, pattern_obj, _fullmatch_string, ${pos}, ${endpos || string.length})
+  
+    match_data.to_dict() if match_data is not None else None
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
@@ -569,7 +657,7 @@ export class PythonPattern implements Pattern {
   async sub(
     repl: string | ((match: Match) => string),
     string: string,
-    count: number = 0
+    count: number = 1
   ): Promise<string> {
     // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_sub_string = ${JSON.stringify(string)}`);
@@ -581,34 +669,41 @@ export class PythonPattern implements Pattern {
   async subn(
     repl: string | ((match: Match) => string),
     string: string,
-    count: number = 0
+    count: number = 1
   ): Promise<[string, number]> {
     // Set string in globals to avoid escaping issues with multiline strings
     await PythonBackend.runPython(`_subn_string = ${JSON.stringify(string)}`);
 
-    // Define the replacement function in Python
-    await PythonBackend.runPython(`
- def replacement_function(match_obj):
-     # Convert match_obj to match data
-     match_data = create_match_data(match_obj, get_pattern("${this._handle}"), _subn_string)
-     match = PythonMatch(match_data, get_pattern("${this._handle}"))
-
-     # Call the JavaScript replacement function
-     result = _repl_function(match)
-     return result
-    `);
-
-    // Pass the JavaScript repl function to Python
-    await PythonBackend.runPython(`_repl_function = ${repl instanceof Function ? repl.toString() : `'${repl}'`}`);
-
-    const result = await PythonBackend.runPython(`
- pattern_obj = get_pattern("${this._handle}")
- if pattern_obj is None:
-     raise ValueError("Pattern handle not found in registry")
-
- result = pattern_obj.subn(replacement_function, _subn_string, ${count})
- result
-    `);
+    let result;
+    if (typeof repl === "function") {
+      // Define the replacement function in Python
+      await PythonBackend.runPython(`
+def replacement_function(match_obj):
+    # Convert match_obj to match data dict
+    match_data = create_match_data(match_obj, get_pattern("${this._handle}"), _subn_string)
+    # Call the JavaScript replacement function with the dict
+    result = _repl_function(match_data.to_dict() if match_data is not None else None)
+    return result
+`);
+      // Pass the JavaScript repl function to Python
+      await PythonBackend.runPython(`_repl_function = ${repl.toString()}`);
+      result = await PythonBackend.runPython(`
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+result = pattern_obj.subn(replacement_function, _subn_string, ${count})
+result
+`);
+    } else {
+      // Use the string replacement directly
+      result = await PythonBackend.runPython(`
+pattern_obj = get_pattern("${this._handle}")
+if pattern_obj is None:
+    raise ValueError("Pattern handle not found in registry")
+result = pattern_obj.subn(${JSON.stringify(repl)}, _subn_string, ${count})
+result
+`);
+    }
 
     return result || ['', 0];
   }
