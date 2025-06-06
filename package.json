@@ -12,8 +12,8 @@
   "scripts": {
     "build": "bun run lint:fix && bun run format && vite build",
     "build:clean": "vite build",
-    "test": "vitest run",
-    "test:watch": "vitest watch",
+    "test": "vitest run --bail 1",
+    "test:watch": "vitest watch --bail 1",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -41,7 +41,6 @@
   },
   "homepage": "https://github.com/syntropiq/pyrex#readme",
   "devDependencies": {
-    "@types/bun": "latest",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",
@@ -51,7 +50,7 @@
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.2"
   },
   "dependencies": {
     "core-js": "^3.42.0",
