@@ -63,6 +63,19 @@ class RegexTestExtractor:
         # Extract regex patterns and assertions
         self._extract_patterns_and_assertions(func_node, test_info)
         
+        # Skip test if any pattern or assertion contains bytes
+        def contains_bytes(obj):
+            if isinstance(obj, bytes):
+                return True
+            if isinstance(obj, dict):
+                return any(contains_bytes(v) for v in obj.values())
+            if isinstance(obj, list):
+                return any(contains_bytes(v) for v in obj)
+            return False
+
+        if contains_bytes(test_info):
+            return None
+
         return test_info
     
     def _extract_patterns_and_assertions(self, func_node: ast.FunctionDef, test_info: Dict[str, Any]):
@@ -70,9 +83,9 @@ class RegexTestExtractor:
         for node in ast.walk(func_node):
             # Look for regex patterns (re.compile, re.match, re.search, etc.)
             if isinstance(node, ast.Call):
-                if (isinstance(node.func, ast.Attribute) and 
-                    isinstance(node.func.value, ast.Name) and 
-                    node.func.value.id == 're'):
+                if (isinstance(node.func, ast.Attribute) and
+                    isinstance(node.func.value, ast.Name) and
+                    node.func.value.id in ('re', 'regex')):
                     
                     pattern_info = self._extract_pattern_from_call(node)
                     if pattern_info:
@@ -88,9 +101,9 @@ class RegexTestExtractor:
     
     def _extract_pattern_from_call(self, call_node: ast.Call) -> Optional[Dict[str, Any]]:
         """Extract regex pattern information from a function call."""
-        if not (isinstance(call_node.func, ast.Attribute) and 
-                isinstance(call_node.func.value, ast.Name) and 
-                call_node.func.value.id == 're'):
+        if not (isinstance(call_node.func, ast.Attribute) and
+                isinstance(call_node.func.value, ast.Name) and
+                call_node.func.value.id in ('re', 'regex')):
             return None
             
         method_name = call_node.func.attr

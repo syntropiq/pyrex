@@ -1,3 +1,8 @@
+## Regex Test Extraction Coverage
+
+- The current extractor now covers these regex function types in the JSON artifact: `compile`, `escape`, `findall`, `finditer`, `fullmatch`, `match`, `search`, `split`, `splititer`, `sub`, `subf`, `subfn`, and `subn`.
+- Constants, error types, and some rarely used flags/classes (e.g., `regex.I`, `regex.BESTMATCH`, `regex.V1`, etc.) are not included in the JSON, as they are not direct function calls or are not serializable.
+- All tests containing Python `bytes` objects are skipped (see README Known Issues).
 # Pyrex Testing Issues Analysis
 
 ## Executive Summary

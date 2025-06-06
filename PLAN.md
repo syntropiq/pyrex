@@ -1,3 +1,8 @@
+### Regex Test Extraction Coverage (2025-06-06)
+
+- Extractor now outputs JSON with these regex function types: `compile`, `escape`, `findall`, `finditer`, `fullmatch`, `match`, `search`, `split`, `splititer`, `sub`, `subf`, `subfn`, `subn`.
+- Constants, error types, and some flags/classes (e.g., `regex.I`, `regex.BESTMATCH`, etc.) are not included, as they are not direct function calls or not serializable.
+- All tests with Python `bytes` objects are skipped (see README Known Issues).
 ## Strategic PLAN Development
 
 ### Executive Summary

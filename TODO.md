@@ -1,3 +1,6 @@
+- [x] Regex test extractor now outputs JSON with coverage for: `compile`, `escape`, `findall`, `finditer`, `fullmatch`, `match`, `search`, `split`, `splititer`, `sub`, `subf`, `subfn`, `subn`
+- [x] Constants, error types, and some flags/classes (e.g., `regex.I`, `regex.BESTMATCH`, etc.) are not included, as they are not direct function calls or not serializable
+- [x] All tests with Python `bytes` objects are skipped (see README Known Issues)
 # Pyrex Project TODO
 
 ## Completed Tasks ✅

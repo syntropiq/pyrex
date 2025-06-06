@@ -1,3 +1,6 @@
+## Known Issues
+
+- The regex test extraction pipeline currently skips all tests containing Python `bytes` objects. These tests are not included in the generated JSON artifact. This is a temporary measure to ensure JSON serialization and will need to be addressed in the future for full test coverage.
 # Pythonic Regex API in TypeScript
 
 A TypeScript library providing a Python-like `re` interface for regex operations, targeting evergreen browsers. The API closely mirrors Python’s `re` module, with seamless support for both JavaScript and Python-only regex features.
