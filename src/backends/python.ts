@@ -247,18 +247,29 @@ export class PythonBackend {
     await this.initialize();
 
     // Set pattern and flags in Python globals to avoid escaping issues
-    await this.runPython(`
- # If the pattern is already quoted (starts and ends with a quote), use as-is, else quote it
+    console.log('[MIRAI DEBUG] About to set pattern and flags in Python globals');
+    console.log('[MIRAI DEBUG] Raw pattern:', pattern);
+    console.log('[MIRAI DEBUG] Raw flags:', flags);
+    
+    const pythonSetupCode = `
+# If the pattern is already quoted (starts and ends with a quote), use as-is, else quote it
 import ast
 if isinstance(${pattern}, str) and (
     (${pattern}.startswith("'") and ${pattern}.endswith("'")) or
-    (${pattern}.startswith('"') and ${pattern}.endswith('"'))
+    (${pattern}.startswith('"') and ${pattern}.endsWith('"'))
 ):
     _compile_pattern = ${pattern}
 else:
     _compile_pattern = ${JSON.stringify(pattern)}
- _compile_flags = "${flags}"
-    `);
+_compile_flags = "${flags}"
+    `;
+    
+    console.log('[MIRAI DEBUG] Python setup code to execute:');
+    console.log('=== START PYTHON CODE ===');
+    console.log(pythonSetupCode);
+    console.log('=== END PYTHON CODE ===');
+    
+    await this.runPython(pythonSetupCode);
 
     // Use globals to pass the result back
     await this.runPython(`
