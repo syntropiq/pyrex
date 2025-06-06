@@ -46,7 +46,11 @@ describe('Direct Pyodide Regex Module Validation', () => {
       test_results
     `);
     
-    expect(result.toJs()).toEqual({
+    // Convert Map to plain object for comparison
+    const resultObj = result.toJs();
+    const plainResult = resultObj instanceof Map ? Object.fromEntries(resultObj) : resultObj;
+    
+    expect(plainResult).toEqual({
       compile_match: true,
       search: true,
       findall: true,
