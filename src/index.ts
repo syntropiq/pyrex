@@ -33,7 +33,14 @@ export async function compileAsync(pattern: string, flags: string = ''): Promise
  */
 export async function search(pattern: string, string: string, flags?: string): Promise<Match | null> {
   const compiledPattern = await compile(pattern, flags);
-  return await compiledPattern.search(string);
+  let result = await compiledPattern.search(string);
+  
+  // If JS backend returns null, try Python backend as a fallback
+  if (result === null && compiledPattern.backend === 'javascript') {
+    const pythonPattern = await pyCompile(pattern, flags);
+    result = await pythonPattern.search(string);
+  }
+  return result;
 }
 
 /**
@@ -42,7 +49,14 @@ export async function search(pattern: string, string: string, flags?: string): P
  */
 export async function match(pattern: string, string: string, flags?: string): Promise<Match | null> {
   const compiledPattern = await compile(pattern, flags);
-  return await compiledPattern.match(string);
+  let result = await compiledPattern.match(string);
+
+  // If JS backend returns null, try Python backend as a fallback
+  if (result === null && compiledPattern.backend === 'javascript') {
+    const pythonPattern = await pyCompile(pattern, flags);
+    result = await pythonPattern.match(string);
+  }
+  return result;
 }
 
 /**
@@ -51,7 +65,14 @@ export async function match(pattern: string, string: string, flags?: string): Pr
  */
 export async function fullmatch(pattern: string, string: string, flags?: string): Promise<Match | null> {
   const compiledPattern = await compile(pattern, flags);
-  return await compiledPattern.fullmatch(string);
+  let result = await compiledPattern.fullmatch(string);
+
+  // If JS backend returns null, try Python backend as a fallback
+  if (result === null && compiledPattern.backend === 'javascript') {
+    const pythonPattern = await pyCompile(pattern, flags);
+    result = await pythonPattern.fullmatch(string);
+  }
+  return result;
 }
 
 /**

@@ -85,6 +85,9 @@ export interface Match {
  * Compiled regular expression pattern object similar to Python's re.Pattern
  */
 export interface Pattern {
+  /** The backend used for this pattern */
+  readonly backend: RegexBackend;
+
   /** The pattern string from which the pattern object was compiled */
   readonly pattern: string;
 

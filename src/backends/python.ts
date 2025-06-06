@@ -413,6 +413,7 @@ export class PythonMatch implements Match {
  * Python implementation of Pattern object
  */
 export class PythonPattern implements AsyncPattern {
+  public readonly backend: import('../types/index.js').RegexBackend = 'python';
   public readonly pattern: string;
   public readonly flags: number;
   public readonly groups: number;

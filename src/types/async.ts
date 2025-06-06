@@ -4,6 +4,9 @@ import type { Match } from './index.js';
  * Async version of Pattern interface for Python backend
  */
 export interface AsyncPattern {
+  /** The backend used for this pattern */
+  readonly backend: import('./index.js').RegexBackend;
+
   /** The pattern string from which the pattern object was compiled */
   readonly pattern: string;
 

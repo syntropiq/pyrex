@@ -155,6 +155,7 @@ export class JSPattern implements Pattern {
   public readonly groupindex: Record<string, number>;
 
   private _regex: RegExp;
+  public readonly backend: import('../types/index.js').RegexBackend = 'javascript';
 
   constructor(pattern: string, flags: string = '') {
     this.pattern = pattern;

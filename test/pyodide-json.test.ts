@@ -185,7 +185,9 @@ describe('Pyodide Regex Test Suite', () => {
         
         if (!sourceLine) continue;
         
-        const title = `Line ${assertion.line}: ${sourceLine.trim()}`;
+        // Create concise test title - only show full source on failure
+        const regexMethod = sourceLine.match(/regex\.(\w+)/)?.[1] || 'unknown';
+        const title = `Line ${assertion.line}: ${regexMethod}()`;
         
         it(title, async () => {
           if (assertion.type === 'assertEqual') {
@@ -211,9 +213,11 @@ describe('Pyodide Regex Test Suite', () => {
             
             try {
               // Execute the regex method
+              console.log(`[DEBUG] Method: ${method}, Args:`, args);
               switch (method) {
                 case 'search':
                   result = await (regex as any).search(args[0], args[1], ...args.slice(2));
+                  console.log(`[DEBUG] Search result:`, result);
                   break;
                 case 'match':
                   result = await (regex as any).match(args[0], args[1], ...args.slice(2));
@@ -302,6 +306,7 @@ describe('Pyodide Regex Test Suite', () => {
               
             } catch (error) {
               console.error(`Test failed: ${title}`);
+              console.error(`Full source: ${sourceLine.trim()}`);
               console.error(`Method: ${method}, Args:`, args);
               console.error(`Expected:`, expectedValue);
               console.error(`Error:`, error);
