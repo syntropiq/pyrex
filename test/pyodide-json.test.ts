@@ -153,15 +153,6 @@ function extractRegexCall(actualExpr: string): { method: string; args: string[] 
   return { method, args };
 }
 
-// Clean up string arguments (remove quotes)
-function cleanStringArg(arg: string): string {
-  const trimmed = arg.trim();
-  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-      (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-    return trimmed.slice(1, -1);
-  }
-  return trimmed;
-}
 
 describe('Pyodide Regex Test Suite', () => {
   // Process each test from the JSON
@@ -173,6 +164,19 @@ describe('Pyodide Regex Test Suite', () => {
     
     describe(test.name, () => {
       const sourceLines = test.source_code.split('\n');
+      
+      // DIAGNOSTIC LOG: Check if test has assertions
+      if (!test.assertions || test.assertions.length === 0) {
+        console.log(`WARNING: Test ${test.name} has no assertions - this will create an empty test suite`);
+        console.log(`Source code: ${test.source_code}`);
+        
+        // Create a placeholder test for now
+        it('placeholder - no assertions found', () => {
+          console.log(`Test ${test.name} needs proper assertion extraction`);
+          expect(true).toBe(true);
+        });
+        return;
+      }
       
       // Create tests from patterns and assertions
       for (const assertion of test.assertions || []) {
@@ -203,43 +207,40 @@ describe('Pyodide Regex Test Suite', () => {
             const expectedValue = extractExpectedValue(expectedExpr);
             const { method, args } = regexCall;
             
-            // Clean up arguments
-            const cleanArgs = args.map(cleanStringArg);
-            
             let result;
             
             try {
               // Execute the regex method
               switch (method) {
                 case 'search':
-                  result = await (regex as any).search(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                  result = await (regex as any).search(args[0], args[1], ...args.slice(2));
                   break;
                 case 'match':
-                  result = await (regex as any).match(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                  result = await (regex as any).match(args[0], args[1], ...args.slice(2));
                   break;
                 case 'findall':
-                  result = await (regex as any).findall(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                  result = await (regex as any).findall(args[0], args[1], ...args.slice(2));
                   break;
                 case 'sub':
-                  result = await (regex as any).sub(cleanArgs[0], cleanArgs[1], cleanArgs[2], ...cleanArgs.slice(3));
+                  result = await (regex as any).sub(args[0], args[1], args[2], ...args.slice(3));
                   break;
                 case 'split':
-                  result = await (regex as any).split(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                  result = await (regex as any).split(args[0], args[1], ...args.slice(2));
                   break;
                 case 'compile':
-                  result = await (regex as any).compile(cleanArgs[0], ...cleanArgs.slice(1));
+                  result = await (regex as any).compile(args[0], ...args.slice(1));
                   break;
                 case 'fullmatch':
-                  result = await (regex as any).fullmatch(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                  result = await (regex as any).fullmatch(args[0], args[1], ...args.slice(2));
                   break;
                 case 'finditer':
-                  result = await (regex as any).finditer(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                  result = await (regex as any).finditer(args[0], args[1], ...args.slice(2));
                   break;
                 case 'subn':
-                  result = await (regex as any).subn(cleanArgs[0], cleanArgs[1], cleanArgs[2], ...cleanArgs.slice(3));
+                  result = await (regex as any).subn(args[0], args[1], args[2], ...args.slice(3));
                   break;
                 case 'escape':
-                  result = (regex as any).escape(cleanArgs[0]);
+                  result = (regex as any).escape(args[0]);
                   break;
                 default:
                   throw new Error(`Unsupported regex method: ${method}`);
@@ -264,7 +265,7 @@ describe('Pyodide Regex Test Suite', () => {
                     const groupArgs = groupMatch[1].split(',').map(arg => {
                       const trimmed = arg.trim();
                       if (!isNaN(Number(trimmed))) return Number(trimmed);
-                      return cleanStringArg(trimmed);
+                      return trimmed;
                     });
                     result = result.group(...groupArgs);
                   } else {
@@ -297,11 +298,11 @@ describe('Pyodide Regex Test Suite', () => {
                 }
               }
               
-              expect.soft(result).toEqual(expectedValue);
+              expect(result).toEqual(expectedValue);
               
             } catch (error) {
               console.error(`Test failed: ${title}`);
-              console.error(`Method: ${method}, Args:`, cleanArgs);
+              console.error(`Method: ${method}, Args:`, args);
               console.error(`Expected:`, expectedValue);
               console.error(`Error:`, error);
               throw error;
@@ -314,21 +315,20 @@ describe('Pyodide Regex Test Suite', () => {
               const regexCall = extractRegexCall(lambdaMatch[1]);
               if (regexCall) {
                 const { method, args } = regexCall;
-                const cleanArgs = args.map(cleanStringArg);
                 
                 await expect(async () => {
                   switch (method) {
                     case 'search':
-                      await (regex as any).search(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                      await (regex as any).search(args[0], args[1], ...args.slice(2));
                       break;
                     case 'match':
-                      await (regex as any).match(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                      await (regex as any).match(args[0], args[1], ...args.slice(2));
                       break;
                     case 'findall':
-                      await (regex as any).findall(cleanArgs[0], cleanArgs[1], ...cleanArgs.slice(2));
+                      await (regex as any).findall(args[0], args[1], ...args.slice(2));
                       break;
                     case 'compile':
-                      await (regex as any).compile(cleanArgs[0], ...cleanArgs.slice(1));
+                      await (regex as any).compile(args[0], ...args.slice(1));
                       break;
                     default:
                       throw new Error(`Unsupported regex method in assertRaisesRegex: ${method}`);

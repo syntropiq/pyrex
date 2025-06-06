@@ -127,7 +127,11 @@ export class PythonBackend {
           return False
       
       def create_match_data(match_obj, pattern_obj, string, pos=0, endpos=None):
+          print(f"MIRAI DEBUG: create_match_data called with match_obj: {match_obj}")
+          print(f"MIRAI DEBUG: create_match_data pattern: {pattern_obj.pattern if pattern_obj else 'None'}")
+          print(f"MIRAI DEBUG: create_match_data string: {repr(string)}")
           if match_obj is None:
+              print(f"MIRAI DEBUG: create_match_data returning None because match_obj is None")
               return None
           
           groups = []
@@ -192,8 +196,8 @@ export class PythonBackend {
 
     // Set pattern and flags in Python globals to avoid escaping issues
     await this.runPython(`
-_compile_pattern = ${JSON.stringify(pattern)}
-_compile_flags = ${JSON.stringify(flags)}
+_compile_pattern = "${pattern}"
+_compile_flags = "${flags}"
     `);
 
     // Use globals to pass the result back
@@ -217,7 +221,15 @@ for flag in _compile_flags:
         flag_value |= flag_map[flag]
 
 try:
+    pattern_bytes = _compile_pattern.encode('utf-8')
+    print(f"MIRAI DEBUG: Compiling pattern: {_compile_pattern}")
+    print(f"MIRAI DEBUG: Pattern bytes (before compile): {list(pattern_bytes)}")
     pattern_obj = re.compile(_compile_pattern, flag_value)
+    
+    # Log the bytes after compilation as well (if compilation succeeds)
+    pattern_bytes_after = pattern_obj.pattern.encode('utf-8')
+    print(f"MIRAI DEBUG: Pattern bytes (after compile): {list(pattern_bytes_after)}")
+    
     handle = register_pattern(pattern_obj)
     pattern_data = create_pattern_data(pattern_obj)
     
@@ -237,7 +249,14 @@ except Exception as e:
       );
     }
 
+    console.log(`DIAGNOSTIC: Compiling Python pattern`);
+    console.log(`DIAGNOSTIC: Pattern: ${pattern}`);
+    console.log(`DIAGNOSTIC: Flags: ${flags}`);
     if (result.error) {
+      console.log(`DIAGNOSTIC: Python pattern compilation failed`);
+      console.log(`DIAGNOSTIC: Pattern: ${pattern}`);
+      console.log(`DIAGNOSTIC: Flags: ${flags}`);
+      console.log(`DIAGNOSTIC: Error: ${result.error}`);
       throw new Error(`Failed to compile Python pattern: ${result.error}`);
     }
 
@@ -423,8 +442,27 @@ pattern_obj = get_pattern("${this._handle}")
 if pattern_obj is None:
     raise ValueError("Pattern handle not found in registry")
 
+print(f"MIRAI DIAGNOSTIC: About to search with pattern '{pattern_obj.pattern}' on string '{_search_string}'")
+print(f"MIRAI DIAGNOSTIC: Search parameters: pos=${pos}, endpos=${endpos || string.length}")
+
+# Test the regex behavior directly
+import regex as re
+direct_pattern = re.compile('a*')
+direct_result = direct_pattern.search('xxx')
+print(f"MIRAI DIAGNOSTIC: Direct regex test: re.compile('a*').search('xxx') = {direct_result}")
+if direct_result:
+    print(f"MIRAI DIAGNOSTIC: Direct result span: {direct_result.span()}")
+    print(f"MIRAI DIAGNOSTIC: Direct result group(0): '{direct_result.group(0)}'")
+
 match_obj = pattern_obj.search(_search_string, ${pos}, ${endpos || string.length})
-create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
+print(f"MIRAI DIAGNOSTIC: pattern_obj.search result: {match_obj}")
+if match_obj:
+    print(f"MIRAI DIAGNOSTIC: match_obj.span(): {match_obj.span()}")
+    print(f"MIRAI DIAGNOSTIC: match_obj.group(0): '{match_obj.group(0)}'")
+
+match_data = create_match_data(match_obj, pattern_obj, _search_string, ${pos}, ${endpos || string.length})
+print(f"MIRAI DIAGNOSTIC: create_match_data result: {match_data}")
+match_data
     `);
 
     return matchData ? new PythonMatch(matchData, this) : null;
