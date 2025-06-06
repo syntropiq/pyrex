@@ -1,9 +1,0 @@
-import { describe, it, expect } from 'vitest';
-import * as re from '../../src/index';
-// Auto-converted from /Users/steve/Projects/amjur.org/pyrex/test/split/general_em_tests.py
-
-// You must implement or import a 'sub' function that mimics Python's regex.sub behavior.
-
-describe('Python Backend - Regex (converted)', () => {
-// Skipped test 1: incomplete arguments in Python: self.assertEqual(regex.compile("bla").match(a), null)
-});
